@@ -1,0 +1,20 @@
+package manage.service;
+
+import java.util.List;
+
+import manage.model.SgCity;
+import manage.model.SgProvince;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-8-28 上午9:09:59
+ *@Version 1.0
+ *
+ */
+
+public interface IProvinceCityService {
+ public List<SgProvince> getProvinceList();
+ public List<SgCity> getCityList(String id);
+}
+

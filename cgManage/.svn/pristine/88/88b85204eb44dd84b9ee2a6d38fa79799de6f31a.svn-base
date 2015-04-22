@@ -1,0 +1,85 @@
+package manage.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+/**
+ * SgFollowers entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name="sg_Followers"
+    ,schema="dbo"
+    ,catalog="SceneryGuide"
+)
+
+public class SgFollowers  implements java.io.Serializable {
+
+
+    // Fields    
+
+     private Integer id;
+     private Integer hostId;
+     private Integer followerId;
+
+
+    // Constructors
+
+    /** default constructor */
+    public SgFollowers() {
+    }
+
+    
+    /** full constructor */
+    public SgFollowers(Integer hostId, Integer followerId) {
+        this.hostId = hostId;
+        this.followerId = followerId;
+    }
+
+   
+    // Property accessors
+    @Id @GeneratedValue(strategy=IDENTITY)
+    
+    @Column(name="id", unique=true, nullable=false)
+
+    public Integer getId() {
+        return this.id;
+    }
+    
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
+    @Column(name="hostId")
+
+    public Integer getHostId() {
+        return this.hostId;
+    }
+    
+    public void setHostId(Integer hostId) {
+        this.hostId = hostId;
+    }
+    
+    @Column(name="followerId")
+
+    public Integer getFollowerId() {
+        return this.followerId;
+    }
+    
+    public void setFollowerId(Integer followerId) {
+        this.followerId = followerId;
+    }
+   
+
+
+
+
+
+
+
+
+}

@@ -1,0 +1,40 @@
+package manage.service.Impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import dao.IBaseDao;
+import manage.model.SysMoudle;
+import manage.service.IMenuService;
+/**
+*
+*@Author yammis
+*@Date 2014-8-26 下午5:25:52
+*@Version 1.0
+*
+*/
+@Service("menuService")
+public class MenuService implements IMenuService {
+	
+	private IBaseDao<SysMoudle> moudleDao;
+	
+public IBaseDao<SysMoudle> getMoudleDao() {
+		return moudleDao;
+	}
+
+@Resource
+	public void setMoudleDao(IBaseDao<SysMoudle> moudleDao) {
+		this.moudleDao = moudleDao;
+	}
+
+@Override
+public List<SysMoudle> getMoudleList() {
+	// TODO Auto-generated method stub
+	String hql="from SysMoudleJava m ";
+	List<SysMoudle> moudleList=moudleDao.get(hql);
+	return moudleList;
+}
+}

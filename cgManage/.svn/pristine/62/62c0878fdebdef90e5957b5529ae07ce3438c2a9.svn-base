@@ -1,0 +1,143 @@
+package manage.action;
+import javax.annotation.Resource;
+
+import manage.model.SgHotPotDistrictOffline;
+import manage.model.SgHpPlanChart;
+import manage.service.IScenicAreaOfflineService;
+import manage.service.IScenicPotService;
+
+import manage.smodel.PageBean;
+
+import org.apache.struts2.ServletActionContext;
+
+import webservice.businessService.IScenicImageService;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+import manage.util.FileUtil;
+import manage.util.ZipCompressorByAnt;
+import manage.util.scenicareaoffline.areaXml;
+import manage.util.scenicareaoffline.htmlGenerator;
+import manage.util.scenicareaoffline.potXml;
+import manage.util.scenicareaoffline.xmlBasicConfig;
+/**
+ *
+ *@Author yammis
+ *@Date 2014-11-4 上午9:48:12
+ *@Version 1.0
+ *
+ */
+
+public class ScenicAreaOfflinePackageAction extends ActionSupport {
+
+	private PageBean<SgHotPotDistrictOffline> offlineList;
+	private IScenicPotService scenicPotService;
+    public IScenicPotService getScenicPotService() {
+		return scenicPotService;
+	}
+    @Resource
+	public void setScenicPotService(IScenicPotService scenicPotService) {
+		this.scenicPotService = scenicPotService;
+	}
+	private IScenicImageService imageService;
+	public IScenicImageService getImageService() {
+		return imageService;
+	}
+@Resource(name="imageBean")
+	public void setImageService(IScenicImageService imageService) {
+		this.imageService = imageService;
+	}
+
+	private int pageIndex;
+	private int pageSize=10;
+
+
+	public int getPageIndex() {
+		return pageIndex;
+	}
+
+	public void setPageIndex(int pageIndex) {
+		this.pageIndex = pageIndex;
+	}
+
+	public int getTotalCounts() {
+		return totalCounts;
+	}
+
+	public void setTotalCounts(int totalCounts) {
+		this.totalCounts = totalCounts;
+	}
+
+	private int totalCounts;
+	public PageBean<SgHotPotDistrictOffline> getOfflineList() {
+		return offlineList;
+	}
+	public void setOfflineList(PageBean<SgHotPotDistrictOffline> offlineList) {
+		this.offlineList = offlineList;
+	}
+	private IScenicAreaOfflineService offlineService;
+	public IScenicAreaOfflineService getOfflineService() {
+		return offlineService;
+	}
+	@Resource
+	public void setOfflineService(IScenicAreaOfflineService offlineService) {
+		this.offlineService = offlineService;
+	}
+	public String scenicAreaOfflineList()
+	{
+	 this.offlineList=offlineService.getOfflinelineList(0,pageSize);
+		return "packageList";
+	}
+	public String scenicAreaOfflineMore()
+	{
+		 String pIndex=ServletActionContext.getRequest().getParameter("pIndex");
+		 this.offlineList=offlineService.getOfflinelineList(Integer.parseInt(pIndex),pageSize);
+		 return "packageMore";
+	}
+
+	   public void offlinePackageGenerator()
+	{
+		areaXml  xml=new areaXml();
+		String id=ServletActionContext.getRequest().getParameter("areaId");
+		xml.areaBean=offlineService.getScenicAreaBeanByAreaId(Integer.parseInt(id));
+	    xml.imageService=this.imageService;
+	    //按areaId配置第一层资源的路径
+		String _htmlDestinationSavePath=xmlBasicConfig.destinationPath+id+xmlBasicConfig.catalogName[0];
+		String _imageDestinationSavePath=xmlBasicConfig.destinationPath+id+xmlBasicConfig.catalogName[1];
+		String _imageThumbDestinationSavePath=xmlBasicConfig.destinationPath+id+xmlBasicConfig.catalogName[2];
+		String _mapDestinationSavePath=xmlBasicConfig.destinationPath+id+xmlBasicConfig.catalogName[3];
+		String _appDestinationSavePath=xmlBasicConfig.destinationPath+id+xmlBasicConfig.catalogName[4];
+		//逐级检查文件夹
+		FileUtil.checkVirtualPath(_htmlDestinationSavePath);
+		FileUtil.checkVirtualPath(_imageDestinationSavePath);
+		FileUtil.checkVirtualPath(_imageThumbDestinationSavePath);
+		FileUtil.checkVirtualPath(_mapDestinationSavePath);
+		//景点配置属性
+		 potXml pot=new potXml();
+		 pot.appPath=_appDestinationSavePath;
+		 pot.potList=scenicPotService.getSgHotPotList(xml.areaBean.getId());
+         pot.imageServices=this.imageService;   
+		 //生成景点文件
+         pot.potFileHandler();	
+//xml配置文件				
+	   //图片
+		xml.thumbPath=_imageThumbDestinationSavePath;
+		xml.mapPath=_mapDestinationSavePath;
+		xml.appConfig=_appDestinationSavePath+"config.xml";
+		//xml文件
+		xml.descriptionPath=_htmlDestinationSavePath+xmlBasicConfig.htmlCatalog[0];
+		xml.routeLinePath=_htmlDestinationSavePath+xmlBasicConfig.htmlCatalog[1];
+		xml.tipPath=_htmlDestinationSavePath+xmlBasicConfig.htmlCatalog[2];
+		xml.ticketPath=_htmlDestinationSavePath+xmlBasicConfig.htmlCatalog[3];
+		xml.trafficPath=_htmlDestinationSavePath+xmlBasicConfig.htmlCatalog[4];
+		xml.areaFileHandler();
+		
+		//zip打包
+		FileUtil.checkVirtualPath("HotPotDistrictPackage/"+xmlBasicConfig.catalogName[7]);
+		ZipCompressorByAnt compress=new ZipCompressorByAnt("HotPotDistrictPackage/"+xmlBasicConfig.catalogName[7]+id+".zip");
+		compress.compress(xmlBasicConfig.destinationPath+id);
+		BaseAction.writeJson(true);
+	}
+
+}
+

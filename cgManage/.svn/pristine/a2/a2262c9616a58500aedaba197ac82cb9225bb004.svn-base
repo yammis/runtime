@@ -1,0 +1,13 @@
+package webservice.businessService;
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-20 下午1:52:42
+ *@Version 1.0
+ *
+ */
+
+public interface IScenicAreaService {
+ public String getScenicAreaInfoByProId();
+}
+

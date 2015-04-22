@@ -1,0 +1,34 @@
+import javax.annotation.Resource;
+
+import org.apache.cxf.endpoint.Client;
+
+import org.apache.cxf.jaxws.endpoint.dynamic.JaxWsDynamicClientFactory;
+import org.junit.Test;
+
+import webservice.businessService.IProvinceService;
+import webservice.businessService.Impl.provinceServiceImpl;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-10 下午4:42:44
+ *@Version 1.0
+ *
+ */
+
+public class asdfsd {
+
+	@Test
+	public void mains()
+	{
+    	JaxWsDynamicClientFactory  factory= JaxWsDynamicClientFactory.newInstance();
+		Client client=factory.createClient("http://localhost:8080/cgManage/ws/getProvinceAreaInfo?wsdl");
+		try {
+			System.out.println( client.invoke("getProvinceInfoScenicAreaCount"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+

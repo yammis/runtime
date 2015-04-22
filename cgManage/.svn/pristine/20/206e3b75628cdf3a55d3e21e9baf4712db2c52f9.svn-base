@@ -1,0 +1,162 @@
+﻿
+$(function () {
+
+
+    $("#btn-smsadd").click(function () {
+        var smsAdd = '<div id="content-box" class="content-box"><ul class="cg-item"><li><span>省份：</span>';
+        smsAdd += '<select id="sms-province"></select>';
+        smsAdd += '<li><span >短信指令：</span><br/><span style=" padding-left:30px" carrier="1">移动：</span><input  type="text" id="sms-code-cmcc"/><br/><span style=" padding-left:30px" carrier="2">联通：</span><input type="text" id="sms-code-unicom"/><br/><span style=" padding-left:30px" carrier="3">电信：</span><input type="text" id="sms-code-telecom"/></li>';
+        smsAdd += '<label style=" color:red; padding-left:3px; display:none">名字不少于两位</label></li><li><span></span><a id="smsinfo-save" href="javascript:;">保存</a></li> </ul></div>';
+        var defaults = {
+            contextHtml: smsAdd,
+            contentWidth: 400,
+            contentHeight: 350
+        }
+        $.layerOpen(defaults);
+        $.get("/SmsOrder/getProvince", function (data) {
+            if (data.rResult) {
+                var pro = eval(data.info);
+                for (var i = 0; i < pro.length; i++) {
+                    $("#sms-province").append('<option value=' + pro[i].id + '>' + pro[i].ProvinceName + '</option>');
+
+                }
+
+            }
+        })
+    });
+})
+
+$("#smsinfo-save").live("click", function () {
+    var OrderList = {
+        cmcc: $("#sms-code-cmcc").val(),
+        unicom: $("#sms-code-unicom").val(),
+        telecom: $("#sms-code-telecom").val(),
+        ProvinceId: $("#sms-province option:selected").val()
+    }
+    $.post("/SmsOrder/SmsOrderNew", { order: OrderList }, function (d) {
+        if (d.rResult) {
+
+            location.href = "/SmsOrder/SmsOrderList";
+        }
+    }, "json");
+
+})
+
+var idArr = [];
+
+$(function () {
+
+
+$(".sc-del").each(function(){
+$(this).click(function(){
+  if(confirm("确定要删除这条信息？"))
+  {
+      idArr = [];
+      $(this).parent().prev().find(".scid").each(function () {
+         idArr.push($(this).val());
+      })
+      var thisTrObj=$(this).parent().parent();
+      $.post("/SmsOrder/DeleteScode",{idCollection:idArr},function(data){
+       if(data.rResult)
+       {
+         $.layerClose();
+         thisTrObj.remove();
+       }
+      });
+  }
+})
+
+});
+
+//编辑
+    $(".sc-edit").each(function () {
+
+        var smsEditHtml = '<div id="content-box" class="content-box"><input type="hidden" id="edit-id" /><ul class="cg-item"><li><span>省份：</span>';
+        smsEditHtml += '<select id="sms-province"></select>';
+        smsEditHtml += '<li><span >短信指令：</span><br/>';
+        smsEditHtml += '<span style=" padding-left:30px" carrier="1">移动：</span><input class="ccode"  type="text" id="sms-code-cmcc"/><span id="user-role">状态：</span>开启：<input type="radio" value="true" name="switcher-s" class="ons iswitcher" />关闭：<input type="radio" name="switcher-s" checked="checked" class="iswitcher" value="false" /><br/>';
+        smsEditHtml += '<span style=" padding-left:30px" carrier="2">联通：</span><input class="ccode" type="text" id="sms-code-unicom"/><span id="user-role">状态：</span>开启：<input type="radio" value="true" name="switcher-c" class="ons iswitcher" />关闭：<input type="radio" name="switcher-c" checked="checked" class="iswitcher" value="false" /><br/>';
+        smsEditHtml += '<span style=" padding-left:30px" carrier="3">电信：</span><input class="ccode" type="text" id="sms-code-telecom"/><span id="user-role">状态：</span>开启：<input type="radio" value="true" name="switcher-t" class="ons iswitcher" />关闭：<input type="radio" name="switcher-t" checked="checked" class="iswitcher" value="false" /></li>';
+        smsEditHtml += '<label style=" color:red; padding-left:3px; display:none">名字不少于两位</label></li><li><span></span><a id="smsedit-save" href="javascript:;">保存</a></li> </ul></div>';
+        var defaults = {
+            contextHtml: smsEditHtml,
+            contentWidth: 450,
+            contentHeight: 350
+        }
+        var listPro = $(this).parent().prev().prev().children().text();
+        $(this).click(function () {
+            idArr = [];
+            $(this).parent().prev().find(".scid").each(function () {
+                idArr.push($(this).val());
+            })
+            $.layerOpen(defaults);
+            //省份赋值
+            $.get("/SmsOrder/getProvince", function (data) {
+                if (data.rResult) {
+                    var pro = eval(data.info);
+                    for (var i = 0; i < pro.length; i++) {
+                        if (listPro == pro[i].ProvinceName)
+                            $("#sms-province").append('<option value=' + pro[i].id + ' selected=selected>' + pro[i].ProvinceName + '</option>');
+                        else
+                            $("#sms-province").append('<option value=' + pro[i].id + '>' + pro[i].ProvinceName + '</option>');
+                    }
+
+                }
+            });
+
+            var allValueArr = [];
+            var inputlist = $(".ccode");
+            var ckon = $(".ons");
+            //状态赋值
+            $(this).parent().prev().find("span").each(function () {
+                allValueArr.push($(this).text());
+            });
+
+            for (var j = 1; j <= allValueArr.length / 3; j++) {
+
+
+                inputlist[j - 1].value = allValueArr[3 * j - 2];
+                if (allValueArr[3 * j - 1] == "True")
+                    ckon[j - 1].checked = allValueArr[3 * j - 1];
+            }
+
+          
+  $(".iswitcher").each(function(i){
+    $(this).click(function(){
+      $("input[name="+$(this).attr("name")+"]").removeAttr("checked");
+      $(this).attr("checked","checked");
+
+    });
+  });
+
+        });
+
+     
+    })
+
+})
+
+
+$("#smsedit-save").live("click", function () {
+    var Code = {
+          cmccCode : $("#sms-code-cmcc").val(),
+          unicomCode : $("#sms-code-unicom").val(),
+          telecomCode : $("#sms-code-telecom").val(),
+    } 
+
+    var Status={
+       cmccStaus : $("input[name='switcher-s'][checked]").val(),
+       unicomStaus : $("input[name='switcher-c'][checked]").val(),
+       telecomStaus : $("input[name='switcher-t'][checked]").val()
+    }
+
+  
+    $.post("/SmsOrder/SmsCodeEdit", {sCode:Code,sStatus:Status,sId:idArr}, function (data) {
+     if(data.rResult)
+     {
+       location.href="/SmsOrder/SmsOrderList";
+     }
+    })
+
+});
+

@@ -1,0 +1,89 @@
+package manage.util;
+
+import java.security.Key;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
+import javax.crypto.spec.DESedeKeySpec;
+import javax.crypto.spec.IvParameterSpec;
+
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-16 上午9:52:48
+ *@Version 1.0
+ *
+ */
+
+public class DESUtil {
+	//解密数据  
+	public static final String DES_KEY="j7Fe8Dt9";
+	public static String EncryptDesBase64(String message, String key) throws Exception {   
+		   //产生与.net 对应的加密des + base64 加密串  
+		      //message = java.net.URLEncoder.encode(message, "ascii");     
+		      Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");     
+		      DESKeySpec desKeySpec = new DESKeySpec(key.getBytes("UTF-8"));     
+		      SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");     
+		      SecretKey secretKey = keyFactory.generateSecret(desKeySpec);     
+		      IvParameterSpec iv = new IvParameterSpec(key.getBytes("UTF-8"));     
+		      cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);     
+		      byte[] encryptbyte = cipher.doFinal(message.getBytes("UTF-8"));     
+		      BASE64Encoder base64Encoder = new BASE64Encoder();  
+		      //base64Encoder.encode(encryptbyte);  
+		      return base64Encoder.encode(encryptbyte);  
+		      //toHexString(encryptbyte).toUpperCase();    
+		
+		 
+		          
+		}      
+	public static String DecryptDesBase64(String message, String key) throws Exception {     
+	    //base64 + des 解密.net 加密传来串  
+	      //byte[] bytesrc = convertHexString(message); //不用base64 的方式  
+	     BASE64Decoder base64Decoder = new BASE64Decoder();  
+	      byte[] bytesrc=base64Decoder.decodeBuffer(message);  
+	      Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");     
+	      DESKeySpec desKeySpec = new DESKeySpec(key.getBytes("UTF-8"));     
+	      SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");     
+	      SecretKey secretKey = keyFactory.generateSecret(desKeySpec);     
+	      IvParameterSpec iv = new IvParameterSpec(key.getBytes("UTF-8"));     
+	      cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);     
+	      byte[] retByte = cipher.doFinal(bytesrc);     
+	        
+	      return new String(retByte, "UTF-8");     
+
+	}     
+	
+	public static String encrypt(Key key, String data) {
+		Cipher enCipher;
+		try {
+		enCipher = Cipher.getInstance("DES");
+		enCipher.init(Cipher.ENCRYPT_MODE, key);
+		byte[] pasByte = enCipher.doFinal(data.getBytes("UTF-8"));
+		BASE64Encoder base64Encoder = new BASE64Encoder();
+		return base64Encoder.encode(pasByte);
+		} catch (Exception e) {
+		e.printStackTrace();
+		return null;
+		}
+		} 
+	public static String dencrypt(Key key, String data) {
+		Cipher deCipher;
+		try {
+		deCipher = Cipher.getInstance("DES");
+		deCipher.init(Cipher.DECRYPT_MODE, key);
+		BASE64Decoder base64Decoder = new BASE64Decoder();
+		byte[] pasByte = deCipher.doFinal(base64Decoder.decodeBuffer(data));
+		return new String(pasByte, "UTF-8");
+		} catch (Exception e) {
+		e.printStackTrace();
+		return null;
+		}
+		} 
+
+
+}

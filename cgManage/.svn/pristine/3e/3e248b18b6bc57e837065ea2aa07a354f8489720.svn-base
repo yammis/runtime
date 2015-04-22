@@ -1,0 +1,140 @@
+package manage.util;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.struts2.ServletActionContext;
+import org.dom4j.Document;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-9-11 下午1:32:42
+ *@Version 1.0
+ *
+ */
+/*
+ * file 文件流
+ * fileName 文件路径+文件名字
+ * */
+public class FileUtil {
+  public static void saveFile(File file,String fileName )
+  {
+	  FileOutputStream fos=null;
+	  FileInputStream fis=null;
+	  try {
+		fos=new FileOutputStream(fileName);
+		fis=new FileInputStream(file);
+		byte[] b=new byte[10240];//设置一次读取10kb 最大60M
+		int len=-1;
+		while((len=fis.read(b))!=-1)
+		{
+			fos.write(b,0,len);
+		}
+		fos.flush();
+		fos.close();
+		fis.close();
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+  }
+  /*
+   * path 物理路径
+   * */
+  public static void checkRealPath(String path)
+  {
+	  File file=new File(path);
+	  if(!file.exists())
+	  {
+		  file.mkdir();
+	  }
+  }
+  
+  public static void checkVirtualPath(String path)
+  {
+	  String realPath=ServletActionContext.getRequest().getRealPath(path);
+	  File file=new File(realPath);
+	  if(file.getParentFile().exists())//判断上一级是否存在
+	  {
+		  file.mkdir();
+	  }
+	  else
+	  {
+		  file.mkdirs();
+	  }
+  }
+  
+  public static  void saveXml(String savePath,Document document)
+  {
+ 	 OutputFormat format=OutputFormat.createPrettyPrint();
+ 	 try {
+ 		 String packAgeRealPath=ServletActionContext.getRequest().getRealPath(savePath);
+ 		 OutputStreamWriter osw=new OutputStreamWriter(new FileOutputStream(new File(packAgeRealPath)),"UTF-8");
+ 	 	XMLWriter writer=new XMLWriter(osw,format);
+ 		writer.write(document);
+ 		osw.flush();
+ 		osw.close();
+ 		writer.close();
+ 	} catch (IOException e) {
+ 		// TODO Auto-generated catch block
+ 		e.printStackTrace();
+ 	}
+ 	 
+  }
+  public static String reName(String fileName) {
+		String extName = fileName.substring(fileName.lastIndexOf("."));
+		String time = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
+		String result =time+ BusinessTool.GetRandomStr(4)+ extName;
+		return result;
+	}
+  
+	public static boolean copyByChannel(String sourcePath, String targetPath) {
+		boolean result = false;
+		FileInputStream fi = null;
+		FileOutputStream fo = null;
+		FileChannel in = null;
+		FileChannel out = null;
+		
+		String sRealPath=ServletActionContext.getRequest().getRealPath(sourcePath);
+	    String tRealPath=ServletActionContext.getRequest().getRealPath(targetPath);
+        
+	    File sourceFile=new File(sRealPath);
+	    File targetFile=new File(tRealPath);
+	    if(sourceFile.isFile())
+	    {
+		try {
+			fi = new FileInputStream(sourceFile);
+			fo = new FileOutputStream(targetFile);
+
+			in = fi.getChannel();
+			out = fo.getChannel();
+			in.transferTo(0, in.size(), out);
+			result = true;
+		} catch (IOException e) {
+			result = false;
+		}
+
+		try {
+			fi.close();
+			in.close();
+			fo.close();
+			out.close();
+		} catch (IOException e) {
+			result = false;
+		}
+	    }
+		return result;
+
+	}
+}
+

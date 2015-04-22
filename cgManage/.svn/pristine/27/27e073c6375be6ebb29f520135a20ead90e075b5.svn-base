@@ -1,0 +1,22 @@
+package manage.service;
+
+import java.util.List;
+
+import manage.model.SgHotPotDistrict;
+import manage.model.SgHotPotDistrictOffline;
+import manage.smodel.PageBean;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-11-4 上午11:35:22
+ *@Version 1.0
+ *
+ */
+
+public interface IScenicAreaOfflineService {
+ public PageBean<SgHotPotDistrictOffline> getOfflinelineList(int page,int pageSize);
+ public SgHotPotDistrict getScenicAreaBeanByAreaId(int id);
+ public void saveDistrictInfo(SgHotPotDistrictOffline packageInfo);
+}
+

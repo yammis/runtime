@@ -1,0 +1,127 @@
+package manage.util.scenicareaoffline;
+
+import java.util.Iterator;
+import manage.model.SgHotPotDistrict;
+import manage.model.SgHotPotDistrictOffline;
+import manage.model.SgHpPlanChart;
+import manage.util.FileUtil;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import webservice.businessService.IScenicImageService;
+
+
+
+
+
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-11-4 下午2:59:16
+ *@Version 1.0
+ *
+ */
+
+public class areaXml {
+ 
+ public String scenicTitle;
+ public String coordinate;
+ public String descriptionPath;
+ public String routeLinePath;
+ public String tipPath;
+ public String ticketPath;
+ public String trafficPath;
+ public String mapPath;
+ public String thumbPath;
+ public String Size;
+ public String appConfig;
+ public SgHotPotDistrict areaBean;
+ public IScenicImageService imageService;
+ 
+ private String areaImageName="";
+ public  Document areaConfigxmlGen()
+ {
+	 Document document= DocumentHelper.createDocument();
+	 Element rootElement= document.addElement("scenic");
+	 rootElement.addElement("title").addText(areaBean.getHdTitle());
+	 Iterator<SgHotPotDistrictOffline> packageIter=areaBean.getSgHotPotDistrictOfflines().iterator();
+	 while(packageIter.hasNext())
+	 {
+		 SgHotPotDistrictOffline packageNext= packageIter.next();
+		 if(packageNext.getSize()==null)rootElement.addElement("size").addText("");
+		 else rootElement.addElement("size").addText(packageNext.getSize());
+	 }
+	 String latitude="";
+     String longitude="";
+	 if( areaBean.getHdCoordinatePosition()!=null)
+	 {
+       String[] coordinates=areaBean.getHdCoordinatePosition().split("\\,");
+       longitude=coordinates[0]; //经度
+       latitude=coordinates[1];  //纬度
+	 }
+	 else
+	 {
+		  latitude="";
+	      longitude="";
+	 }
+	 Element node1= rootElement.addElement("anchor");
+	 node1.addElement("latitude").addText(latitude);
+	 node1.addElement("longitude").addText(longitude);
+	 
+	 Element node2= rootElement.addElement("html");
+	 node2.addElement("item1").addAttribute("name", "景区介绍").addText(descriptionPath);
+	 node2.addElement("item2").addAttribute("name", "景区路线").addText(routeLinePath);
+	 node2.addElement("item3").addAttribute("name", "小贴士").addText(tipPath);
+	 node2.addElement("item4").addAttribute("name", "票务信息").addText(ticketPath);
+	 node2.addElement("item5").addAttribute("name", "交通路线").addText(trafficPath);
+	 
+	 Element node3=rootElement.addElement("resources");
+	 node3.addElement("thumbImage").addText(thumbPath+areaImageName+"zip");
+	 if(areaBean.getSgHpPlanChart()!=null)
+	 node3.addElement("map").addText(mapPath+areaBean.getSgHpPlanChart().getPcImageName());
+	 else  node3.addElement("map").addText("");
+	 rootElement.addElement("hotPotXmlPath").addText(appConfig);
+     
+	 return document;
+ }
+ 
+ public void areaFileHandler()
+ {
+	  //html文件
+			htmlGenerator.buildHtml(descriptionPath,areaBean.getHdDescription());
+			htmlGenerator.buildHtml(routeLinePath,areaBean.getHdInnerTraffic());
+			htmlGenerator.buildHtml(tipPath,areaBean.getHdTip());
+			htmlGenerator.buildHtml(ticketPath,areaBean.getHdTicketInfo());
+			htmlGenerator.buildHtml(trafficPath,areaBean.getHdTraffic());
+	 
+		SgHpPlanChart map=areaBean.getSgHpPlanChart();
+		//景区文件拷贝
+		//复制图片
+		areaImageName= imageService.getScenicImageBySortId(areaBean.getHdImageSortId(),false);
+		if(areaImageName!=null)
+		{
+		String sourceImagePath=xmlBasicConfig._VirtualThumbHpImgPath+areaImageName;
+		String targetImagePath=thumbPath+areaImageName;
+		FileUtil.copyByChannel(sourceImagePath, targetImagePath);
+		}
+		//复制地图 zip	
+	
+		if(map!=null)
+		{
+			String sourceMapPath=xmlBasicConfig._VirtualOriginalMapPath+map.getPcImageName()+".zip";
+			String targetMapPath=mapPath+map.getPcImageName()+".zip";
+			if(!map.getPcImageName().contains("\\."))
+	    	FileUtil.copyByChannel(sourceMapPath, targetMapPath);
+			else FileUtil.copyByChannel(sourceMapPath, mapPath+map.getPcImageName());
+		}
+		
+		saveXml();
+ }
+ 
+ public void saveXml()
+ {
+	 FileUtil.saveXml(xmlBasicConfig.destinationPath+areaBean.getId()+xmlBasicConfig.htmlCatalog[5], areaConfigxmlGen());
+ }
+}
+

@@ -1,0 +1,161 @@
+﻿$(function () {
+
+    $(".moudle-list").each(function () {
+        $(this).mouseover(function () {
+            if (!$(this).hasClass("clicked"))
+                $(this).css({"background-color":"#DFEBEB"});
+        });
+        $(this).mouseout(function () {
+            if (!$(this).hasClass("clicked"))
+                $(this).css({"background-color":""});
+        });
+        $(this).click(function () {
+            if (!$(this).hasClass("clicked")) {
+                $(this).css({"background-color":"#FCE6A2"});
+                $(this).addClass("clicked");
+            }
+            else {
+                $(this).css({"background-color":""});
+                $(this).removeClass("clicked");
+            }
+        });
+    });
+
+    $(".cm-edit").each(function () {
+
+        $(this).click(function () {
+
+            var strHtml = '<div id="sdds"> <h3 style="margin-left: 140px; margin-top: 20px; font-size:16px">  计费模式修改</h3> <div id="content-box" class="content-box">  <input type="hidden" id="edit-id" />';
+            strHtml += '<ul class="cg-item" style="height: 30px; margin-left: 50px; margin-top: 30px; line-height: 30px;"> <li><span>计费插件名称：</span><input style=" height:30px" type="text" id="name" /><label style="color: red;';
+            strHtml += 'padding-left: 3px; display: none">名字不少于两位</label></li> <li>计费模式状态：<span id="status"></span>开启';
+            strHtml += ' <input type="radio" name="ed_status" id="sw-open" value="True" />关闭<input type="radio" id="sw-close" name="ed_status" value="False" /></li>';
+            strHtml += ' <li><span></span><a id="jifei-save" href="javascript:;">保存</a></li>   </ul>  </div> </div>';
+
+            var defaults = {
+                contextHtml: strHtml,
+                contentWidth: 400,
+                contentHeight: 350
+            }
+            $.layerOpen(defaults);
+
+            var Name = $(this).parent().prev().prev().prev().text();
+            var id = $(this).parent().prev().prev().prev().prev().text();
+
+            var status = $(this).parent().prev().prev().text();
+            var bl;
+            if ($.trim(status) == "开启") {
+                $("#sw-open").attr("checked", "checked");
+            }
+            else {
+                $("#sw-close").attr("checked", "checked");
+            }
+
+            $("#edit-id").val($.trim(id));
+            $("#name").val($.trim(Name));
+        });
+    });
+
+    //添加弹出层
+    $("#btn-madd").live("click", function () {
+        var strHtml = '<div id="jifei_add">';
+        strHtml += ' <h3 style="margin-left: 140px; margin-top: 20px;  font-size:16px">   计费模式添加</h3>';
+        strHtml += ' <ul class="moudle-item" style="height: 30px; margin-left: 50px; margin-top: 30px; line-height: 30px;">';
+        strHtml += ' <li><span>计费模式名称：</span><input type="text" style=" height:30px" id="jifei-name" value="" /></li>';
+
+        strHtml += '<li>计费模式状态：<span id="user-role"></span>开启';
+        strHtml += ' <input type="radio" name="switcher" value="True" />关闭<input type="radio" name="switcher" value="False" /></li>';
+        strHtml += ' <li style="margin-top: 15px; margin-left: 20px;"><span></span><a id="minfo-Add" href="javascript:;">';
+        strHtml += '  保存</a><a id="minfo-close" style="margin-left: 20px;" href="javascript:;">关闭</a></li>';
+        strHtml += '</ul> </div>';
+        var defaults = {
+            contextHtml: strHtml,
+            contentWidth: 400,
+            contentHeight: 350
+        }
+        $.layerOpen(defaults);
+    });
+
+    //添加计费模式信息
+    $("#minfo-Add").live("click", function () {
+
+        var jifeiName = $("#jifei-name").val();
+        var New = document.getElementsByName("switcher");
+        var jifeiStatus;
+        for (var i = 0; i < New.length; i++) {
+            if (New.item(i).checked) {
+                jifeiStatus = New.item(i).getAttribute("value");
+                break;
+            } else {
+                continue;
+            }
+        }
+        if (jifeiStatus == "True") {
+            jifeiStatus = "1";
+        }
+        else { jifeiStatus = "0"; }
+
+        if (jifeiName != "" && jifeiStatus!="") {
+            $.post("page/addChargeMode", { modeName: jifeiName, status: jifeiStatus },
+             function (data) {
+                 if (data) {
+                  window.location.reload();
+                 }
+                 else alert("添加失败，请重试。");
+             });
+        }
+        else {
+            alert("添加内容不能为空！");
+        }
+    });
+
+    //修改计费模式信息
+    $("#jifei-save").live("click", function () {
+        var jifeiId = $("#edit-id").val();
+        var jifeiName = $("#name").val();
+
+        var New = document.getElementsByName("ed_status");
+        var jifeiStatus;
+        for (var i = 0; i < New.length; i++) {
+            if (New.item(i).checked) {
+                jifeiStatus = New.item(i).getAttribute("value");
+                break;
+            } else {
+                continue;
+            }
+        }
+        if (jifeiStatus == "True") {
+            jifeiStatus = "True";
+        }
+        else { jifeiStatus = "False"; }
+        if (jifeiId != "" && jifeiName != "") {
+            $.post("page/updateChargeMode", { modeId: jifeiId, modeName: jifeiName, modeStatus: jifeiStatus },
+                     function (data) {
+                         if (data.status) {
+                             window.location.reload();
+                         }
+                         else alert("修改失败，请重试。");
+                     },"json");
+        }
+        else {
+            alert("修改内容不能为空！");
+        }
+    });
+})
+
+
+//删除计费模式信息
+function chargeItemDel(id) {
+
+    if (confirm("确定删除?")) {
+        $.post("page/deleteChargeMode", { id: id }, function (data) {
+            if (data.status) {
+               $("#cg-"+id).parent().parent().remove();
+            }
+            else {
+                alert("删除失败！");
+            }
+        },"json");
+    }
+}
+
+

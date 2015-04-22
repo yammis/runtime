@@ -1,0 +1,60 @@
+package webservice.SOAPServices.Impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import manage.util.DESUtil;
+import manage.util.JsonUtil;
+
+
+
+import webservice.SOAPServices.IScenicAreaInfoByProvinceId;
+import webservice.businessService.IProvinceService;
+import webservice.businessService.IScenicAreaService;
+import webservice.vo.ScenicArea;
+
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-20 下午1:35:42
+ *@Version 1.0
+ *
+ */
+
+public class ScenicAreaInfoByProvinceId implements IScenicAreaInfoByProvinceId {
+	 private IProvinceService  scenicAreaDao;
+		
+	public IProvinceService getScenicAreaDao() {
+		return scenicAreaDao;
+	}
+
+	  @Resource(name="scenicAreaBean")
+	public void setScenicAreaDao(IProvinceService scenicAreaDao) {
+		this.scenicAreaDao = scenicAreaDao;
+	}
+
+
+
+
+	@Override
+	public String getScenicAreaInfoByProvinceId(String provinceId) {
+        String result=null;
+         List<ScenicArea> areaList= scenicAreaDao.getScenicAreaInfoByProId(provinceId);
+		 String jsonstr= JsonUtil.objToString(areaList);
+		  try {
+			result= DESUtil.EncryptDesBase64(jsonstr, DESUtil.DES_KEY).toString();
+		//	results=DESUtil.DecryptDesBase64(result, DESUtil.DES_KEY).toString();
+			  //result=DESUtil.des3EncodeCBC(key, keyiv, data)
+		//System.out.println(results);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return  result;
+	}
+
+}
+

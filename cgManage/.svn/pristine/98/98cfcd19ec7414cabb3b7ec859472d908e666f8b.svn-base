@@ -1,0 +1,109 @@
+package manage.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+/**
+ * SysMoudleJava entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name="sys_MoudleJava"
+    ,schema="dbo"
+    ,catalog="SceneryGuide"
+)
+
+public class SysMoudleJava  implements java.io.Serializable {
+
+
+    // Fields    
+
+     private Integer moudleId;
+     private String moudleName;
+     private String moudleUri;
+     private Integer parentId;
+     private Integer roleId;
+
+
+    // Constructors
+
+    /** default constructor */
+    public SysMoudleJava() {
+    }
+
+    
+    /** full constructor */
+    public SysMoudleJava(String moudleName, String moudleUri, Integer parentId, Integer roleId) {
+        this.moudleName = moudleName;
+        this.moudleUri = moudleUri;
+        this.parentId = parentId;
+        this.roleId = roleId;
+    }
+
+   
+    // Property accessors
+    @Id @GeneratedValue(strategy=IDENTITY)
+    
+    @Column(name="moudleId", unique=true, nullable=false)
+
+    public Integer getMoudleId() {
+        return this.moudleId;
+    }
+    
+    public void setMoudleId(Integer moudleId) {
+        this.moudleId = moudleId;
+    }
+    
+    @Column(name="moudleName")
+
+    public String getMoudleName() {
+        return this.moudleName;
+    }
+    
+    public void setMoudleName(String moudleName) {
+        this.moudleName = moudleName;
+    }
+    
+    @Column(name="moudleUri", length=50)
+
+    public String getMoudleUri() {
+        return this.moudleUri;
+    }
+    
+    public void setMoudleUri(String moudleUri) {
+        this.moudleUri = moudleUri;
+    }
+    
+    @Column(name="parentId")
+
+    public Integer getParentId() {
+        return this.parentId;
+    }
+    
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+    
+    @Column(name="roleId")
+
+    public Integer getRoleId() {
+        return this.roleId;
+    }
+    
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
+    }
+   
+
+
+
+
+
+
+
+
+}

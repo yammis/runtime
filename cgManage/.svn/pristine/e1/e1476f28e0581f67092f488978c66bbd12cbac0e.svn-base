@@ -1,0 +1,38 @@
+$(function(){
+	$(".hpimage").each(function(){
+	 var imgSort=$(this).attr("src");	
+	 var str=[];
+	 str=imgSort.split('|');
+	  imgSort=str[1];
+	 var imgObj=$(this);
+	 $.post("page/HdImgList",{imgSortId:imgSort},function(data){
+		// alert(data);
+		 if(data)
+	    {
+		 imgObj.attr("src",str[0].replace("|","")+eval(data));
+
+	     }
+	 })
+	 
+	})
+})
+
+function loadImg()
+{
+	$(".hpimage").each(function(){
+		 var imgSort=$(this).attr("src");	
+		 var str=[];
+		 str=imgSort.split('|');
+		  imgSort=str[1];
+		 var imgObj=$(this);
+		 $.post("page/HdImgList",{imgSortId:imgSort},function(data){
+			// alert(data);
+			 if(data)
+		    {
+			 imgObj.attr("src",str[0].replace("|","")+eval(data));
+
+		     }
+		 })
+		 
+		})
+}

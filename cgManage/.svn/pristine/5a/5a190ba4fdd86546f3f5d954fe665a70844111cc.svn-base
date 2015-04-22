@@ -1,0 +1,86 @@
+package manage.service.Impl;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.hibernate.Query;
+import org.springframework.stereotype.Service;
+
+import dao.IBaseDao;
+import manage.model.SgCity;
+import manage.model.SgHotPotDistrict;
+import manage.model.SgProvince;
+import manage.service.IProvinceCityService;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-8-28 上午9:10:47
+ *@Version 1.0
+ *
+ */
+
+@Service("proviceCityService")
+public class ProvinceCityServiceImpl implements IProvinceCityService {
+
+	private IBaseDao<SgProvince> provinceDao;
+	public IBaseDao<SgProvince> getProvinceDao() {
+		return provinceDao;
+	}
+	@Resource
+	public void setProvinceDao(IBaseDao<SgProvince> provinceDao) {
+		this.provinceDao = provinceDao;
+	}
+
+	private IBaseDao<SgCity> cityDao;
+	
+	public IBaseDao<SgCity> getCityDao() {
+		return cityDao;
+	}
+
+	@Resource
+	public void setCityDao(IBaseDao<SgCity> cityDao) {
+		this.cityDao = cityDao;
+	}
+
+	/* (non-Javadoc)
+	 * @see manage.service.IProvinceCityService#getProvinceList()
+	 */
+	@Override
+	public List<SgProvince> getProvinceList() {
+		// TODO Auto-generated method stub
+		String hql="select new list(id,province) from SgProvince p";
+	    List<SgProvince> province=provinceDao.get(hql);
+	    return province;
+	}
+
+	/* (non-Javadoc)
+	 * @see manage.service.IProvinceCityService#getCityList()
+	 */
+	@Override
+	public List<SgCity> getCityList(String id) {
+		// TODO Auto-generated method stub
+		//String hql="select new map(c.id as id,c.city as city) from SgCity c where c.sgProvince.id='"+id+"'";
+	//	String hql="select new map(p.id as id,p.province as province,(select count(id) from SgHotPotDistrict s  where s.id in ( select c.pid from SgCity c)) as count from SgProvince p"; 
+		//List<SgCity> city= cityDao.get(hql);
+		String hql="from SgProvince s";
+		List<SgProvince> provinceList=provinceDao.get(hql);
+		for(SgProvince p:provinceList)
+		{
+		Iterator<SgCity> iterCity= p.getSgCities().iterator();
+		while(iterCity.hasNext())
+		{
+		  iterCity.next().getSgHotPotDistricts().size();
+		}
+	  //System.out.println(	city.get(0).getSgHotPotDistricts().size());
+		}
+		
+		 return null;
+	}
+
+}
+

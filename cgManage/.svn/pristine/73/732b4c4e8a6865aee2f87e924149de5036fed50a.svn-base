@@ -1,0 +1,70 @@
+package manage.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+/**
+ * SgCommentUser entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sg_Comment_User", schema = "dbo", catalog = "SceneryGuide")
+public class SgCommentUser implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private SgCommentDistrict sgCommentDistrict;
+	private String toUserComment;
+
+	// Constructors
+
+	/** default constructor */
+	public SgCommentUser() {
+	}
+
+	/** full constructor */
+	public SgCommentUser(SgCommentDistrict sgCommentDistrict,
+			String toUserComment) {
+		this.sgCommentDistrict = sgCommentDistrict;
+		this.toUserComment = toUserComment;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "toDistrictCommentId")
+	public SgCommentDistrict getSgCommentDistrict() {
+		return this.sgCommentDistrict;
+	}
+
+	public void setSgCommentDistrict(SgCommentDistrict sgCommentDistrict) {
+		this.sgCommentDistrict = sgCommentDistrict;
+	}
+
+	@Column(name = "toUserComment")
+	public String getToUserComment() {
+		return this.toUserComment;
+	}
+
+	public void setToUserComment(String toUserComment) {
+		this.toUserComment = toUserComment;
+	}
+
+}

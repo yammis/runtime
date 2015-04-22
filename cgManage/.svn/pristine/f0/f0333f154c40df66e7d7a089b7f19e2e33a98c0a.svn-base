@@ -1,0 +1,10 @@
+$(function(){
+	
+	$("a").click(function(){
+		if(!isMobile()) window.location.href="download?r=4695f6252ac26e74d1659287c02d5d56";else alert('请在手机上使用浏览器打开本页面，或者扫描下面的二维码，即可安装');		
+	});
+})
+
+function isMobile() {
+return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+} 

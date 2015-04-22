@@ -1,0 +1,135 @@
+﻿var btnEdit = getClass("a", "btn");
+var mList = getClass("div", "moudle-list");
+$(function () {
+    for (var i = 0; i < mList.length; i++) {
+        mList[i].onmouseover = function () {
+            if (!$(this).hasClass("clicked")) 
+            this.style.background = "#DFEBEB";
+        }
+        mList[i].onmouseout = function () {
+            if (!$(this).hasClass("clicked")) 
+            this.style.background = "";
+        }
+        mList[i].onclick = function () {
+            if (!$(this).hasClass("clicked")) {
+                this.style.background = "#FCE6A2";
+                $(this).addClass("clicked");
+            }
+            else {
+                this.style.background = "";
+                $(this).removeClass("clicked");
+            }
+        }
+    }
+    for (var i = 0; i < btnEdit.length; i++) {
+        btnEdit[i].index = i;
+
+        btnEdit[i].onclick = function () {
+
+            var mUri = this.parentNode.previousElementSibling;
+            var mName = this.parentNode.previousElementSibling.previousElementSibling;
+            $("#moudle-name").val(mName.firstChild.innerHTML);
+            $("#moudle-uri").val(mUri.innerHTML);
+            $("#edit-id").val(this.parentNode.nextElementSibling.value);
+            DialogShow();
+        }
+    }
+})
+
+
+
+function getClass(tagName, className) //获得标签名为tagName,类名className的元素
+{
+    if (document.getElementsByClassName) //支持这个函数
+    {
+        return document.getElementsByClassName(className);
+    }
+    else {
+        var tags = document.getElementsByTagName(tagName); //获取标签
+        var tagArr = []; //用于返回类名为className的元素
+        for (var i = 0; i < tags.length; i++) {
+            if (tags[i].class == className) {
+                tagArr[tagArr.length] = tags[i]; //保存满足条件的元素
+            }
+        }
+        return tagArr;
+    }
+
+}
+function DialogShow() {
+    $("#overlay").show();
+    $("#context-holder").show();
+}
+//关闭编辑
+function DialogClose() {
+    $("#moudle-name").val("");
+    $("#moudle-uri").val("");
+    $("#overlay").hide();
+    $("#context-holder").hide();
+}
+$(".mbox-close").live("click", function () {
+    DialogClose();
+})
+//编辑 焦点变色
+$(".mbox-close").live("mouseover", function () {
+    $(this).attr("src", "../../Content/image/closehover.png");
+})
+//编辑 失去焦点
+$(".mbox-close").live("mouseout", function () {
+    $(this).attr("src", "../../Content/image/close.png");
+})
+
+$("#minfo-save").live("click", function () {
+    var mName = $("#moudle-name").val();
+    var mUri = $("#moudle-uri").val();
+    var mId = $("#edit-id").val();
+    $.post("/Moudle/moudleEdit", { moudleId: mId, moudleName: mName, moudleUri: mUri }, function (data) {
+        if (data.result) {
+            var originalObj = $("#m-" + mId + "").prev();
+            originalObj.prev().text(mUri);
+            originalObj.prev().prev().children().text(mName);
+            DialogClose();
+        }
+    });
+})
+
+//添加
+$("#btn-madd").live("click", function () {
+    DialogShow();
+    $("#minfo-save").attr("id", "minfo-add");
+    $(".mbox-close").attr("class", "mbox-add-close");
+});
+//关闭添加
+$(".mbox-add-close").live("click", function () {
+    $("#minfo-add").attr("id", "minfo-save");
+    $(".mbox-add-close").attr("class", "mbox-close");
+
+    DialogClose();
+});
+//添加 焦点变色
+$(".mbox-add-close").live("mouseover", function () {
+    $(this).attr("src", "../../Content/image/closehover.png");
+})
+$(".mbox-add-close").live("mouseout", function () {
+    $(this).attr("src", "../../Content/image/close.png");
+})
+//添加保存
+
+$("#minfo-add").live("click", function () {
+    var mName = $("#moudle-name").val();
+    var mUri = $("#moudle-uri").val();
+    $.post("/Moudle/moudleAdd", { moudleName: mName, moudleUri: mUri }, function (data) {
+        if (data.result) {
+            DialogClose();
+            var newStr = '<div class="moudle-list" style=" width: 940px; height: 40px; line-height: 40px;">';
+            newStr += '<div class="m-item" style=" width:100px; border:1px solid #ccc;  float:left"><span style=" padding-left:15px">' + mName + '</span>  </div>';
+            newStr += '<div class="m-item" style="  width:200px ;float:left; margin-left:105px">' + mUri + '</div>';
+            newStr += '<div class="m-item" style="  width:270px;  float:left; margin-left:20px; text-align:center"><a class="btn" href="javascript:;">编辑</a></div>';
+            newStr += '<input id="m-' + data.echoId + '" type="hidden" value="' + data.echoId + '" />';
+            newStr += '<div style=" clear:both"></div></div>';
+
+            $("#list-box").append(newStr);
+
+        }
+    });
+})

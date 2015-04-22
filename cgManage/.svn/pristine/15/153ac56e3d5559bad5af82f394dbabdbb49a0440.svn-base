@@ -1,0 +1,31 @@
+package manage.smodel;
+/**
+*
+*@Author yammis
+*@Date 2014-8-26 下午5:25:52
+*@Version 1.0
+*
+*/
+public class JsonMessage {
+ private boolean status=false;
+ public boolean isStatus() {
+	return status;
+}
+public void setStatus(boolean status) {
+	this.status = status;
+}
+public String getMessage() {
+	return message;
+}
+public void setMessage(String message) {
+	this.message = message;
+}
+public Object getObj() {
+	return obj;
+}
+public void setObj(Object obj) {
+	this.obj = obj;
+}
+private String message="";
+ private Object obj=null;
+}

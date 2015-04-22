@@ -1,0 +1,26 @@
+package manage.service;
+
+import java.util.List;
+import java.util.Map;
+
+import manage.model.SysSoftInfo;
+import manage.model.SysSoftWareSnapshot;
+import manage.smodel.PageBean;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-11-17 下午2:53:51
+ *@Version 1.0
+ *
+ */
+
+public interface ISoftWareService {
+ public void addSoftWareInfo(SysSoftInfo softInfo);
+ public void addSoftSnapshot(SysSoftWareSnapshot snapshot);
+ public PageBean<SysSoftInfo> getSoftWareList(int page,int pageSize);
+ public List<SysSoftWareSnapshot> getSoftSnapshotList(String snapShotSortid);
+ public void deleteSoftWareItem(int id);
+ public SysSoftInfo getSoftInfoForInstall();
+}
+

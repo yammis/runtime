@@ -1,0 +1,18 @@
+package manage.webservice;
+
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebService;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-9 下午4:25:02
+ *@Version 1.0
+ *
+ */
+@WebService()
+public interface test {
+	 String sayHi(@WebParam(name="text") String text);  
+}
+

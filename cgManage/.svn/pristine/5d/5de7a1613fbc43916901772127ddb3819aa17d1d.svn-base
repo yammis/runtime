@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- START SNIPPET: beans -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://cxf.apache.org/jaxws
+    http://cxf.apache.org/schemas/jaxws.xsd
+    ">                                                                                                                                                                                          
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+
+    <bean id="ProAreaBean" class="webservice.businessService.Impl.provinceServiceImpl"></bean>  
+    <!--<bean id="webs" class="webservice.SOAPServices.Impl.ProvinceNameScenicAreaCount"></bean>
+    <jaxws:endpoint id="cxfDemo" implementor="#webs" address="/getProvinceAreaInfo" />-->
+    
+    <jaxws:server id="proAreaInfoWS" serviceClass="webservice.SOAPServices.IProvinceNameScenicAreaCount" address="/getProvinceAreaInfo">
+  		<jaxws:serviceBean>
+  			<bean class="webservice.SOAPServices.Impl.ProvinceNameScenicAreaCount"/>
+  		</jaxws:serviceBean>
+  	</jaxws:server>
+  	
+  	<bean id="imageBean" class="webservice.businessService.Impl.ScenicImageServiceImpl"></bean>
+  	<bean id="scenicAreaBean" class="webservice.businessService.Impl.provinceServiceImpl"></bean>
+    <jaxws:server id="scenicAreaInfoWS" serviceClass="webservice.SOAPServices.IScenicAreaInfoByProvinceId" address="/getScenicAreaInfo">
+  		<jaxws:serviceBean>
+  			<bean class="webservice.SOAPServices.Impl.ScenicAreaInfoByProvinceId"/>
+  		</jaxws:serviceBean>
+  	</jaxws:server>
+  	
+  	<bean id="scenicPotBean" class="webservice.businessService.Impl.scenicAreaServiceImpl"></bean>
+    <jaxws:server id="scenicPotInfoWS" serviceClass="webservice.SOAPServices.IScenicPotInfoByAreaId" address="/getScenicPotInfo">
+  		<jaxws:serviceBean>
+  			<bean class="webservice.SOAPServices.Impl.ScenicPotInfoByAreaId"/>
+  		</jaxws:serviceBean>
+  	</jaxws:server>
+  	
+  	  	<bean id="scenicAreaGuideBean" class="webservice.businessService.Impl.scenicAreaServiceImpl"></bean>
+    <jaxws:server id="scenicAreaGuidesWS" serviceClass="webservice.SOAPServices.IScenicAreaGuidesByAreaId" address="/getScenicAreaGuides">
+  		<jaxws:serviceBean>
+  			<bean class="webservice.SOAPServices.Impl.ScenicAreaGuideByAreaId"/>
+  		</jaxws:serviceBean>
+  	</jaxws:server>
+  	
+  	  	<bean id="scenicAreaViewerBean" class="webservice.businessService.Impl.ViewerServiceImpl"></bean>
+    <jaxws:server id="scenicAreaViewWS" serviceClass="webservice.SOAPServices.IScenicAreaViewers" address="/getScenicAreaViewers">
+  		<jaxws:serviceBean>
+  			<bean class="webservice.SOAPServices.Impl.ScenicAreaViewers"/>
+  		</jaxws:serviceBean>
+  	</jaxws:server>
+</beans>

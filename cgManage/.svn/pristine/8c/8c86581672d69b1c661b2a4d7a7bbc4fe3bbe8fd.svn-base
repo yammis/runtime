@@ -1,0 +1,51 @@
+package webservice.businessService.Impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import manage.model.SgChargeSwitcher;
+import dao.IBaseDao;
+import webservice.businessService.IChargeModeService;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-24 下午3:52:07
+ *@Version 1.0
+ *
+ */
+
+public class ChargeModeServiceImpl implements IChargeModeService {
+ private IBaseDao<SgChargeSwitcher> chargeDao;
+
+	public IBaseDao<SgChargeSwitcher> getChargeDao() {
+	return chargeDao;
+}
+@Resource
+public void setChargeDao(IBaseDao<SgChargeSwitcher> chargeDao) {
+	this.chargeDao = chargeDao;
+}
+  /*
+   * 
+   * @return
+   * 0--免费模式；1--移动AMN模式；2--SMS模式
+   */
+	@Override
+	public String getChargeMode() {
+		// TODO Auto-generated method stub
+		String hql="from SgChargeSwitcher c where c.isCharge=true";
+		List<SgChargeSwitcher> chargeMode=chargeDao.get(hql);
+		if(chargeMode==null || chargeMode.size()==0)
+		{
+			return "0";
+		}
+		else if(chargeMode.get(0).getId()==1)
+		{
+			return "1";
+		}
+		else return "2";
+	}
+
+}
+

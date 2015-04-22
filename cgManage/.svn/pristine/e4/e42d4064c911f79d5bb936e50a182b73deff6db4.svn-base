@@ -1,0 +1,34 @@
+package webservice.SOAPServices.Impl;
+
+import javax.annotation.Resource;
+
+import webservice.SOAPServices.IChargeMode;
+import webservice.businessService.IChargeModeService;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-24 下午4:05:06
+ *@Version 1.0
+ *
+ */
+
+public class ChargeMode implements IChargeMode {
+private IChargeModeService modeService;
+
+	public IChargeModeService getModeService() {
+	return modeService;
+}
+@Resource(name="chargeModeBean")
+public void setModeService(IChargeModeService modeService) {
+	this.modeService = modeService;
+}
+
+	@Override
+	public String getChargeMode() {
+		// TODO Auto-generated method stub
+		return modeService.getChargeMode();
+	}
+
+}
+

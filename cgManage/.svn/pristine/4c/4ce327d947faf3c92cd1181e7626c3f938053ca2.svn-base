@@ -1,0 +1,54 @@
+package webservice.SOAPServices.Impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import manage.model.SgHotPotDistrict;
+import manage.util.DESUtil;
+import manage.util.JsonUtil;
+
+import webservice.SOAPServices.IScenicAreaPositionList;
+import webservice.businessService.IScenicAreaService;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-24 下午3:05:40
+ *@Version 1.0
+ *
+ */
+
+public class ScenicAreaPositionList implements IScenicAreaPositionList {
+    private IScenicAreaService areaService;
+
+	public IScenicAreaService getAreaService() {
+		return areaService;
+	}
+@Resource(name="scenicAreaPositionBean")
+	public void setAreaService(IScenicAreaService areaService) {
+		this.areaService = areaService;
+	}
+
+	@Override
+	public String getScenicAreaPositionList() {
+		// TODO Auto-generated method stub
+	    //String results=null;
+		String result=null;
+		List<Object[]> posObj= areaService.getScenicAreaPosition();
+		 String jsonstr= JsonUtil.objToString(posObj);
+		  try {
+			result= DESUtil.EncryptDesBase64(jsonstr, DESUtil.DES_KEY).toString();
+			//results=DESUtil.DecryptDesBase64(result, DESUtil.DES_KEY).toString();
+			  //result=DESUtil.des3EncodeCBC(key, keyiv, data)
+		//System.out.println(results);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return  result;
+	}
+
+}
+

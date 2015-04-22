@@ -1,0 +1,182 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <base href="<%=basePath%>">
+    
+    <title>软件添加</title>
+    
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+
+<link rel="stylesheet" href="<%=basePath %>localResources/bootstrap/css/bootstrap-responsive.min.css" type="text/css"></link>
+  <link rel="stylesheet" href="<%=basePath %>localResources/bootstrap/css/bootstrap.min.css" type="text/css"></link>
+<link href="<%=basePath %>localResources/js/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+  
+  <link rel="stylesheet" href="<%=basePath %>localResources/css/addHotPotDistrict.css" type="text/css"></link>
+   <script type="text/javascript" src="<%=basePath %>localResources/js/jquery-1.8.0.js"></script>
+   <script type="text/javascript" src="<%=basePath %>localResources/js/uploadify/jquery.uploadify.min.js"></script>
+  </head>
+  
+  <body>
+    <div style=" margin-left:20px">
+   <ol class="breadcrumb">
+            <i class="icon-home"></i>
+		   <li><a href="<%=basePath %>admin/logUserInfo.html" target="mainpage">首页</a></li>
+		<span class="divider">/</span>
+		   <li><a href="javascript:;" style="cursor:not-allowed">软件添加</a></li>
+  </ol>
+
+<div style="width: 910px;">
+    <form action="<%=basePath %>page/saveSoftWareInfo" method="post" enctype="multipart/form-data"
+    onsubmit="return HpContentCheck();" class="frm" style="width: 900px; height: 700px;">
+    <table width="width:910px;" cellspacing="1" cellpadding="0" bgcolor="#d2d2d2" style="margin-top: 5px">
+        
+        <tr>
+            <td width="136px" height="56" align="center" bgcolor="#e6e6e6">
+                <span style="color: red">*</span> 软件版本介绍：
+            </td>
+            <td width="800px" height="53" align="left" bgcolor="#FFFFFF" class="right-panle">
+                <label>
+                    <textarea  name="softWare.softDescription" id="softDescription" style="height: 50px; width: 190px;
+                        line-height: 50px"></textarea>
+                </label>
+            </td>
+        </tr>
+
+        <tr>
+            <td height="56" align="center" bgcolor="#e6e6e6">
+                <span style="color: red">*</span>图片预览
+            </td>
+            <td height="56" bgcolor="#FFFFFF" class="right-panle">
+                <div id="hpimgQueue">
+                </div>
+                <p>
+                    <a href="javascript:$('#softimg_upload').uploadify('upload','*')">上 传</a> | <a href="javascript:$('#softimg_upload').uploadify('cancel','*')">
+                        取消上传</a>
+                    <input type="hidden" value="0" name="sHimgId" id="hid-isupload" />
+                </p>
+            </td>
+        </tr>
+     <tr>
+            <td height="56" align="center" bgcolor="#e6e6e6">
+                <span style="color: red">*</span> 软件截图：
+            </td>
+            <td height="53" align="left" bgcolor="#FFFFFF" class="right-panle">
+                <input type="file" name="imgFile" id="softimg_upload" />
+                <input type="hidden" name="softWare.softSnapshotSortId" id="softImg_Info" />
+            </td>
+        </tr>
+     
+      <tr>
+            <td width="136px" height="56" align="center" bgcolor="#e6e6e6">
+                <span style="color: red">*</span> 软件版本号：
+            </td>
+            <td width="800px" height="53" align="left" bgcolor="#FFFFFF" class="right-panle">
+                <label>
+                    <input type="text"  name="softWare.versionId" id="versionId" style="height: 30px; width: 190px;
+                        line-height: 30px" />
+                </label>
+            </td>
+        </tr>
+
+        <tr>
+            <td height="56" align="center" bgcolor="#e6e6e6">
+                <span style="color: red">*</span>应用软件
+            </td>
+            <td height="56" bgcolor="#FFFFFF" class="right-panle">
+                <div id="voiceQueue">
+                </div>
+                <p>
+                    <a href="javascript:$('#softWare').uploadify('upload','*')">上 传</a> | <a href="javascript:$('#softWare').uploadify('cancel', '*')">
+                        取消上传</a>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td height="53" align="center" bgcolor="#e6e6e6">
+                <p>
+                    <span style="color: red">*</span> 应用软件<br />
+                    <br />
+                </p>
+            </td>
+            <td height="56" align="left" bgcolor="#FFFFFF" class="right-panle">
+                <input type="file" name="softFile" id="softWare" />
+                <input type="hidden" name="softInfo" id="softWare_Info" />
+                <input type="hidden" name="isUpload" id="hid-soft" value="0" />
+            </td>
+        </tr>
+    
+        <tr>
+            <td height="56" align="center" bgcolor="#e6e6e6">
+                &nbsp;
+            </td>
+            <td height="56" align="center" bgcolor="#FFFFFF" class="right-panle">
+                <input type="submit" style=" width:120px"  id="button" value="提交" class="btn btn-primary" >
+            </td>
+        </tr>
+    </table>
+    </form>
+   
+    <script type="text/javascript">
+    $(function () {
+
+        $('#softimg_upload').uploadify({
+            'auto': false,
+            'buttonText': '图片选择',
+            'queueSizeLimit': 10,
+            'fileSizeLimit': '4MB',
+            'queueID': 'hpimgQueue',
+            'fileObjName':'imgFile',
+            'fileTypeDesc': 'Image Files',
+            'fileTypeExts': '*.jpg; *.png;',
+            'multi': true,
+            'swf': '/cgManage/localResources/js/uploadify/uploadify.swf',
+            'uploader': 'uploadSoftWareImage',
+            'onQueueComplete': function () {
+                $("#hid-isupload").val("1");
+            },
+            'onUploadSuccess': function (file, data, response) {
+                var imgValue = $("#softImg_Info").val();
+                if (imgValue == "")
+                    $("#softImg_Info").val(eval(data));
+                else
+                    $("#softImg_Info").val(eval(data) + "|" + imgValue);
+            }
+        });
+
+    });
+
+    $(function () {
+        $('#softWare').uploadify({
+            'auto': false,
+            'buttonText': '文件选择',
+            'fileSizeLimit': '20MB',
+            'queueID': 'voiceQueue',
+            'fileObjName':'softFile',
+            'fileTypeDesc': 'Application File',
+            'fileTypeExts': '*.apk; *.ipa; *.zip',
+            'multi': false,
+            'swf': '/cgManage/localResources/js/uploadify/uploadify.swf',
+            'uploader': 'uploadSoftWare',
+            'onQueueComplete': function () {
+                $("#hid-soft").val("1");
+            },
+            'onUploadSuccess': function (file, data, response) {
+                $("#softWare_Info").val(eval(data));
+            }
+        });
+    });
+
+</script>
+</div>
+  </body>
+</html>

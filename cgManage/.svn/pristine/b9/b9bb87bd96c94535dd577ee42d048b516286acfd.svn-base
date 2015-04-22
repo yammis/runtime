@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+<!-- 指定由spring负责action对象的创建 -->
+	<constant name="struts.objectFactory" value="spring" />
+	<!-- 所有匹配*.action的请求都由struts2处理 -->
+	<constant name="struts.action.extension" value="action,do,htm,html,," />
+	<!-- 是否启用开发模式 -->
+	<constant name="struts.devMode" value="true" />
+	<!-- struts配置文件改动后，是否重新加载 -->
+	<constant name="struts.configuration.xml.reload" value="true" />
+	<!-- 设置浏览器是否缓存静态内容 -->
+	<constant name="struts.serve.static.browserCache" value="false" />
+	<!-- 请求参数的编码方式 -->
+	<constant name="struts.i18n.encoding" value="utf-8" />
+	<!-- 每次HTTP请求系统都重新加载资源文件，有助于开发 -->
+	<constant name="struts.i18n.reload" value="true" />
+	<!-- 文件上传最大值 -->
+	<constant name="struts.multipart.maxSize" value="104857600" />
+	<!-- 让struts2支持动态方法调用 -->
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+	<!-- Action名称中是否还是用斜线 -->
+	<constant name="struts.enable.SlashesInActionNames" value="false" />
+	<!-- 允许标签中使用表达式语法 -->
+	<constant name="struts.tag.altSyntax" value="true" />
+	<!-- 对于WebLogic,Orion,OC4J此属性应该设置成true -->
+	<constant name="struts.dispatcher.parametersWorkaround" value="false" />
+	<!-- 访问类的静态方法和属性设置为true -->
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true"/> 
+	
+	<package name="globalInterceptor" extends="struts-default">
+	  <interceptors>
+	   <interceptor name="ActionInterceptor" class="manage.myextends.interceptor.ActionInterceptor"></interceptor>
+	    <interceptor-stack name="InterceptorStack">
+	      <interceptor-ref name="ActionInterceptor"></interceptor-ref>
+	      <interceptor-ref name="defaultStack"></interceptor-ref>
+	    </interceptor-stack>
+	  </interceptors>
+	  
+	  		<default-interceptor-ref name="InterceptorStack" />
+	        <default-action-ref name="LogMeIn"></default-action-ref>
+	  		<global-results><result name="noLogin">/login.jsp</result></global-results>
+	</package>
+	
+	<package name="loginPackage" extends="globalInterceptor" namespace="/admin">	
+	    <action name="LogMeIn"><result name="noLogin">/login.jsp</result></action>
+	    <action name="welcome" class="manage.action.LoginAction" method="Login">
+	     </action>
+	    <action name="index" >
+	    <result name="success">/view/index.jsp</result>
+	    </action>
+	    <action name="logOut"  class="manage.action.LoginAction" method="loginOut">
+	     <result name="logOut">/login.jsp</result>
+	    </action>
+	    <action name="logUserInfo" class="manage.action.LoginAction" method="getLoginUserInfo">
+	     <result name="loadUserInfo">/template/main.jsp</result>
+	    </action>
+	</package>
+	
+	<package name="moudlePackage" extends="globalInterceptor"  namespace="/moudles">
+	 <action name="*_*"  class="manage.action.{1}Action" method="{2}">
+	  <result name="loadMenu">/template/menu.jsp</result>
+	 </action>
+	</package>
+	
+	<package name="pagePackage" extends="globalInterceptor"  namespace="/page">
+		 <action name="addHotPotDistrict" class="manage.action.ProvinceCityAction" method="provinceCityProvider">
+		 <result name="provinceCity" >/view/addHotPotDistrict.jsp</result>
+		 </action>
+		 
+		 <action name="getProviceList" class="manage.action.ProvinceCityAction" method="getProvinceCity">
+		 </action>
+		 <action name="hotPotDistrictList" class="manage.action.ScenicAreaAction" method="ScenicAreaList">
+		 <result name="areaList">/view/HotPotDistrictList.jsp</result></action>
+		 <action name="hotPotDistrictMore" class="manage.action.ScenicAreaAction" method="ScenicAreaListMore"><result name="areaMore">/view/HotPotDistrictList.jsp</result></action>
+		 <action name="deleteHotPotDistrict" class="manage.action.ScenicAreaAction" method="deleteScenicArea"></action>
+		 <action name="editHotPotDistrict" class="manage.action.ScenicAreaAction" method="ScenicAreaDetail">
+		  <result name="areaDetail">/view/editHotPotDistrict.jsp</result>
+		 </action>
+		 <action name="HdImgList" class="manage.action.ScenicAreaAction" method="AreaImageList"></action>
+			<!-- 城市列表 -->
+		 <action name="getCityList" class="manage.action.ProvinceCityAction" method="cityProvider"></action>
+		   <!-- 添加景区 -->
+		 <action name="submitScenicArea" class="manage.action.ScenicAreaAction" method="addScenicArea">
+		 <result name="areaList">/view/HotPotDistrictList.jsp</result></action>
+		   <!-- 获得景区详细信息 -->
+		 <action name="getAreaDetail" class="manage.action.ScenicAreaAction" method="ScenicAreaDetail">
+		  <result name="areaDetail">/view/HotPotDistrictDetail.jsp</result></action>
+		 <action name="HdImgAllList" class="manage.action.ScenicAreaAction" method="AllAreaImageList"></action>
+		 <action name="uploadAreaImage" class="manage.action.ScenicAreaAction" method="uploadAreaImage">
+		 </action>
+		 <action name="uploadMapImage" class="manage.action.ScenicAreaAction" method="uploadMapImage">
+		 </action>
+		 <!-- 景区编辑 -->
+		 <action name="editScenicArea"  class="manage.action.ScenicAreaAction" method="updateScenicArea">
+		  <result name="editToDetail" type="chain">
+		   <param name="actionName">getAreaDetail</param>
+		   <param name="areaid">${areaid}</param>
+		  </result>
+		 </action>
+		 
+		 <action name="getScenicAreaInfo" class="manage.action.ScenicAreaAction" method="getScenicAreaNameList"></action>
+		 <action name="addHotPot"><result>/view/addHotPot.jsp</result></action>
+		 <action name="submitScenicPot" class="manage.action.ScenicPotAction" method="saveScenicPot"></action>
+	     <action name="uploadPotImage" class="manage.action.ScenicPotAction" method="uploadPotImage"></action>
+	     <action name="uploadVoice" class="manage.action.ScenicPotAction" method="uploadPotVoice"></action>
+	    <action name="getScenicPotList" class="manage.action.ScenicPotAction" method="getScenicPotListByPid">
+	     <result name="scenicPotList">/view/hotpotList.jsp</result>
+	    </action>
+	    <action name="getScenicPotMore" class="manage.action.ScenicPotAction" method="getScenicPotListMore">
+	     <result name="scenicPotMore">/view/hotpotList.jsp</result>
+	    </action>
+	    
+	    <action name="deleteScenicPotInfo" class="manage.action.ScenicPotAction" method="deleteScenicPotById"></action>
+	    
+	   <action name="editScenicPotInfo" class="manage.action.ScenicPotAction" method="editScenicPot">
+	    <result name="editToScenicPot">/view/editHotPot.jsp</result>
+	   </action>
+	   
+	   <action name="updateScenicPot" class="manage.action.ScenicPotAction" method="editScenicPotInfo">
+	   <result name="scenicPotList">/view/hotpotList.jsp</result>
+	   </action>
+	   
+	   <!--搜索  -->
+	     <action name="searchByAreaName" class="manage.action.ScenicAreaAction" method="searchScenicArea">  </action>
+	     <action name="searchByPotName" class="manage.action.ScenicPotAction" method="searchScenicPot"></action>
+	      <!-- 收费模式 -->
+	     <action name="chargeMode"  class="manage.action.ChargeModeAction" method="chargeModeList"><result name="chargeModeManage">/view/chargeMode.jsp</result></action>
+	     <action name="addChargeMode" class="manage.action.ChargeModeAction" method="addNewMode"></action>
+	     <action name="deleteChargeMode" class="manage.action.ChargeModeAction" method="deleteModeItem"></action>
+	     <action name="updateChargeMode" class="manage.action.ChargeModeAction" method="updateModeItem"></action>
+	</package>
+	<constant name="struts.multipart.saveDir" value="/tmp"/>
+	<constant name="struts.multipart.maxSize" value="1024000000"/>
+</struts>

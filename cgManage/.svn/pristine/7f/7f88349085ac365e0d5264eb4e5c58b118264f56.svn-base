@@ -1,0 +1,141 @@
+package manage.model;
+
+import java.sql.Timestamp;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+/**
+ * SgOrder entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sg_Order", schema = "dbo", catalog = "SceneryGuide")
+public class SgOrder implements java.io.Serializable {
+
+	// Fields
+
+	private Integer SId;
+	private SgHotPotDistrict sgHotPotDistrict;
+	private SgUser sgUser;
+	private SgChargeSwitcher sgChargeSwitcher;
+	private String OOrderId;
+	private String OPayMobileNo;
+	private Timestamp OOrderTime;
+	private Timestamp ODealTime;
+	private Integer OStatus;
+
+	// Constructors
+
+	/** default constructor */
+	public SgOrder() {
+	}
+
+	/** full constructor */
+	public SgOrder(SgHotPotDistrict sgHotPotDistrict, SgUser sgUser,
+			SgChargeSwitcher sgChargeSwitcher, String OOrderId,
+			String OPayMobileNo, Timestamp OOrderTime, Timestamp ODealTime,
+			Integer OStatus) {
+		this.sgHotPotDistrict = sgHotPotDistrict;
+		this.sgUser = sgUser;
+		this.sgChargeSwitcher = sgChargeSwitcher;
+		this.OOrderId = OOrderId;
+		this.OPayMobileNo = OPayMobileNo;
+		this.OOrderTime = OOrderTime;
+		this.ODealTime = ODealTime;
+		this.OStatus = OStatus;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "s_Id", unique = true, nullable = false)
+	public Integer getSId() {
+		return this.SId;
+	}
+
+	public void setSId(Integer SId) {
+		this.SId = SId;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "o_HotPotDistrictId")
+	public SgHotPotDistrict getSgHotPotDistrict() {
+		return this.sgHotPotDistrict;
+	}
+
+	public void setSgHotPotDistrict(SgHotPotDistrict sgHotPotDistrict) {
+		this.sgHotPotDistrict = sgHotPotDistrict;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "o_AccountId")
+	public SgUser getSgUser() {
+		return this.sgUser;
+	}
+
+	public void setSgUser(SgUser sgUser) {
+		this.sgUser = sgUser;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "o_ChargeModeId")
+	public SgChargeSwitcher getSgChargeSwitcher() {
+		return this.sgChargeSwitcher;
+	}
+
+	public void setSgChargeSwitcher(SgChargeSwitcher sgChargeSwitcher) {
+		this.sgChargeSwitcher = sgChargeSwitcher;
+	}
+
+	@Column(name = "o_OrderId", length = 50)
+	public String getOOrderId() {
+		return this.OOrderId;
+	}
+
+	public void setOOrderId(String OOrderId) {
+		this.OOrderId = OOrderId;
+	}
+
+	@Column(name = "o_PayMobileNO", length = 11)
+	public String getOPayMobileNo() {
+		return this.OPayMobileNo;
+	}
+
+	public void setOPayMobileNo(String OPayMobileNo) {
+		this.OPayMobileNo = OPayMobileNo;
+	}
+
+	@Column(name = "o_OrderTime", length = 23)
+	public Timestamp getOOrderTime() {
+		return this.OOrderTime;
+	}
+
+	public void setOOrderTime(Timestamp OOrderTime) {
+		this.OOrderTime = OOrderTime;
+	}
+
+	@Column(name = "o_DealTime", length = 23)
+	public Timestamp getODealTime() {
+		return this.ODealTime;
+	}
+
+	public void setODealTime(Timestamp ODealTime) {
+		this.ODealTime = ODealTime;
+	}
+
+	@Column(name = "o_Status")
+	public Integer getOStatus() {
+		return this.OStatus;
+	}
+
+	public void setOStatus(Integer OStatus) {
+		this.OStatus = OStatus;
+	}
+
+}

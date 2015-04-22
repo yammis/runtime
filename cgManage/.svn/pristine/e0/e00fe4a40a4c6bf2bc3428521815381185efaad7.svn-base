@@ -1,0 +1,65 @@
+package manage.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * SysSoftWareSnapshot entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sys_SoftWareSnapshot", schema = "dbo", catalog = "SceneryGuide")
+public class SysSoftWareSnapshot implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private String imageName;
+	private String imageSortId;
+
+	// Constructors
+
+	/** default constructor */
+	public SysSoftWareSnapshot() {
+	}
+
+	/** full constructor */
+	public SysSoftWareSnapshot(String imageName, String imageSortId) {
+		this.imageName = imageName;
+		this.imageSortId = imageSortId;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@Column(name = "imageName", length = 50)
+	public String getImageName() {
+		return this.imageName;
+	}
+
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+
+	@Column(name = "imageSortId", length = 50)
+	public String getImageSortId() {
+		return this.imageSortId;
+	}
+
+	public void setImageSortId(String imageSortId) {
+		this.imageSortId = imageSortId;
+	}
+
+}

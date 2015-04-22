@@ -1,0 +1,65 @@
+package webservice.businessService.Impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import manage.model.SgHotPot;
+import manage.model.SgHpImage;
+
+import dao.IBaseDao;
+
+import webservice.businessService.IScenicImageService;
+import webservice.businessService.IScenicPotService;
+import webservice.vo.ScenicPotDetail;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-23 下午5:23:53
+ *@Version 1.0
+ *
+ */
+
+public class ScenicPotServiceImpl implements IScenicPotService {
+
+	private IBaseDao<SgHotPot> potDao;
+	private IScenicImageService imgserv;
+	public IScenicImageService getImgserv() {
+		return imgserv;
+	}
+	@Resource(name="imageBean")
+	public void setImgserv(IScenicImageService imgserv) {
+		this.imgserv = imgserv;
+	}
+	public IBaseDao<SgHotPot> getPotDao() {
+		return potDao;
+	}
+	@Resource
+	public void setPotDao(IBaseDao<SgHotPot> potDao) {
+		this.potDao = potDao;
+	}
+	@Override
+	public List<ScenicPotDetail> getScenicPotInfoByPotId(String potId) {
+		// TODO Auto-generated method stub
+		String hql="from SgHotPot s where s.id='"+potId+"'";
+		List<SgHotPot> potList=potDao.get(hql);
+		List<ScenicPotDetail> potdList=new ArrayList<ScenicPotDetail>();
+		
+		for(SgHotPot pot:potList)
+		{
+			ScenicPotDetail potd=new ScenicPotDetail();
+			potd.setId(pot.getId());
+			potd.setScenicPotDescription(pot.getHDescription());
+			potd.setScenicPotName(pot.getHTitle());
+			String imgName=imgserv.getScenicImageBySortId(pot.getHImageSortId(),true);
+            potd.setImgName(imgName);
+            potd.setVoiceName(pot.getSgHpVoice().getHpVoiceName());
+            potdList.add(potd);
+		}
+		return potdList;
+	}
+
+}
+

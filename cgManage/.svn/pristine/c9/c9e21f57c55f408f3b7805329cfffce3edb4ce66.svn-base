@@ -1,0 +1,54 @@
+package webservice.SOAPServices.Impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import manage.model.SgHotPotDistrict;
+import manage.util.DESUtil;
+import manage.util.JsonUtil;
+
+import webservice.SOAPServices.IScenicAreaViewers;
+import webservice.businessService.IViewerService;
+import webservice.vo.ScenicPot;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-23 下午2:03:40
+ *@Version 1.0
+ *
+ */
+
+public class ScenicAreaViewers implements IScenicAreaViewers {
+
+	private IViewerService areaViewer;
+	public IViewerService getAreaViewer() {
+		return areaViewer;
+	}
+	@Resource(name="scenicAreaViewerBean")
+	public void setAreaViewer(IViewerService areaViewer) {
+		this.areaViewer = areaViewer;
+	}
+	@Override
+	public String getScenicAreaViewer(String areaId) {
+		// TODO Auto-generated method stub
+	    String results=null;
+		String result=null;
+		 List<SgHotPotDistrict> view=areaViewer.getAreaViewer(areaId);
+		 String jsonstr= JsonUtil.objToString(view);
+		  try {
+			result= DESUtil.EncryptDesBase64(jsonstr, DESUtil.DES_KEY).toString();
+			results=DESUtil.DecryptDesBase64(result, DESUtil.DES_KEY).toString();
+			  //result=DESUtil.des3EncodeCBC(key, keyiv, data)
+		//System.out.println(results);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return  result;
+	}
+
+}
+

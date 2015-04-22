@@ -1,0 +1,20 @@
+package manage.util.scenicareaoffline;
+/**
+ *
+ *@Author yammis
+ *@Date 2014-11-6 上午11:24:51
+ *@Version 1.0
+ *
+ */
+
+public class xmlBasicConfig {
+       public static final String _VirtualThumbHpImgPath = "/UploadFiles/hotpotimg/Thumb/";
+       public static final String _VirtualOriginalMapPath = "/UploadFiles/hopotplatchart/";
+       public static final String[] catalogName = { "/html/", "/image/", "/image/thumb/", "/map/", "/app/", "/voice/", "/image/large/", "zip/" };
+       public static final String destinationPath = "HotPotDistrictPackage/ScenicAreaOffline/";
+       public static final String _VirtualVoicePath = "/UploadFiles/hotpotvoice/";
+       public static final String _VirtualLargeHpImgPath = "/UploadFiles/hotpotimg/Thumb/";
+       public static final String[] htmlCatalog={"description.html", "routeline.html","tip.html","ticket.html","traffic.html","/config.xml"};
+
+}
+

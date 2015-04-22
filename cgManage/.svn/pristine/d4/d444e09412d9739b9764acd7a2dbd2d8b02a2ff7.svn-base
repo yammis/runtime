@@ -1,0 +1,46 @@
+﻿$("#page-next").live("click", function () {
+    var pager = $("#curr-Pager").val();
+    $.post("/Manage/StuffListPager", { pageIndex: pager }, function (data) {
+        if (data.result != null) {
+            var dataJson = data.result;
+            var dynamtic = "";
+            //            dynamtic += "<tr>";
+            //             dynamtic +=' <td height="97" align="center" bgcolor="#FFFFFF">@item.hpDistrict.h_Title
+            //             dynamtic +=  </td>
+            //             dynamtic +=           <td align="center" bgcolor="#FFFFFF">@item.hpDistrict.h_City
+            //              dynamtic +=          </td>
+            //            dynamtic +=            <td align="center" bgcolor="#FFFFFF">
+            //                            @foreach (var image in item.hpImage.hp_ImageName.Split('|'))
+            //                            {
+            //                                <img src="@ViewData["VHpImg"]@image" alt=""  style="width:50px;height:50px" />
+            //      
+            //                            }
+            //                        </td>
+            //                        <td align="center" bgcolor="#FFFFFF">
+            //                            <p>@item.hpDistrict.h_Description</p>
+            //                        </td>
+            //                        <td>
+            //                            <audio controls="controls" preload="none" src="../../UploadFiles/hotpotvoice/@item.hpDistrict.sg_hpVoice.hp_VoiceName" width="50px">浏览器不支持    </audio>
+            //                        </td>
+            //                        <td align="left" bgcolor="#FFFFFF">
+            //                            <p>@item.hpDistrict.h_TitleIndex</p>
+            //                        </td>
+            //                        <td align="center" bgcolor="#FFFFFF">
+            //                            <img src="../../UploadFiles/hopotplatchart/@item.hpDistrict.sg_hpPlanChart.pc_ImageName" alt="" width="98" height="58" style="width:70;height:70px">
+            //                        </td>
+            //                        <td align="left" bgcolor="#FFFFFF">
+            //                            <p>@item.hpDistrict.h_InnerTraffic</p>
+            //                        </td>
+            //                        <td align="left" bgcolor="#FFFFFF">
+            //                            <p>@item.hpDistrict.h_Traffic</p>
+            //                        </td>
+            //                        <td align="center" bgcolor="#FFFFFF">@item.hpDistrict.h_Like
+            //                        </td>
+            //                        <td align="center" bgcolor="#FFFFFF">
+            //                            <a href="#">删除</a>|<a href="/manage/StuffEdit/@item.hpDistrict.id">修改</a>|<a href="/manage/StuffDetail/@item.hpDistrict.id">详情</a>
+            //                        </td>
+            //                    </tr>";
+            $("#data-hp-box").empty();
+        }
+    }, "json")
+})

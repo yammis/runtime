@@ -1,0 +1,186 @@
+package manage.model;
+
+import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+/**
+ * SgUser entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sg_User", schema = "dbo", catalog = "SceneryGuide")
+public class SgUser implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private String userMobile;
+	private String userPassword;
+	private String userNickName;
+	private String userPhoto;
+	private String userAge;
+	private Boolean userGender;
+	private String ipAdress;
+	private Timestamp regTime;
+	private Timestamp lastLoginTime;
+	private Boolean isAvaiable;
+	private Set<SgCommentDistrict> sgCommentDistricts = new HashSet<SgCommentDistrict>(
+			0);
+	private Set<SgOrder> sgOrders = new HashSet<SgOrder>(0);
+
+	// Constructors
+
+	/** default constructor */
+	public SgUser() {
+	}
+
+	/** full constructor */
+	public SgUser(String userMobile, String userPassword, String userNickName,
+			String userPhoto, String userAge, Boolean userGender,
+			String ipAdress, Timestamp regTime, Timestamp lastLoginTime,
+			Boolean isAvaiable, Set<SgCommentDistrict> sgCommentDistricts,
+			Set<SgOrder> sgOrders) {
+		this.userMobile = userMobile;
+		this.userPassword = userPassword;
+		this.userNickName = userNickName;
+		this.userPhoto = userPhoto;
+		this.userAge = userAge;
+		this.userGender = userGender;
+		this.ipAdress = ipAdress;
+		this.regTime = regTime;
+		this.lastLoginTime = lastLoginTime;
+		this.isAvaiable = isAvaiable;
+		this.sgCommentDistricts = sgCommentDistricts;
+		this.sgOrders = sgOrders;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@Column(name = "userMobile", length = 11)
+	public String getUserMobile() {
+		return this.userMobile;
+	}
+
+	public void setUserMobile(String userMobile) {
+		this.userMobile = userMobile;
+	}
+
+	@Column(name = "userPassword", length = 50)
+	public String getUserPassword() {
+		return this.userPassword;
+	}
+
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
+	}
+
+	@Column(name = "userNickName", length = 100)
+	public String getUserNickName() {
+		return this.userNickName;
+	}
+
+	public void setUserNickName(String userNickName) {
+		this.userNickName = userNickName;
+	}
+
+	@Column(name = "userPhoto", length = 50)
+	public String getUserPhoto() {
+		return this.userPhoto;
+	}
+
+	public void setUserPhoto(String userPhoto) {
+		this.userPhoto = userPhoto;
+	}
+
+	@Column(name = "userAge", length = 50)
+	public String getUserAge() {
+		return this.userAge;
+	}
+
+	public void setUserAge(String userAge) {
+		this.userAge = userAge;
+	}
+
+	@Column(name = "userGender")
+	public Boolean getUserGender() {
+		return this.userGender;
+	}
+
+	public void setUserGender(Boolean userGender) {
+		this.userGender = userGender;
+	}
+
+	@Column(name = "ipAdress", length = 50)
+	public String getIpAdress() {
+		return this.ipAdress;
+	}
+
+	public void setIpAdress(String ipAdress) {
+		this.ipAdress = ipAdress;
+	}
+
+	@Column(name = "regTime", length = 23)
+	public Timestamp getRegTime() {
+		return this.regTime;
+	}
+
+	public void setRegTime(Timestamp regTime) {
+		this.regTime = regTime;
+	}
+
+	@Column(name = "lastLoginTime", length = 23)
+	public Timestamp getLastLoginTime() {
+		return this.lastLoginTime;
+	}
+
+	public void setLastLoginTime(Timestamp lastLoginTime) {
+		this.lastLoginTime = lastLoginTime;
+	}
+
+	@Column(name = "isAvaiable")
+	public Boolean getIsAvaiable() {
+		return this.isAvaiable;
+	}
+
+	public void setIsAvaiable(Boolean isAvaiable) {
+		this.isAvaiable = isAvaiable;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sgUser")
+	public Set<SgCommentDistrict> getSgCommentDistricts() {
+		return this.sgCommentDistricts;
+	}
+
+	public void setSgCommentDistricts(Set<SgCommentDistrict> sgCommentDistricts) {
+		this.sgCommentDistricts = sgCommentDistricts;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sgUser")
+	public Set<SgOrder> getSgOrders() {
+		return this.sgOrders;
+	}
+
+	public void setSgOrders(Set<SgOrder> sgOrders) {
+		this.sgOrders = sgOrders;
+	}
+
+}

@@ -1,0 +1,59 @@
+$(function(){
+	$(".snapshotshow").each(function(){
+		var thisObj=$(this);
+		$(this).click(function(){
+			$.post("page/snapshotName",{sortId:$(this).prev().val()},function(data){
+				if(data)
+					{
+					   dataJson=eval(data);
+					   host= $("base").attr("href");
+					  $(document.body).append('<div id="overlay" style=" position:relative; top:-75%;width: 100%; height: 150%; background-color:#000;  z-index: 99; opacity: 0.5;"></div>');
+					  i=0;
+					  $("#overlay").after("<div style='position:absolute; top:35%;left:33%;z-index:101;background-color:White;box-shadow:3px 3px 3px 3px; width:auto;height:auto'><a style='display:block; cursor:pointer' class='imgSwitcher'><img id='imgbox' src='"+host+"UploadFiles/soft/snapshot/"+dataJson[i].image+"' /></a></div>");
+				
+					}
+			})
+			
+		});
+	})
+	$("#overlay").live("click",function(){
+		 $("#overlay").next().remove();
+			 $("#overlay").remove();
+
+		});
+	$(".imgSwitcher").live("click",function(){
+		if(i>=dataJson.length-1)
+			{
+			i=0; 
+			$("#imgbox").attr("src",""+host+"UploadFiles/soft/snapshot/"+dataJson[i].image+"");
+			} 
+		else
+			{
+			    i+=1;
+				$("#imgbox").attr("src",""+host+"UploadFiles/soft/snapshot/"+dataJson[i].image+"");		
+			}  
+	})
+})
+
+$(function(){
+	
+	$(".soft-del").each(function(){
+				$(this).click(function(){
+					if(confirm("确定删除？"))
+					{
+					var thisItem=$(this);
+					var id=thisItem.next().val();
+					$.post("page/deleteSoftById",{sortId:id},function(data){
+						if(data=="true")
+							{
+						   	thisItem.parent().parent().remove();
+							}
+					})
+					}
+				})
+			
+	})
+})
+
+
+	

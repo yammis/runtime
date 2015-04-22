@@ -1,0 +1,65 @@
+package manage.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * SysMoudleRole entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sys_moudle_role", schema = "dbo", catalog = "SceneryGuide")
+public class SysMoudleRole implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private Integer roleId;
+	private Integer moudleId;
+
+	// Constructors
+
+	/** default constructor */
+	public SysMoudleRole() {
+	}
+
+	/** full constructor */
+	public SysMoudleRole(Integer roleId, Integer moudleId) {
+		this.roleId = roleId;
+		this.moudleId = moudleId;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@Column(name = "roleId")
+	public Integer getRoleId() {
+		return this.roleId;
+	}
+
+	public void setRoleId(Integer roleId) {
+		this.roleId = roleId;
+	}
+
+	@Column(name = "moudleId")
+	public Integer getMoudleId() {
+		return this.moudleId;
+	}
+
+	public void setMoudleId(Integer moudleId) {
+		this.moudleId = moudleId;
+	}
+
+}

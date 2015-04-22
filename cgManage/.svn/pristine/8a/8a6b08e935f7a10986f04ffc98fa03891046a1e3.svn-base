@@ -1,0 +1,230 @@
+package dao.Impl;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import dao.IBaseDao;
+import manage.smodel.PageBean;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.stereotype.Repository;
+
+@Repository("baseDao")
+public class BaseDaoImpl<T>  implements IBaseDao<T>  {
+	
+	private SessionFactory sessionFactory;
+	
+public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+@Resource
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+private Session getCurrentSession()
+{
+	return this.sessionFactory.getCurrentSession();
+}
+
+@Override
+public T get(String hql, Map<String ,Object> params) {
+	// TODO Auto-generated method stub
+	Query q=this.getCurrentSession().createQuery(hql);
+	if(params!=null && !params.isEmpty())
+	{
+		
+		for(String key:params.keySet())
+		{
+			q.setParameter(key,params.get(key));
+		}
+		List<T> list=q.list();
+		if(list!=null && list.size()>0)
+		{		
+			return list.get(0);
+		}
+	}
+	return null;
+}
+
+@Override
+public List<T> get(String hql) {
+	// TODO Auto-generated method stub
+	Query q=this.getCurrentSession().createQuery(hql);
+		List<T> list=q.list();
+		if(list!=null && list.size()>0)
+		{		
+			return list;
+		}
+	return null;
+}
+
+@Override
+public Query getQueryList(String hql) {
+	// TODO Auto-generated method stub
+	Query q=this.getCurrentSession().createQuery(hql);
+		if(q!=null && q.list().size()>0)
+		{		
+			return q;
+		}
+	return null;
+}
+
+/* (non-Javadoc)
+ * @see manage.dao.IBaseDao#getList(java.lang.String, java.util.Map)
+ */
+@Override
+public List<T> getList(String hql, Map<String, Object> params) {
+	// TODO Auto-generated method stub
+	Query q=this.getCurrentSession().createQuery(hql);
+	if(params!=null && !params.isEmpty())
+	{
+		for(String key:params.keySet())
+		{
+			q.setParameter(key,params.get(key));
+		}
+		List<T> list=q.list();
+		if(list!=null && list.size()>0)
+		{
+			return list;
+		}
+	}
+	return null;
+}
+
+/* (non-Javadoc)
+ * @see manage.dao.IBaseDao#save(java.lang.Object)
+ */
+@Override
+public Serializable save(T o) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+/* (non-Javadoc)
+ * @see manage.dao.IBaseDao#saveT(java.lang.Object)
+ */
+@Override
+public void saveT(T t) {
+	// TODO Auto-generated method stub
+	this.getCurrentSession().save(t);
+}
+
+/* (non-Javadoc)
+ * @see manage.dao.IBaseDao#delete(java.lang.Object)
+ */
+@Override
+public void delete(T t) {
+	// TODO Auto-generated method stub
+	this.getCurrentSession().delete(t);
+}
+
+/* (non-Javadoc)
+ * @see manage.dao.IBaseDao#update(java.lang.Object)
+ */
+@Override
+public void update(T o) {
+	// TODO Auto-generated method stub
+	this.getCurrentSession().merge(o);
+	
+}
+
+/* (non-Javadoc)
+ * @see manage.dao.IBaseDao#saveOrUpdate(java.lang.Object)
+ */
+@Override
+public void saveOrUpdate(T o) {
+	// TODO Auto-generated method stub
+	
+}
+
+/* (non-Javadoc)
+ * @see manage.dao.IBaseDao#getPagedList(java.lang.String)
+ */
+@Override
+public PageBean<T> getPagedList(String hql,int pageSize,int page) {
+	// TODO Auto-generated method stub
+	Query q=this.getCurrentSession().createQuery(hql);
+	List<T> list=q.list();
+   
+	
+	int allRow=list.size();
+	int totalPage=PageBean.countTotalPage(pageSize, allRow);
+	int pageStrart=PageBean.countOffset(pageSize, page);
+	if(pageStrart < 0){pageStrart = 0;}
+	final int offset = pageStrart;
+	final int currentPage = PageBean.countCurrentPage(page);
+	if(page > totalPage){page = totalPage;}
+	  List<T> pagedList= q.setFirstResult(offset).setMaxResults(pageSize).list();
+	if(list!=null && list.size()>0)
+	{		
+		PageBean<T> pageBean=new PageBean<T>();
+		pageBean.setAllRow(allRow);
+		PageBean.setTotalPage(totalPage);
+		pageBean.setPageSize(pageSize);
+		pageBean.setCurrentPage(currentPage);
+		pageBean.setList(pagedList);
+		return pageBean;
+	}
+return null;
+}
+
+/* (non-Javadoc)
+ * @see manage.dao.IBaseDao#get(java.lang.Class, java.io.Serializable)
+ */
+@SuppressWarnings("unchecked")
+@Override
+public T get(Class<T> c, Serializable id) {
+	// TODO Auto-generated method stub
+	return (T) this.getCurrentSession().get(c, id);
+}
+
+/* (non-Javadoc)
+ * @see manage.dao.IBaseDao#executeHql(java.lang.String)
+ */
+@Override
+public int executeHql(String hql) {
+	// TODO Auto-generated method stub
+	Query query= this.getCurrentSession().createQuery(hql);
+	return query.executeUpdate();
+	
+}
+
+/* (non-Javadoc)
+ * @see dao.IBaseDao#getBySql(java.lang.String)
+ */
+@Override
+public List<T> getBySql(String sql,Class<T> c) {
+Query query=this.getCurrentSession().createSQLQuery(sql).addEntity(c);
+List<T> list=query.list();
+if(list!=null && list.size()>0)
+{
+	return list;
+}
+return null;
+}
+
+/* (non-Javadoc)
+ * @see dao.IBaseDao#getToPoJo(java.lang.String)
+ */
+//@Override
+//public List<T> getToPoJo(String hql,Class<T> c) {
+//	// TODO Auto-generated method stub
+//	Query query=this.getCurrentSession().createSQLQuery(hql)
+//	 .setResultTransformer(new EscColumnToBean(c));
+//	return query.list();
+//}
+
+
+/* (non-Javadoc)
+ * @see manage.dao.IBaseDao#findById(int)
+ */
+//@Override
+//public T findById(int id) {
+//	// TODO Auto-generated method stub
+//	return this.getCurrentSession().load(, id)
+//}
+}

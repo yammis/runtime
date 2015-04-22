@@ -1,0 +1,13 @@
+package webservice.businessService;
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-24 下午3:51:45
+ *@Version 1.0
+ *
+ */
+
+public interface IChargeModeService {
+ public String getChargeMode();
+}
+

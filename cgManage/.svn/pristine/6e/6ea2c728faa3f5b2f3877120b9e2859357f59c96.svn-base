@@ -1,0 +1,77 @@
+package manage.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * SgHpImage entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sg_hpImage", schema = "dbo", catalog = "SceneryGuide")
+public class SgHpImage implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private String hpImageName;
+	private String hpImageSortId;
+	private Boolean isAvaiable;
+
+	// Constructors
+
+	/** default constructor */
+	public SgHpImage() {
+	}
+
+	/** full constructor */
+	public SgHpImage(String hpImageName, String hpImageSortId,
+			Boolean isAvaiable) {
+		this.hpImageName = hpImageName;
+		this.hpImageSortId = hpImageSortId;
+		this.isAvaiable = isAvaiable;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@Column(name = "hp_ImageName", length = 100)
+	public String getHpImageName() {
+		return this.hpImageName;
+	}
+
+	public void setHpImageName(String hpImageName) {
+		this.hpImageName = hpImageName;
+	}
+
+	@Column(name = "hp_ImageSortId", length = 50)
+	public String getHpImageSortId() {
+		return this.hpImageSortId;
+	}
+
+	public void setHpImageSortId(String hpImageSortId) {
+		this.hpImageSortId = hpImageSortId;
+	}
+
+	@Column(name = "isAvaiable")
+	public Boolean getIsAvaiable() {
+		return this.isAvaiable;
+	}
+
+	public void setIsAvaiable(Boolean isAvaiable) {
+		this.isAvaiable = isAvaiable;
+	}
+
+}

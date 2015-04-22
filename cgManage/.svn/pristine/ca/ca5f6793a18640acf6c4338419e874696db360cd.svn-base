@@ -1,0 +1,59 @@
+package webservice.businessService.Impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.hibernate.Query;
+
+import manage.model.SgHotPot;
+import manage.model.SgHotPotDistrict;
+import dao.IBaseDao;
+import webservice.businessService.IViewerService;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-23 上午11:55:16
+ *@Version 1.0
+ *
+ */
+
+public class ViewerServiceImpl implements IViewerService {
+
+	private IBaseDao<SgHotPotDistrict> areaDao;
+	public IBaseDao<SgHotPotDistrict> getAreaDao() {
+		return areaDao;
+	}
+	@Resource
+	public void setAreaDao(IBaseDao<SgHotPotDistrict> areaDao) {
+		this.areaDao = areaDao;
+	}
+	@Override
+	public List<SgHotPotDistrict> getAreaViewer(String areaId) {
+		// TODO Auto-generated method stub
+		String hql="select new map(s.hdViewers as viewer) from SgHotPotDistrict s where s.id='"+areaId+"'";
+		List<SgHotPotDistrict> areaList= areaDao.get(hql);
+		
+		return areaList;
+	}
+
+	@Override
+	public void increaseAreaViewer(String areaId) {
+		// TODO Auto-generated method stub
+		SgHotPotDistrict viewer=new SgHotPotDistrict();
+		String hql="select s.hdViewers,s.id from SgHotPotDistrict s where s.id='"+areaId+"'";
+		Query q=areaDao.getQueryList(hql);
+		if(q!=null)
+		{
+			List<Object[]> viewList=q.list();
+			for(Object[] obj:viewList)
+			{
+				  viewer.setHdViewers(Integer.parseInt(obj[0].toString())+1);
+		          viewer.setId(Integer.parseInt(obj[1].toString()));
+			}
+		}
+		areaDao.update(viewer);
+	}
+}
+

@@ -1,0 +1,96 @@
+package manage.model;
+
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+/**
+ * SgHpPlanChart entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sg_hpPlanChart", schema = "dbo", catalog = "SceneryGuide")
+public class SgHpPlanChart implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private String pcImageName;
+	private Boolean isAvaiable;
+	private Set<SgHotPotDistrict> sgHotPotDistricts = new HashSet<SgHotPotDistrict>(
+			0);
+	private Set<SgHotPotDistrict> sgHotPotDistricts_1 = new HashSet<SgHotPotDistrict>(
+			0);
+
+	// Constructors
+
+	/** default constructor */
+	public SgHpPlanChart() {
+	}
+
+	/** full constructor */
+	public SgHpPlanChart(String pcImageName, Boolean isAvaiable,
+			Set<SgHotPotDistrict> sgHotPotDistricts,
+			Set<SgHotPotDistrict> sgHotPotDistricts_1) {
+		this.pcImageName = pcImageName;
+		this.isAvaiable = isAvaiable;
+		this.sgHotPotDistricts = sgHotPotDistricts;
+		this.sgHotPotDistricts_1 = sgHotPotDistricts_1;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@Column(name = "pc_ImageName", length = 100)
+	public String getPcImageName() {
+		return this.pcImageName;
+	}
+
+	public void setPcImageName(String pcImageName) {
+		this.pcImageName = pcImageName;
+	}
+
+	@Column(name = "isAvaiable")
+	public Boolean getIsAvaiable() {
+		return this.isAvaiable;
+	}
+
+	public void setIsAvaiable(Boolean isAvaiable) {
+		this.isAvaiable = isAvaiable;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sgHpPlanChart")
+	public Set<SgHotPotDistrict> getSgHotPotDistricts() {
+		return this.sgHotPotDistricts;
+	}
+
+	public void setSgHotPotDistricts(Set<SgHotPotDistrict> sgHotPotDistricts) {
+		this.sgHotPotDistricts = sgHotPotDistricts;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sgHpPlanChart")
+	public Set<SgHotPotDistrict> getSgHotPotDistricts_1() {
+		return this.sgHotPotDistricts_1;
+	}
+
+	public void setSgHotPotDistricts_1(Set<SgHotPotDistrict> sgHotPotDistricts_1) {
+		this.sgHotPotDistricts_1 = sgHotPotDistricts_1;
+	}
+
+}

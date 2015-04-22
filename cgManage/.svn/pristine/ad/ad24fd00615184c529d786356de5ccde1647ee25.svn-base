@@ -1,0 +1,106 @@
+package manage.service.Impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.hibernate.Query;
+import org.springframework.stereotype.Service;
+
+import dao.IBaseDao;
+import manage.model.SysSoftInfo;
+import manage.model.SysSoftWareSnapshot;
+import manage.service.ISoftWareService;
+import manage.smodel.PageBean;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-11-17 下午2:54:22
+ *@Version 1.0
+ *
+ */
+@Service("softWareService")
+public class SoftWareService implements ISoftWareService {
+
+
+	private IBaseDao<SysSoftInfo> softDao;
+    private IBaseDao<SysSoftWareSnapshot> snapshotDao;
+
+
+	
+	public IBaseDao<SysSoftWareSnapshot> getSnapshotDao() {
+		return snapshotDao;
+	}
+   @Resource
+	public void setSnapshotDao(IBaseDao<SysSoftWareSnapshot> snapshotDao) {
+		this.snapshotDao = snapshotDao;
+	}
+
+	public IBaseDao<SysSoftInfo> getSoftDao() {
+		return softDao;
+	}
+
+	@Resource
+	public void setSoftDao(IBaseDao<SysSoftInfo> softDao) {
+		this.softDao = softDao;
+	}
+
+	@Override
+	public void addSoftWareInfo(SysSoftInfo softInfo) {
+		// TODO Auto-generated method stub
+		softDao.saveT(softInfo);
+	}
+
+
+	@Override
+	public void addSoftSnapshot(SysSoftWareSnapshot snapshot) {
+		// TODO Auto-generated method stub
+		snapshotDao.saveT(snapshot);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.ISoftWareService#getSoftWareList()
+	 */
+	@Override
+	public PageBean<SysSoftInfo> getSoftWareList(int page,int pageSize) {
+		// TODO Auto-generated method stub
+		String hql="from SysSoftInfo soft";
+		PageBean<SysSoftInfo> pagedList=softDao.getPagedList(hql, pageSize, page);
+        return pagedList;
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.ISoftWareService#getSoftSnapshotList(java.lang.String)
+	 */
+	@Override
+	public List<SysSoftWareSnapshot> getSoftSnapshotList(String snapShotSortid) {
+		// TODO Auto-generated method stub
+		String hql="select new map(snap.imageName as image) from SysSoftWareSnapshot snap where snap.imageSortId='"+snapShotSortid+"'"; 
+		List<SysSoftWareSnapshot> snapList= snapshotDao.get(hql);
+		return snapList;
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.ISoftWareService#deleteSoftWareItem(java.lang.String)
+	 */
+	@Override
+	public void deleteSoftWareItem(int id) {
+		// TODO Auto-generated method stub
+		SysSoftInfo soft=softDao.get(SysSoftInfo.class, id);
+		softDao.delete(soft);
+	}
+	
+	@Override
+	public SysSoftInfo getSoftInfoForInstall() {
+		String hql="from SysSoftInfo soft where soft.versionId=(select max(s.versionId) from SysSoftInfo s)";
+		List<SysSoftInfo> softInfo=softDao.get(hql);
+		if(softInfo!=null && softInfo.size()>0)
+		{
+			return softInfo.get(0);
+		}
+		return null;
+	}
+
+
+ 
+}
+

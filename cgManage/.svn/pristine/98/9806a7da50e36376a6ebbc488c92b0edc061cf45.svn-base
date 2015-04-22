@@ -1,0 +1,45 @@
+package manage.util.scenicareaoffline;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
+
+import org.apache.struts2.ServletActionContext;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-11-4 下午5:28:52
+ *@Version 1.0
+ *
+ */
+
+public class htmlGenerator {
+
+
+
+/*
+ * destinationPath 文件全路径 =文件夹路径+文件名字
+ * content 写入内容
+ **/
+public static boolean buildHtml(String destinationPath,String content)
+{
+	boolean result=false;
+    String htmlTemplate="<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\"><html><head><meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"/><meta name=\"viewport\" content=\"width=300; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\"/><link rel=\"stylesheet\" type=\"text/css\" href=\"global.css\"/></head><body><div class=\"ui-content\">#</div></body>";
+	String realPath=ServletActionContext.getRequest().getRealPath(destinationPath);
+	htmlTemplate=htmlTemplate.replaceAll("#", content);
+	try {
+		OutputStreamWriter osw=new OutputStreamWriter(new FileOutputStream(realPath),"UTF-8");
+		osw.write(htmlTemplate);
+		osw.flush();
+		osw.close();
+		result=true;
+	} catch (IOException e) {
+		result=false;
+	}
+	return result;
+	
+}
+}
+

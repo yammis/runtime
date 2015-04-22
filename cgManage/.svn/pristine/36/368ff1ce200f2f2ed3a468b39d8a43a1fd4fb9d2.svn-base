@@ -1,0 +1,62 @@
+﻿if(self.location!=top.location) { top.location.href=self.location.href;}
+$(function () {
+	$("#uName").focus();
+
+		    $("#reglogin").click(function () {
+		        signin();
+		    });
+		    document.onkeydown = function (e) {
+		        window.event ? e = window.event : e;
+		        if (e.keyCode == 13) {
+		            signin();
+		            return false;
+		        }
+		    }
+
+})
+
+function check()
+{
+  var name=	$("#uName");
+  var pass= $("#uPass");
+  var tip=$("#errorTip");
+  if(name.val()=="" )
+	  {
+	   name.focus();
+	   tip.text("登录名不能为空！");
+	   return false;
+	  }
+  else if(name.val()!="")
+	  {
+	  tip.text("");
+	  }
+   if(pass.val()=="")
+	  {
+	   pass.focus();
+	   tip.text("密码不能为空！");
+	   return false;
+	  }
+   else if(pass.val()!="")
+	   {
+	   tip.text("");
+	   }
+  return true;
+}
+
+ function signin () {
+	 if(check())
+		 {
+		    var name = $("#uName").val();
+		    var pass = $("#uPass").val();
+		    $.post("/cgManage/admin/welcome.html", { sysName: name, sysPass: pass }, function (data) {
+		        if (data.status ) {
+		            location.href="/cgManage/admin/index.html";
+		        }
+		        else
+		        	{
+		        	 $("#errorTip").html(data.message);
+		        	 return false;
+		        	}
+		    },"json");
+		 }
+}

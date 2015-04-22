@@ -1,0 +1,46 @@
+package manage.action;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+import manage.model.SysMoudle;
+import manage.service.IMenuService;
+/**
+*
+*@Author yammis
+*@Date 2014-8-26 下午5:25:52
+*@Version 1.0
+*
+*/
+public class MenuAction extends ActionSupport {
+ 
+	private IMenuService menuService;
+	private List<SysMoudle> moudles; 
+
+	public List<SysMoudle> getMoudles() {
+		return moudles;
+	}
+
+	public void setMoudles(List<SysMoudle> moudles) {
+		this.moudles = moudles;
+	}
+
+	public IMenuService getMenuService() {
+		return menuService;
+	}
+
+	@Autowired
+	public void setMenuService(IMenuService menuService) {
+		this.menuService = menuService;
+	}
+	
+	public String MoudleList()
+	{
+		this.moudles= menuService.getMoudleList();
+		return "loadMenu";
+	}
+	
+}

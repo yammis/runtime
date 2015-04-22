@@ -1,0 +1,33 @@
+﻿$(function () {
+    $(".sa-gen").each(function () {
+        $(this).click(function () {
+            var id = $(this).next().val();
+            var offid=$(this).next().next().val();
+            $.post("page/packageGen", { areaId: id,offlineId:offid }, function (data) {
+                if (data) {
+                    location = location;
+                    alert("生成成功!");
+
+                }
+            },"json")
+        })
+    })
+})
+
+
+ $(function(){
+   
+           $.post("page/snapshotName",{sortId:$("#sortId").val()},function(d){
+             var dataJson=eval(d);
+             if(dataJson!=null && dataJson!="")
+             {
+               for(var i=0;i<=dataJson.length;i++)
+               {
+	              var snapHtml='<td class="text-center" width="20%" style="border:none;"><div style=""> <img style="width:230px;" src="<%=basePath %>UploadFiles/soft/snapshot/'+dataJson[i].image+'"></div> </td>';
+	              $("#sortId").after(snapHtml);
+               }
+             }
+           });
+  })
+
+

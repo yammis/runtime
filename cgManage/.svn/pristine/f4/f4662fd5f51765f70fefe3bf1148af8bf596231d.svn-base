@@ -1,0 +1,95 @@
+package manage.model;
+
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+/**
+ * SgSmsCode entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sg_SmsCode", schema = "dbo", catalog = "SceneryGuide")
+public class SgSmsCode implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private String soCodeName;
+	private Integer soCodeType;
+	private Boolean isClosed;
+	private Set<SgSmsCodeProvinceCarrier> sgSmsCodeProvinceCarriers = new HashSet<SgSmsCodeProvinceCarrier>(
+			0);
+
+	// Constructors
+
+	/** default constructor */
+	public SgSmsCode() {
+	}
+
+	/** full constructor */
+	public SgSmsCode(String soCodeName, Integer soCodeType, Boolean isClosed,
+			Set<SgSmsCodeProvinceCarrier> sgSmsCodeProvinceCarriers) {
+		this.soCodeName = soCodeName;
+		this.soCodeType = soCodeType;
+		this.isClosed = isClosed;
+		this.sgSmsCodeProvinceCarriers = sgSmsCodeProvinceCarriers;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@Column(name = "so_CodeName", length = 20)
+	public String getSoCodeName() {
+		return this.soCodeName;
+	}
+
+	public void setSoCodeName(String soCodeName) {
+		this.soCodeName = soCodeName;
+	}
+
+	@Column(name = "so_CodeType")
+	public Integer getSoCodeType() {
+		return this.soCodeType;
+	}
+
+	public void setSoCodeType(Integer soCodeType) {
+		this.soCodeType = soCodeType;
+	}
+
+	@Column(name = "isClosed")
+	public Boolean getIsClosed() {
+		return this.isClosed;
+	}
+
+	public void setIsClosed(Boolean isClosed) {
+		this.isClosed = isClosed;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sgSmsCode")
+	public Set<SgSmsCodeProvinceCarrier> getSgSmsCodeProvinceCarriers() {
+		return this.sgSmsCodeProvinceCarriers;
+	}
+
+	public void setSgSmsCodeProvinceCarriers(
+			Set<SgSmsCodeProvinceCarrier> sgSmsCodeProvinceCarriers) {
+		this.sgSmsCodeProvinceCarriers = sgSmsCodeProvinceCarriers;
+	}
+
+}

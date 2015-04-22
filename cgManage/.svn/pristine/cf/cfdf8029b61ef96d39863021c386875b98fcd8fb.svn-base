@@ -1,0 +1,105 @@
+package manage.action;
+
+
+
+import java.util.List;
+import java.util.Map;
+
+import manage.model.SysUser;
+import manage.service.ILoginService;
+import manage.service.ILoginUserInfoService;
+import manage.smodel.JsonMessage;
+
+import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.interceptor.SessionAware;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ActionContext;
+/**
+*
+*@Author yammis
+*@Date 2014-8-26 下午5:25:52
+*@Version 1.0
+*
+*/
+public class LoginAction extends BaseAction implements SessionAware {
+
+	private static final Logger logger = Logger.getLogger(LoginAction.class);
+	private Map<String,Object> session;
+	private List<SysUser> users;
+public List<SysUser> getUsers() {
+		return users;
+	}
+	public void setUsers(List<SysUser> users) {
+		this.users = users;
+	}
+
+private ILoginService LoginService;
+private ILoginUserInfoService loginInfoService;
+
+public ILoginUserInfoService getLoginInfoService() {
+	return loginInfoService;
+}
+@Autowired
+public void setLoginInfoService(ILoginUserInfoService loginInfoService) {
+	this.loginInfoService = loginInfoService;
+}
+public ILoginService getLoginService() {
+	return LoginService;
+}
+@Autowired
+public void setLoginService(ILoginService loginService) {
+	LoginService = loginService;
+}
+
+@Override
+public void setSession(Map<String, Object> session) {
+	// TODO Auto-generated method stub
+	this.session=session;
+}
+
+
+public String loginOut()
+{
+	session.remove("uName");
+	session.clear();
+	return "logOut";
+}
+
+public void Login()  {
+	String name=	ServletActionContext.getRequest().getParameter("sysName");
+	String pass=ServletActionContext.getRequest().getParameter("sysPass");
+	SysUser user=new SysUser();
+	user.setSysName(name);
+	user.setSysPass(pass);
+	user= LoginService.loginCheck(user);
+	JsonMessage jm =new JsonMessage();
+	if (user != null) {
+		jm.setStatus(true);
+		session.put("uName",user.getSysName().toString());
+		LoginService.coutLogin(user);
+	} else {
+		jm.setStatus(false);
+		jm.setMessage("登录失败，用户名或密码错误！");
+	}
+
+	super.writeJson(jm);
+}
+
+public String getLoginUserInfo()
+{
+	@SuppressWarnings("unchecked")
+	Map<String,Object> session=(Map<String,Object>)ActionContext.getContext().get(ServletActionContext.SESSION);
+	SysUser u=new SysUser();
+	if(session!=null && session.get("uName")!="")
+	{
+		u.setSysName(session.get("uName").toString());
+		this.users=loginInfoService.getLoginUserInfo(u);
+		
+	}
+	return "loadUserInfo";
+}
+
+
+}

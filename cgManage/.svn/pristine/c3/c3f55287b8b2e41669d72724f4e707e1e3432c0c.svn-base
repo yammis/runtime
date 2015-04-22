@@ -1,0 +1,93 @@
+package manage.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Version;
+
+/**
+ * SgHotPotDistrictOffline entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sg_HotPotDistrictOffline", schema = "dbo", catalog = "SceneryGuide")
+public class SgHotPotDistrictOffline implements java.io.Serializable {
+
+	// Fields
+
+	private Integer offlineId;
+	private Integer timeStamp;
+	private SgHotPotDistrict sgHotPotDistrict;
+	private String size;
+	private Boolean isNewVersion;
+
+	// Constructors
+
+	/** default constructor */
+	public SgHotPotDistrictOffline() {
+	}
+
+	/** full constructor */
+	public SgHotPotDistrictOffline(SgHotPotDistrict sgHotPotDistrict,
+			String size, Boolean isNewVersion) {
+		this.sgHotPotDistrict = sgHotPotDistrict;
+		this.size = size;
+		this.isNewVersion = isNewVersion;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "offlineId", unique = true, nullable = false)
+	public Integer getOfflineId() {
+		return this.offlineId;
+	}
+
+	public void setOfflineId(Integer offlineId) {
+		this.offlineId = offlineId;
+	}
+
+	@Version
+	@Column(name = "timeStamp")
+	public Integer getTimeStamp() {
+		return this.timeStamp;
+	}
+
+	public void setTimeStamp(Integer timeStamp) {
+		this.timeStamp = timeStamp;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "districtId")
+	public SgHotPotDistrict getSgHotPotDistrict() {
+		return this.sgHotPotDistrict;
+	}
+
+	public void setSgHotPotDistrict(SgHotPotDistrict sgHotPotDistrict) {
+		this.sgHotPotDistrict = sgHotPotDistrict;
+	}
+
+	@Column(name = "Size")
+	public String getSize() {
+		return this.size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
+	}
+
+	@Column(name = "isNewVersion")
+	public Boolean getIsNewVersion() {
+		return this.isNewVersion;
+	}
+
+	public void setIsNewVersion(Boolean isNewVersion) {
+		this.isNewVersion = isNewVersion;
+	}
+
+}

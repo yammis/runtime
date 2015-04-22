@@ -1,0 +1,51 @@
+package manage.service.Impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import dao.IBaseDao;
+import manage.model.SysUser;
+import manage.service.ILoginUserInfoService;
+
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-8-27 下午2:27:30
+ *@Version 1.0
+ *
+ */
+@Service("loginInfoService")
+public class LoginUserInfoServiceImpl implements ILoginUserInfoService {
+	private IBaseDao<SysUser> userDao;
+
+	public IBaseDao<SysUser> getUserDao() {
+		return userDao;
+	}
+
+	@Resource
+	public void setUserDao(IBaseDao<SysUser> userDao) {
+		this.userDao = userDao;
+	}
+
+	/* (non-Javadoc)
+	 * @see manage.service.ILoginUserInfoService#getLoginUserInfo()
+	 */
+	@Override
+	public List<SysUser> getLoginUserInfo(SysUser user) {
+		// TODO Auto-generated method stub
+		Map<String,Object> params=new HashMap<String,Object>();
+		params.put("uName", user.getSysName());
+		
+		List<SysUser> lUser=userDao.getList("from SysUser s where s.sysName= :uName", params);		
+			return lUser;
+
+	}
+	
+}
+

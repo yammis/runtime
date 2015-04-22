@@ -1,0 +1,18 @@
+package webservice.SOAPServices;
+
+import javax.jws.WebService;
+
+import webservice.conf.wsConf;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-24 下午4:04:55
+ *@Version 1.0
+ *
+ */
+@WebService(targetNamespace=wsConf.cg_TargetNamespace, serviceName="ChargeMode")
+public interface IChargeMode {
+public String getChargeMode();
+}
+

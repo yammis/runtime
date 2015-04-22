@@ -1,0 +1,60 @@
+package webservice.businessService.Impl;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.jws.WebService;
+
+import manage.model.SgCity;
+import manage.model.SgProvince;
+import dao.IBaseDao;
+
+import webservice.businessService.IProvinceService;
+import webservice.vo.ProvinceNameScenicCount;
+
+
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-13 上午10:55:35
+ *@Version 1.0
+ *
+ */
+public class provinceServiceImpl implements IProvinceService {
+
+	private IBaseDao<SgProvince> provinceDao;
+	public IBaseDao<SgProvince> getProvinceDao() {
+		return provinceDao;
+	}
+	@Resource
+	public void setProvinceDao(IBaseDao<SgProvince> provinceDao) {
+		this.provinceDao = provinceDao;
+	}
+	@Override
+	public List<ProvinceNameScenicCount> getProvinceAreaInfoList() {
+		//String hql="select new map(p.id as id,p.province as province) from SgProvince p";
+		String hql="from SgProvince s";
+		List<SgProvince> provinceList=provinceDao.get(hql);
+		List<ProvinceNameScenicCount> pncList=new ArrayList<ProvinceNameScenicCount>();
+		
+		for(SgProvince p:provinceList)
+		{
+			ProvinceNameScenicCount pnsc=new ProvinceNameScenicCount();
+			pnsc.setId(p.getId());
+			pnsc.setProvinceName(p.getProvince());
+			Iterator<SgCity> iterCity= p.getSgCities().iterator();
+			while(iterCity.hasNext())
+			{
+				pnsc.setScenicAreaCount(iterCity.next().getSgHotPotDistricts().size());
+			}
+			pncList.add(pnsc);
+		}
+		return pncList;
+	}
+  
+}
+

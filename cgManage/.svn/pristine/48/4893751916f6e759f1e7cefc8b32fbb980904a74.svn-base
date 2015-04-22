@@ -1,0 +1,66 @@
+package manage.action;
+
+import java.util.List;
+import javax.annotation.Resource;
+import org.apache.struts2.ServletActionContext;
+import manage.model.SgCity;
+import manage.model.SgProvince;
+import manage.service.IProvinceCityService;
+import com.opensymphony.xwork2.ActionSupport;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-8-28 上午11:23:09
+ *@Version 1.0
+ *
+ */
+
+public class ProvinceCityAction extends ActionSupport{
+
+	private static final long serialVersionUID = 1L;
+    private IProvinceCityService provinceCityService;
+   private List<SgProvince> provinceList;
+  
+
+public List<SgProvince> getProvinceList() {
+	return provinceList;
+}
+
+public void setProvinceList(List<SgProvince> provinceList) {
+	this.provinceList = provinceList;
+}
+
+public IProvinceCityService getProvinceCityService() {
+	return provinceCityService;
+}
+
+@Resource
+public void setProvinceCityService(IProvinceCityService provinceCityService) {
+	this.provinceCityService = provinceCityService;
+}
+
+public String provinceCityProvider()
+{
+	provinceList= provinceCityService.getProvinceList();
+	return "provinceCity";
+}
+
+public void getProvinceCity()
+{
+	provinceList= provinceCityService.getProvinceList();
+	BaseAction.writeJson(provinceList);
+}
+
+public void cityProvider()
+{
+	//BaseAction baseAction=new BaseAction();
+	String id=ServletActionContext.getRequest().getParameter("id");
+	
+	List<SgCity> cityList= provinceCityService.getCityList(id);
+
+	BaseAction.writeJson(cityList);
+}
+
+}
+

@@ -1,0 +1,127 @@
+package manage.model;
+
+import java.sql.Timestamp;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+/**
+ * SysUser entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sys_User", schema = "dbo", catalog = "SceneryGuide")
+public class SysUser implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private SysRole sysRole;
+	private String sysName;
+	private String sysPass;
+	private Timestamp lastLoginDate;
+	private Integer loginCouter;
+	private Timestamp createDate;
+	private Boolean isAvaiable;
+
+	// Constructors
+
+	/** default constructor */
+	public SysUser() {
+	}
+
+	/** full constructor */
+	public SysUser(SysRole sysRole, String sysName, String sysPass,
+			Timestamp lastLoginDate, Integer loginCouter, Timestamp createDate,
+			Boolean isAvaiable) {
+		this.sysRole = sysRole;
+		this.sysName = sysName;
+		this.sysPass = sysPass;
+		this.lastLoginDate = lastLoginDate;
+		this.loginCouter = loginCouter;
+		this.createDate = createDate;
+		this.isAvaiable = isAvaiable;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "roleId")
+	public SysRole getSysRole() {
+		return this.sysRole;
+	}
+
+	public void setSysRole(SysRole sysRole) {
+		this.sysRole = sysRole;
+	}
+
+	@Column(name = "sys_Name")
+	public String getSysName() {
+		return this.sysName;
+	}
+
+	public void setSysName(String sysName) {
+		this.sysName = sysName;
+	}
+
+	@Column(name = "sys_Pass", length = 50)
+	public String getSysPass() {
+		return this.sysPass;
+	}
+
+	public void setSysPass(String sysPass) {
+		this.sysPass = sysPass;
+	}
+
+	@Column(name = "lastLoginDate", length = 23)
+	public Timestamp getLastLoginDate() {
+		return this.lastLoginDate;
+	}
+
+	public void setLastLoginDate(Timestamp lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
+	}
+
+	@Column(name = "loginCouter")
+	public Integer getLoginCouter() {
+		return this.loginCouter;
+	}
+
+	public void setLoginCouter(Integer loginCouter) {
+		this.loginCouter = loginCouter;
+	}
+
+	@Column(name = "CreateDate", length = 23)
+	public Timestamp getCreateDate() {
+		return this.createDate;
+	}
+
+	public void setCreateDate(Timestamp createDate) {
+		this.createDate = createDate;
+	}
+
+	@Column(name = "IsAvaiable")
+	public Boolean getIsAvaiable() {
+		return this.isAvaiable;
+	}
+
+	public void setIsAvaiable(Boolean isAvaiable) {
+		this.isAvaiable = isAvaiable;
+	}
+
+}

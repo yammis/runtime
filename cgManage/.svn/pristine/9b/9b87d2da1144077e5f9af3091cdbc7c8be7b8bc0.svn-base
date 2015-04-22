@@ -1,0 +1,13 @@
+function delHpItem(id)
+{
+	if (confirm("删除景点将会附带删除其所属的语音信息，确定删除?")) {
+		$.post("page/deleteScenicPotInfo",{potId:id},function(data){
+			var dataJson=eval(data);
+			if(dataJson)
+				{
+				 $("#pot-"+id+"").remove();
+				}
+			
+		},"json");
+	}
+}

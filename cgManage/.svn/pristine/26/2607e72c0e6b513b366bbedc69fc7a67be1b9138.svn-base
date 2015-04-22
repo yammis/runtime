@@ -1,0 +1,32 @@
+import javax.annotation.Resource;
+
+import org.junit.Test;
+
+import webservice.businessService.IProvinceService;
+import webservice.businessService.Impl.provinceServiceImpl;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-10 下午4:42:44
+ *@Version 1.0
+ *
+ */
+
+public class asdfsd {
+	private IProvinceService ss;
+	public IProvinceService getSs() {
+		return ss;
+	}
+	@Resource
+	public void setSs(IProvinceService ss) {
+		this.ss = ss;
+	}
+	@Test
+	public void mains()
+	{
+		provinceServiceImpl ii=new provinceServiceImpl();
+		ii.getProvinceAreaInfoList();
+	}
+}
+

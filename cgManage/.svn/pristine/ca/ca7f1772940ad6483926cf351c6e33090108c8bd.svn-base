@@ -1,0 +1,49 @@
+package manage.filter;
+
+import java.io.IOException;
+
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-11 下午5:15:57
+ *@Version 1.0
+ *
+ */
+
+public class MyStrutsPrepareAndExecuteFilter extends StrutsPrepareAndExecuteFilter {
+
+	@Override
+	public void destroy() {
+		// TODO Auto-generated method stub
+		super.destroy();
+	}
+
+	@Override
+	public void doFilter(ServletRequest arg0, ServletResponse arg1,
+			FilterChain arg2) throws IOException, ServletException {
+		// TODO Auto-generated method stub
+		  String requestURI = ((HttpServletRequest) arg0).getRequestURI();
+	        if(requestURI != null && requestURI.contains("/ws/"))           
+	            arg2.doFilter(arg0, arg1);       
+	        else
+	            super.doFilter(arg0, arg1, arg2); 
+	}
+
+	@Override
+	public void init(FilterConfig arg0) throws ServletException {
+		// TODO Auto-generated method stub
+		super.init(arg0);
+	}
+	
+ 
+}
+

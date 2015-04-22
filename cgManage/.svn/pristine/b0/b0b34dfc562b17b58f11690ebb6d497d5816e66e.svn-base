@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+	<table name="sys_MoudleJava" schema="dbo" catalog="SceneryGuide"></table>
+	<table name="sg_HotPotDistrict_HotPotImage" schema="dbo"
+		catalog="SceneryGuide">
+		<primary-key>
+			<generator class="identity"></generator>
+		</primary-key>
+	</table>
+	<table name="sg_Carrier" schema="dbo" catalog="SceneryGuide">
+		<primary-key>
+			<generator class="identity"></generator>
+		</primary-key>
+	</table>
+	<table name="w_Order" schema="dbo" catalog="SceneryGuide">
+		<primary-key>
+			<generator class="identity"></generator>
+		</primary-key>
+	</table>
+	<table name="phone_region" schema="dbo" catalog="SceneryGuide">
+		<primary-key>
+			<generator class="identity"></generator>
+		</primary-key>
+	</table>
+<table name="sg_ChargeSwitcher" schema="dbo" catalog="SceneryGuide">
+	<primary-key>
+		<generator class="identity"></generator>
+	</primary-key>
+</table>
+</hibernate-reverse-engineering>

@@ -1,0 +1,19 @@
+package webservice.businessService;
+
+import java.util.List;
+
+import manage.model.SgHpImage;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-21 下午4:47:38
+ *@Version 1.0
+ *
+ */
+
+public interface IScenicImageService {
+	  public String getScenicImageBySortId(String sortId,boolean isFetchAll);
+	  public List<SgHpImage> getScenicImageList(String sortId);
+}
+

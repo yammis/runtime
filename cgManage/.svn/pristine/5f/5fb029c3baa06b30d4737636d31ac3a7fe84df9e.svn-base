@@ -1,0 +1,71 @@
+package manage.service.Impl;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.hibernate.Query;
+import org.springframework.stereotype.Service;
+
+import dao.IBaseDao;
+import manage.model.SgCity;
+import manage.model.SgHotPotDistrict;
+import manage.model.SgProvince;
+import manage.service.IProvinceCityService;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-8-28 上午9:10:47
+ *@Version 1.0
+ *
+ */
+
+@Service("proviceCityService")
+public class ProvinceCityServiceImpl implements IProvinceCityService {
+
+	private IBaseDao<SgProvince> provinceDao;
+	public IBaseDao<SgProvince> getProvinceDao() {
+		return provinceDao;
+	}
+	@Resource
+	public void setProvinceDao(IBaseDao<SgProvince> provinceDao) {
+		this.provinceDao = provinceDao;
+	}
+
+	private IBaseDao<SgCity> cityDao;
+	
+	public IBaseDao<SgCity> getCityDao() {
+		return cityDao;
+	}
+
+	@Resource
+	public void setCityDao(IBaseDao<SgCity> cityDao) {
+		this.cityDao = cityDao;
+	}
+
+	/* (non-Javadoc)
+	 * @see manage.service.IProvinceCityService#getProvinceList()
+	 */
+	@Override
+	public List<SgProvince> getProvinceList() {
+		// TODO Auto-generated method stub
+		String hql="select new list(id,province) from SgProvince p";
+	    List<SgProvince> province=provinceDao.get(hql);
+	    return province;
+	}
+
+
+	@Override
+	public List<SgCity> getCityList(String id) {
+		// TODO Auto-generated method stub
+		String hql="select new map(c.id as id,c.city as city) from SgCity c where c.sgProvince.id='"+id+"'";
+		List<SgCity> city= cityDao.get(hql);	
+		 return city;
+	}
+
+}
+

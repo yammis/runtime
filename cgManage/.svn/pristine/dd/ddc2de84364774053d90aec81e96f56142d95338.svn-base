@@ -1,0 +1,63 @@
+package webservice.SOAPServices.Impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import manage.util.DESUtil;
+import manage.util.JsonUtil;
+
+
+
+import webservice.SOAPServices.IScenicAreaInfoByProvinceId;
+import webservice.businessService.IProvinceService;
+import webservice.businessService.IScenicAreaService;
+import webservice.vo.ScenicArea;
+
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-20 下午1:35:42
+ *@Version 1.0
+ *
+ */
+
+public class ScenicAreaInfoByProvinceId implements IScenicAreaInfoByProvinceId {
+	 private IScenicAreaService  scenicAreaService;
+		
+	public IScenicAreaService getScenicAreaService() {
+		return scenicAreaService;
+	}
+	  @Resource(name="scenicAreaBean")
+	public void setScenicAreaService(IScenicAreaService scenicAreaService) {
+		this.scenicAreaService = scenicAreaService;
+	}
+
+
+
+
+
+
+	@Override
+	public String getScenicAreaInfoByProvinceId(String provinceId) {
+        String result=null;
+         //List<ScenicArea> areaList= scenicAreaService.getScenicAreaInfoByProId(provinceId);
+		 List<Map> areaList=scenicAreaService.getScenicAreaByProvinceId(provinceId);
+        String jsonstr= JsonUtil.objToString(areaList);
+		  try {
+			result= DESUtil.EncryptDesBase64(jsonstr, DESUtil.DES_KEY).toString();
+		//	results=DESUtil.DecryptDesBase64(result, DESUtil.DES_KEY).toString();
+			  //result=DESUtil.des3EncodeCBC(key, keyiv, data)
+		//System.out.println(results);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return  result;
+	}
+
+}
+

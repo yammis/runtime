@@ -1,0 +1,232 @@
+﻿$(function () {
+
+
+
+
+    $(".moudle-list").each(function () {
+        $(this).mouseover(function () {
+            if (!$(this).hasClass("clicked"))
+                $(this).css("background-color", "#DFEBEB");
+        });
+        $(this).mouseout(function () {
+            if (!$(this).hasClass("clicked"))
+                $(this).css("background-color", "");
+        });
+        $(this).click(function () {
+            if (!$(this).hasClass("clicked")) {
+                $(this).css("background-color", "#FCE6A2");
+                $(this).addClass("clicked");
+            }
+            else {
+                $(this).css("background-color", "");
+                $(this).removeClass("clicked");
+            }
+        });
+    });
+
+    //编辑role信息
+    $(".btn").each(function () {
+        $(this).live("click", function () {
+            var roleName = $(this).parent().prev().prev().text();
+            var roleId = $(this).parent().prev().prev().prev().text();
+
+            $("#role-name").val(roleName);
+            $("#edit-id").val(roleId);
+            var ckbox = "";
+            $.post("/SysRole/getUserList", { roleId: roleId }, function (data) {
+                var userinfo = eval(data.rUser);
+                if (userinfo != "") {
+                    ckbox += "<div style=' padding-right:10px;  color:blue'>组内成员:</div><div>";
+                    for (var i = 0; i < userinfo.length; i++) {
+                        ckbox += '<label>' + userinfo[i].roleUser + '</label><input type="checkbox" checked="checked" class="ck-user"/>';
+                    }
+                    ckbox += '</div>';
+                }
+                //列出unAvaiable用户列表
+                $.post("/SysRole/getUnAvaiableUserList", function (data) {
+                    var unAvaiableUser = eval(data.unUser);
+                    ckbox += "<div style=' padding-right:10px; color:blue;  '>组外成员:</div><div style=' padding-top:5px'>"
+                    for (var i = 0; i < unAvaiableUser.length; i++) {
+
+                        ckbox += '<label>' + unAvaiableUser[i].unUser + '</label><input type="checkbox" class="ck-user"/>';
+                    }
+                    ckbox += '</div>';
+                    $("#user-list").append(ckbox);
+
+                    //在点击编辑事件后注册 checkbox
+                    $(".ck-user").each(function () {
+                        $(this).click(function () {
+                            var isChecked = $(this).attr("checked");
+                            var uName = $(this).prev().text();
+                            $.post("/SysRole/setUserIsAvaiable", { roleId: roleId, isAvaiable: isChecked, userName: uName }, function (data) {
+                                if (data.rResult) {
+                                    
+                                }
+                            })
+
+                        });
+                    });
+                })
+            });
+            DialogShow();
+
+        });
+    });
+
+
+})
+
+
+//保存角色编辑信息
+$("#rinfo-save").live("click", function () {
+    var rName = $("#role-name").val();
+    var rId = $("#edit-id").val();
+    $.post("/SysRole/saveRoleName", { roleId: rId, roleName: rName }, function (data) {
+        if (data.rResult) {
+            $("#r-"+rId+"").prev().prev().prev().text(rName);
+            DialogClose();
+        }
+    });
+
+});
+
+
+$(".mbox-close").live("click", function () {
+    DialogClose();
+})
+
+//编辑 焦点变色
+$(".mbox-close").live("mouseover", function () {
+    $(this).attr("src", "../../Content/image/closehover.png");
+})
+//编辑 失去焦点
+$(".mbox-close").live("mouseout", function () {
+    $(this).attr("src", "../../Content/image/close.png");
+})
+
+
+//角色编辑 显示
+function DialogShow() {
+    $("#overlay").show();
+    $("#context-holder").show();
+    $("#content-box").show();
+}
+
+//角色管理关闭编辑
+function DialogClose() {
+    $("#role-name").val("");
+
+    $("#user-list").empty();
+    $("#overlay").hide();
+    $("#context-holder").hide();
+}
+
+//新添加
+$("#btn-radd").live("click", function () {
+    $("#context-holder").show();
+    $("#content-box").hide();
+    buildNewRoleDialog();
+
+})
+
+//添加 焦点变色
+$(".new-rbox-close").live("mouseover", function () {
+    $(this).attr("src", "../../Content/image/closehover.png");
+})
+//添加 失去焦点
+$(".new-rbox-close").live("mouseout", function () {
+    $(this).attr("src", "../../Content/image/close.png");
+})
+//添加 关闭
+$(".new-rbox-close").live("click", function () {
+    $("#context-holder").hide();
+    $("#new-role-box").remove();
+})
+
+//添加用户构造
+function buildNewRoleDialog() {
+    var dialogHtml = '  <div id="new-role-box">';
+    dialogHtml +='<div style="float: right; padding: 3px 3px 0 0;">';
+      dialogHtml +='  <a href="javascript:;">';
+      dialogHtml += '   <img src="../../Content/image/close.png" class="new-rbox-close" alt="关闭" />';
+      dialogHtml +='  </a>';
+     dialogHtml +='</div>';
+    dialogHtml +='<ul class="user-item">';
+    dialogHtml += '   <li><span>角色名：</span><input type="text" id="new-role-name" /><label style=" color:red; padding-left:3px; display:none">名字不少于两位</label></li>';
+     dialogHtml += '   <li><span></span><a id="new-role-save" href="javascript:;">保存</a></li>';
+    dialogHtml +='</ul>';
+   dialogHtml +=' </div>';
+    $("#context-holder").append(dialogHtml);
+}
+
+$("#new-role-save").live("click", function () {
+    var roleName = $("#new-role-name").val();
+    $.post("/SysRole/NewRoleInfo", { roleName: roleName }, function (data) {
+        if (data.rResult > 0) {
+            var newRecord = '<div style="width: 920px; height: 40px; line-height: 40px;" class="moudle-list">';
+              newRecord +='<div style=" width:100px;  float:left;text-align:center;" class="m-item"><span>'+data.rResult +'</span>  </div>';
+              newRecord += '<div style=" width:200px ; float:left; text-align:center; " class="m-item">' + roleName + '</div>';
+              newRecord +='<div style=" width:330px ;float:left;text-align:center; " class="m-item">';
+              newRecord +='暂无</div>';
+
+              newRecord += '<div style=" width:270px;  float:left; margin-left:20px; text-align:center" class="m-item"><a href="javascript:;" class="btn">编辑</a></div>';
+              newRecord += '<input type="hidden" value="' + data.rResult + '" id="r-' + data.rResult + '">';
+         
+              newRecord +='</div>';
+              $("#list-box").append(newRecord);
+              $("#context-holder").hide();
+              $("#new-role-box").remove();
+        }
+    })
+  })
+
+  function roleDelete(id) {
+      if (confirm("确定删除？")) {
+          $.post("/SysRole/delRoleInfo", { rid: id }, function (data) {
+              if (data.rResult) {
+                  $("#r-" + id + "").parent().remove();
+              }
+          })
+      }
+  }
+
+
+  function editAuthority(id) {
+
+      $("#overlay").show();
+      $("#context-holder").hide();
+      roleToModuleBuilder();
+  }
+
+
+  function roleToModuleBuilder()
+  {
+      var dialogHtml = '  <div id="role-module-box" style="width: 400px; height: 350px; position: absolute;background-color: White; z-index: 110; top: 40%; left: 30%; border: 2px solid #ccc; box-shadow: 0 0 9px #999999; ">';
+    dialogHtml +='<div style="float: right; padding: 3px 3px 0 0;">';
+      dialogHtml +='  <a href="javascript:;">';
+      dialogHtml += '   <img src="../../Content/image/close.png" class="new-mbox-close" alt="关闭" />';
+      dialogHtml +='  </a>';
+     dialogHtml +='</div>';
+    dialogHtml +='<ul class="user-item">';
+    dialogHtml += '   <li class="moudle-list"></li>';
+     dialogHtml += '   <li><span></span><a id="new-role-save" href="javascript:;">保存</a></li>';
+    dialogHtml +='</ul>';
+   dialogHtml +=' </div>';
+   $("#overlay").after(dialogHtml);
+}
+
+//模块权限
+$(".new-mbox-close").live("click", function () {
+    $("#overlay").hide();
+    $("#role-module-box").remove();
+})
+
+
+//模块权限 焦点变色
+$(".new-mbox-close").live("mouseover", function () {
+    $(this).attr("src", "../../Content/image/closehover.png");
+})
+//模块权限 失去焦点
+$(".new-mbox-close").live("mouseout", function () {
+    $(this).attr("src", "../../Content/image/close.png");
+})

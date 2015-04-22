@@ -1,0 +1,55 @@
+package webservice.SOAPServices.Impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import manage.model.SgHotPotDistrict;
+import manage.util.DESUtil;
+import manage.util.JsonUtil;
+
+import webservice.SOAPServices.IScenicAreaGuidesByAreaId;
+import webservice.businessService.IScenicAreaService;
+import webservice.vo.ScenicArea;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-23 上午11:15:11
+ *@Version 1.0
+ *
+ */
+
+public class ScenicAreaGuideByAreaId implements IScenicAreaGuidesByAreaId {
+  private IScenicAreaService guideService;
+
+	public IScenicAreaService getGuideService() {
+	return guideService;
+}
+@Resource(name="scenicAreaGuideBean")
+public void setGuideServices(IScenicAreaService guideService) {
+	this.guideService = guideService;
+}
+
+	@Override
+	public String getScenicAreaInfoByProvinceId(String areaId) {
+		// TODO Auto-generated method stub
+		String results=null;
+		String result=null;
+        List<SgHotPotDistrict> guideList=guideService.getScenicAreaGuides(areaId);
+		 String jsonstr= JsonUtil.objToString(guideList);
+		  try {
+			result= DESUtil.EncryptDesBase64(jsonstr, DESUtil.DES_KEY).toString();
+			results=DESUtil.DecryptDesBase64(result, DESUtil.DES_KEY).toString();
+			  //result=DESUtil.des3EncodeCBC(key, keyiv, data)
+		//System.out.println(results);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return  result;
+	}
+
+}
+

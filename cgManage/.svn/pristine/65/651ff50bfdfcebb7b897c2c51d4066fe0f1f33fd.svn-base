@@ -1,0 +1,124 @@
+package manage.util.scenicareaoffline;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import manage.model.SgHotPot;
+import manage.model.SgHpImage;
+import manage.util.FileUtil;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.springframework.stereotype.Component;
+
+import webservice.businessService.IScenicImageService;
+
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-11-5 下午5:11:35
+ *@Version 1.0
+ *
+ */
+public class potXml {
+	public List<SgHotPot> potList;
+	public List<SgHpImage> imgList;
+	public String thumbImagePath;
+	public String largeImagePath;
+	public String voicePath;
+	public String htmlPath;
+	public String appPath;
+
+	public IScenicImageService imageServices;
+
+	public  Document areaConfigxmlGen()
+	 {
+		 Document document= DocumentHelper.createDocument();
+		 Element rootElement= document.addElement("scenicHotPot");
+		 //景点列表
+		 for(SgHotPot potBean:potList)
+		 {
+		  Element node1= rootElement.addElement("hotPot").addAttribute("id",potBean.getId().toString());
+		  node1.addElement("title").addText(potBean.getHTitle());
+		  node1.addElement("thumbImage").addText(appPath+potBean.getId()+xmlBasicConfig.catalogName[2]+imgList.get(0).getHpImageName());
+		  Element node2= node1.addElement("resources");
+		  //景点图片节点
+		  imgList=imageServices.getScenicImageList(potBean.getHImageSortId());
+		  if(imgList!=null)
+		  {
+			  for(SgHpImage imgBean:imgList)
+			  {
+			   node2.addElement("largeImage").addAttribute("id", imgBean.getId().toString()).addText(appPath+potBean.getId()+xmlBasicConfig.catalogName[6]+imgBean.getHpImageName());
+			  }
+		  }
+		  else
+		  {
+			  node2.addElement("largeImage");
+		  }
+		  if(potBean.getSgHpVoice()!=null)
+		  node1.addElement("voice").addText(appPath+potBean.getId()+potBean.getSgHpVoice().getHpVoiceName());
+		  else node1.addElement("voice");
+		  node1.addElement("titleIndex").addText(potBean.getHTitleIndex());
+		  node1.addElement("description").addText(appPath+potBean.getId()+xmlBasicConfig.catalogName[0]+"hotpotDescription.html");
+		  node1.addElement("viewers").addText(potBean.getHViewers().toString());
+		  Element node3= node1.addElement("anchor");
+		  if(potBean.getHCoordinatePosition()!=null)
+		  {
+		    String[] coordinates=potBean.getHCoordinatePosition().split("\\,");
+		    node3.addElement("latitude").addText(coordinates[1]);
+		    node3.addElement(" longitude").addText(coordinates[0]);
+		  }
+		  else
+		  {
+			   node3.addElement("latitude").addText("");
+			    node3.addElement(" longitude").addText("");
+		  }
+		  node1.addElement("commentScore").addText(potBean.getHCommentScore());
+		 }
+	     
+		 return document;
+	 }
+	
+	public void potFileHandler()
+	{
+		
+		 for(SgHotPot pot :potList)
+		 {
+		   String thisPotPath=appPath+pot.getId();
+		   String appHtmlPath=thisPotPath+xmlBasicConfig.catalogName[0];
+		   String appThumbImagePath=thisPotPath+xmlBasicConfig.catalogName[2];
+		   String appLargeImagePath=thisPotPath+xmlBasicConfig.catalogName[6];
+		   String appVoicePath=thisPotPath+xmlBasicConfig.catalogName[5];
+		   FileUtil.checkVirtualPath(appHtmlPath);
+		   FileUtil.checkVirtualPath(appThumbImagePath);
+		   FileUtil.checkVirtualPath(appLargeImagePath);
+		   FileUtil.checkVirtualPath(appVoicePath);
+		   htmlGenerator.buildHtml(appHtmlPath+xmlBasicConfig.htmlCatalog[0], pot.getHDescription());
+		   if(pot.getSgHpVoice()!=null)
+		   FileUtil.copyByChannel(xmlBasicConfig._VirtualVoicePath+pot.getSgHpVoice().getHpVoiceName(),appVoicePath+pot.getSgHpVoice().getHpVoiceName());
+		   imgList=this.imageServices.getScenicImageList(pot.getHImageSortId());
+		   if(imgList!=null && imgList.size()>0)
+		   {
+			   for(SgHpImage image:imgList)
+			   {
+			     FileUtil.copyByChannel(xmlBasicConfig._VirtualThumbHpImgPath+image.getHpImageName(), appThumbImagePath+image.getHpImageName());
+			     FileUtil.copyByChannel(xmlBasicConfig._VirtualLargeHpImgPath+image.getHpImageName(), appLargeImagePath+image.getHpImageName());
+			   }
+		   }
+		   if(pot.getSgHpVoice()!=null)
+		   FileUtil.copyByChannel(xmlBasicConfig._VirtualVoicePath+pot.getSgHpVoice().getHpVoiceName(),voicePath+ pot.getSgHpVoice().getHpVoiceName());
+		 }
+		 
+		 saveXml();
+	}
+	
+	private void saveXml()
+	{
+		FileUtil.saveXml(appPath+"config.xml", areaConfigxmlGen());
+	}
+	
+}
+

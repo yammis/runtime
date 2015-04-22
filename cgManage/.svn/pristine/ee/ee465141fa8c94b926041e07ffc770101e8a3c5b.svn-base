@@ -1,0 +1,56 @@
+package webservice.SOAPServices.Impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import manage.util.DESUtil;
+import manage.util.JsonUtil;
+
+import webservice.SOAPServices.IScenicPotInfoByPotId;
+import webservice.businessService.IScenicPotService;
+import webservice.vo.ScenicPot;
+import webservice.vo.ScenicPotDetail;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-24 上午10:26:55
+ *@Version 1.0
+ *
+ */
+
+public class ScenicPotInfoByPotId implements IScenicPotInfoByPotId {
+
+	private IScenicPotService potService;
+
+	public IScenicPotService getPotService() {
+		return potService;
+	}
+@Resource(name="scenicPotDetailBean")
+	public void setPotService(IScenicPotService potService) {
+		this.potService = potService;
+	}
+
+	@Override
+	public String getScenicPotInfoByPotId(String potId) {
+		// TODO Auto-generated method stub
+		String result=null;
+		 List<ScenicPotDetail> potList=	potService.getScenicPotInfoByPotId(potId);
+		 String jsonstr= JsonUtil.objToString(potList);
+		  try {
+			result= DESUtil.EncryptDesBase64(jsonstr, DESUtil.DES_KEY).toString();
+		//	results=DESUtil.DecryptDesBase64(result, DESUtil.DES_KEY).toString();
+			  //result=DESUtil.des3EncodeCBC(key, keyiv, data)
+		//System.out.println(results);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return  result;
+	
+	}
+
+}
+

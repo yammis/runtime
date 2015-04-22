@@ -1,0 +1,47 @@
+package webservice.vo;
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-23 下午5:28:10
+ *@Version 1.0
+ *
+ */
+
+public class ScenicPotDetail {
+ private int id;
+ private String scenicPotName;
+ public int getId() {
+	return id;
+}
+public void setId(int id) {
+	this.id = id;
+}
+public String getScenicPotName() {
+	return scenicPotName;
+}
+public void setScenicPotName(String scenicPotName) {
+	this.scenicPotName = scenicPotName;
+}
+public String getVoiceName() {
+	return voiceName;
+}
+public void setVoiceName(String voiceName) {
+	this.voiceName = voiceName;
+}
+public String getScenicPotDescription() {
+	return scenicPotDescription;
+}
+public void setScenicPotDescription(String scenicPotDescription) {
+	this.scenicPotDescription = scenicPotDescription;
+}
+public String getImgName() {
+	return imgName;
+}
+public void setImgName(String imgName) {
+	this.imgName = imgName;
+}
+private String voiceName;
+ private String scenicPotDescription;
+ private String imgName;
+}
+

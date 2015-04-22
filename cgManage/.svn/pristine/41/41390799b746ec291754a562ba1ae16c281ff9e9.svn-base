@@ -1,0 +1,112 @@
+package manage.model;
+
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+
+/**
+ * SysRole entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name="sys_Role"
+    ,schema="dbo"
+    ,catalog="SceneryGuide"
+)
+
+public class SysRole  implements java.io.Serializable {
+
+
+    // Fields    
+
+     private Integer id;
+     private String roleName;
+     private Boolean flag;
+     private Set<SysMoudle> sysMoudles = new HashSet<SysMoudle>(0);
+     private Set<SysUser> sysUsers = new HashSet<SysUser>(0);
+
+
+    // Constructors
+
+    /** default constructor */
+    public SysRole() {
+    }
+
+    
+    /** full constructor */
+    public SysRole(String roleName, Boolean flag, Set<SysMoudle> sysMoudles, Set<SysUser> sysUsers) {
+        this.roleName = roleName;
+        this.flag = flag;
+        this.sysMoudles = sysMoudles;
+        this.sysUsers = sysUsers;
+    }
+
+   
+    // Property accessors
+    @Id @GeneratedValue(strategy=IDENTITY)
+    
+    @Column(name="id", unique=true, nullable=false)
+
+    public Integer getId() {
+        return this.id;
+    }
+    
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
+    @Column(name="roleName")
+
+    public String getRoleName() {
+        return this.roleName;
+    }
+    
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+    
+    @Column(name="flag")
+
+    public Boolean getFlag() {
+        return this.flag;
+    }
+    
+    public void setFlag(Boolean flag) {
+        this.flag = flag;
+    }
+@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="sysRole")
+
+    public Set<SysMoudle> getSysMoudles() {
+        return this.sysMoudles;
+    }
+    
+    public void setSysMoudles(Set<SysMoudle> sysMoudles) {
+        this.sysMoudles = sysMoudles;
+    }
+@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="sysRole")
+
+    public Set<SysUser> getSysUsers() {
+        return this.sysUsers;
+    }
+    
+    public void setSysUsers(Set<SysUser> sysUsers) {
+        this.sysUsers = sysUsers;
+    }
+   
+
+
+
+
+
+
+
+
+}

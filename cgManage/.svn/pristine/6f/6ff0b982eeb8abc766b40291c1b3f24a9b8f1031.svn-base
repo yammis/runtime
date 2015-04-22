@@ -1,0 +1,307 @@
+﻿$(function () {
+    $(".moudle-list").each(function (i) {
+        $(this).mouseover(function () {
+            if (!$(this).hasClass("clicked")) {
+                $(this).css("background-color", "#DFEBEB");
+            }
+        });
+        $(this).mouseout(function () {
+            if (!$(this).hasClass("clicked"))
+                $(this).css("background-color", "");
+        });
+        $(this).click(function () {
+            if (!$(this).hasClass("clicked")) {
+                $(this).css("background-color", "#FCE6A2");
+                $(this).addClass("clicked");
+            }
+            else {
+                $(this).css("background-color", "");
+                $(this).removeClass("clicked");
+            }
+        });
+    });
+
+    $(".btn").each(function (i) {
+        $(this).click(function () {
+            DialogShow();
+            var uName = $(this).parent().prev().prev().prev().prev().prev().children().text();
+            var uRole = $(this).parent().prev().prev().prev().prev().text();
+            var uId = $(this).parent().next().val();
+
+            getRoleJson("user-role");
+            $("#sel-opt option").each(function () {
+                if ($(this).text() == uRole) {
+                    $(this).attr("selected", "selected");
+                }
+            });
+            $("#user-name").val(uName);
+            $("#edit-id").val(uId);
+        });
+    })
+})
+
+function getRoleJson(opt)
+{
+ $.post("/SysUser/RoleListForJson", function (data) {
+                var roleJson = eval(data.rolelist);
+                for (var i = 0; i < roleJson.length; i++) {
+                    $("#"+opt+"").next().append('<option value=' + roleJson[i].id + '>' + roleJson[i].roleName + '</option>');
+                }
+            });
+}
+
+function DialogShow() {
+    $("#overlay").show();
+    $("#context-holder").show();
+    $("#content-box").show();
+}
+//用户管理关闭编辑
+function DialogClose() {
+    $("#user-name").val("");
+    $("#user-pass").val("");
+    $("#user-role").next().empty();
+    $("#overlay").hide();
+    $("#context-holder").hide();
+}
+
+$(".mbox-close").live("click", function () {
+    DialogClose();
+})
+
+//编辑 焦点变色
+$(".mbox-close").live("mouseover", function () {
+    $(this).attr("src", "../../Content/image/closehover.png");
+})
+//编辑 失去焦点
+$(".mbox-close").live("mouseout", function () {
+    $(this).attr("src", "../../Content/image/close.png");
+})
+
+//修改密码域展开
+$("#reset-pass").live("click", function () {
+    var passEdit = '<li class="pass-input"><span>密码：</span><input type="password" id="user-pass" /><label style=" color:red; padding-left:3px; display:none">密码不少于五位</label></li>';
+    $(this).parent().after(passEdit);
+    passEdit = null;
+    if ($(this).text().indexOf("密码")>0) {
+        $(this).text("点击关闭修改");
+    }
+    else {
+        $(".pass-input").remove();
+        $(this).text("点击修改密码");
+    }
+})
+
+//保存编辑
+
+$("#uinfo-save").live("click", function () {
+    var uId = $("#edit-id").val();
+    var uName = $("#user-name").val();
+    var uRole = $("#user-role").next().find("option:selected").val();
+    var uRoleText = $("#user-role").next().find("option:selected").text();
+    var uPass = "";
+    if ($("#reset-pass").parent().next().hasClass("pass-input")) {
+        uPass = $("#user-pass").val();
+        if (uName != "" && uPass != "" && uName.length >= 2 && uPass.length >= 5) {
+            $.post("/SysUser/UserInfoEdit", { Uid: uId, Name: uName, Role: uRole, Pass: uPass }, function (data) {
+                if (data.rResult == 1) {
+                    DialogClose();
+                    var hidUid = $("#user-id-" + uId + "").prev().prev().prev().prev().prev();
+                    hidUid.text(uRoleText);
+                    hidUid.prev().children().text(uName);
+                }
+                else if (data.rResult == 0) {
+                    $("#user-name").next().css("display", "inline");
+                    $("#user-name").next().text("操作出错，请重新添加");
+                    return false;
+                }
+                else if (data.rResult == 2) {
+                    $("#user-name").next().css("display", "inline");
+                    $("#user-name").next().text("用户名已存在！");
+                    return false;
+                }
+                if (data.passNotify) {
+                    $.post("/SysUser/SetCookieExpire", { userName: uName }, function (data) {
+                        if (data.rResult) {
+                            alert("用户密码已经改变，请重新登录")
+                            location.href = "/login/index";
+                        }
+                    });
+                }
+            });
+        }
+        else {
+            if (uName.length < 2 && uPass.length < 5) {
+                $("#user-name").next().css("display", "inline");
+                $("#user-pass").next().css("display", "inline");
+                $("#user-name").focus();
+                return false;
+            }
+            else if (uName.length >= 2 && uPass.length < 5) {
+                $("#user-name").next().css("display", "none");
+                $("#user-pass").next().css("display", "inline");
+                $("#user-pass").focus();
+                return false;
+            }
+            else if (uName.length < 2 && uPass.length >= 5) {
+                $("#user-name").next().css("display", "inline");
+                $("#user-pass").next().css("display", "none");
+                $("#user-name").focus();
+                return false;
+            }
+        }
+    }
+    else {
+        if (uName != "" && uName.length >= 2) {
+            $.post("/SysUser/UserInfoEdit", { Uid: uId, Name: uName, Role: uRole, Pass: uPass }, function (data) {
+                if (data.rResult == 1) {
+                    DialogClose();
+                    var hidUid = $("#user-id-" + uId + "").prev().prev().prev().prev().prev();
+                    hidUid.text(uRoleText);
+                    hidUid.prev().children().text(uName);
+                    DialogClose();
+                }
+                else if (data.rResult == 0) {
+                    $("#user-name").next().css("display", "inline");
+                    $("#user-name").next().text("操作出错，请重新添加");
+                    return false;
+                }
+                else if (data.rResult == 2) {
+                    $("#user-name").next().css("display", "inline");
+                    $("#user-name").next().text("用户名已存在！");
+                    return false;
+                }
+            });
+        }
+        else {
+            if (uName.length < 2 && uPass.length < 5) {
+                $("#user-name").next().css("display", "inline");
+                $("#user-pass").next().css("display", "inline");
+                $("#user-name").focus();
+                return false;
+            }
+            else if (uName.length >= 2 && uPass.length < 5) {
+                $("#user-name").next().css("display", "none");
+                $("#user-pass").next().css("display", "inline");
+                $("#user-pass").focus();
+                return false;
+            }
+            else if (uName.length < 2 && uPass.length >= 5) {
+                $("#user-name").next().css("display", "inline");
+                $("#user-pass").next().css("display", "none");
+                $("#user-name").focus();
+                return false;
+            }
+        }
+    }
+
+});
+
+
+//添加用户构造
+function buildNewUserDialog() {
+    var dialogHtml = '<div id="user-new-dialog" style=" z-index:100">';
+         dialogHtml +='<div style="float: right; padding: 3px 3px 0 0;">';
+         dialogHtml +='<a href="javascript:;">';
+         dialogHtml +='   <img src="../../Content/image/close.png" class="ubox-close" alt="关闭" />';
+         dialogHtml +='</a>';
+         dialogHtml +='</div>';
+         dialogHtml +=' <ul class="user-item">';
+         dialogHtml +='   <li><span>用户名：</span><input type="text" id="user-name-add" /><label style=" color:red; padding-left:3px; display:none">名字不少于两位</label></li>';
+         dialogHtml +='    <li><span id="user-role-add">角色：</span><select id="sel-opt-add"></select></li>';
+         dialogHtml += '   <li class="pass-input-add"><span>密码：</span><input type="password" id="user-pass-add" /><label style="color:red; padding-left:3px; display:none" >密码不少于五位</label></li>';
+         dialogHtml +=' <li><span></span><a id="uinfo-save-add" href="javascript:;">保存</a></li>';
+         dialogHtml +=' </ul>';
+         dialogHtml += ' </div>';
+         $("#context-holder").append(dialogHtml);
+}
+
+//用户添加 关闭
+$(".ubox-close").live("click", function () {
+    $("#user-new-dialog").remove();
+    $("#context-holder").hide();
+})
+
+//用户添加 打开
+$("#btn-uadd").live("click", function () {
+    $("#context-holder").show();
+    $("#content-box").hide();
+    buildNewUserDialog();
+    getRoleJson("user-role-add");
+})
+
+//用户添加 保存
+$("#uinfo-save-add").live("click", function () {
+    var newName = $("#user-name-add").val();
+    var newRole = $("#sel-opt-add").find("option:selected").val();
+    var newRoleText = $("#sel-opt-add").find("option:selected").text();
+    var newPass = $("#user-pass-add").val();
+    if (newName != "" && newPass != "" && newName.length >= 2 && newPass.length >=5) {
+        $.post("/SysUser/AddNewUser", { nName: newName, nPass: newPass, nRole: newRole }, function (data) {
+            if (data.rResult == 1) {
+                var newRecord = '       <div class="moudle-list" style="width: 920px; height: 40px; line-height: 40px">';
+                newRecord += '<div class="m-item" style="width: 150px; float: left; text-align: center">';
+                newRecord += ' <span style="padding-left: 35px">' + newName + '</span>';
+                newRecord += '</div>';
+                newRecord += '<div class="m-item" style="width: 80px; float: left; text-align: center">' + newRoleText + '</div>';
+                newRecord += '<div class="m-item" style="width: 200px; float: left; text-align: center">' + data.cDate + '</div>';
+                newRecord += '<div class="m-item" style="width: 200px; float: left; text-align: center">' + data.lDate + '</div>';
+                newRecord += '<div class="m-item" style="width: 100px; float: left; text-align: center">0</div>';
+                newRecord += '<div class="m-item" style="width: 100px; float: left; text-align: center">';
+                newRecord += '   <a class="btn" href="javascript:;">编辑</a>';
+                newRecord += ' <a href="javascript:;" onclick="userDel(' + data.did + ')">删除</a>';
+                newRecord += ' </div>';
+                newRecord += ' <input id="user-id-' + data.nid + '" type="hidden" value=' + data.nid + ' />';
+                newRecord += '<div style="clear: both">';
+                newRecord += ' </div>';
+                newRecord += ' </div>';
+                $("#list-box").append(newRecord);
+                $("#user-new-dialog").remove();
+                $("#context-holder").hide();
+            }
+            else if (data.rResult == 0) {
+                $("#user-name-add").next().css("display", "inline");
+                $("#user-name-add").next().text("操作出错，请重新添加");
+                return false;
+            }
+            else if (data.rResult == 2) {
+                $("#user-name-add").next().css("display", "inline");
+                $("#user-name-add").next().text("用户名已存在");
+                return false;
+            }
+        });
+    }
+    else {
+
+        if (newName.length < 2 && newPass.length < 5) {
+            $("#user-name-add").next().css("display", "inline");
+            $("#user-pass-add").next().css("display", "inline");
+            $("#user-name-add").focus();
+            return false;
+        }
+
+        else if (newName.length >= 2 && newPass.length < 5) {
+            $("#user-name-add").next().css("display", "none");
+            $("#user-pass-add").next().css("display", "inline");
+            $("#user-pass-add").focus();
+            return false;
+        }
+        else if (newName.length < 2 && newPass.length >= 5) {
+            $("#user-pass-add").next().css("display", "none");
+            $("#user-name-add").next().css("display", "inline");
+            $("#user-name-add").focus();
+            return false;
+        }
+
+    }
+})
+
+//删除用户
+function userDel(did) {
+    if (confirm("确定要删除此用户？")) {
+        $.post("/SysUser/UserInfoDelete", { userId: did }, function (data) {
+            if (data.rStatus) {
+                $("#user-id-" + did + "").parent().remove();
+            }
+        })
+    }
+}

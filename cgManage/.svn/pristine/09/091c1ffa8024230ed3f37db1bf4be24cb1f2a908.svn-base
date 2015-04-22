@@ -1,0 +1,30 @@
+package manage.service;
+
+import java.util.List;
+
+import manage.model.SgHotPot;
+import manage.model.SgHpImage;
+import manage.model.SgHpPlanChart;
+import manage.model.SgHpVoice;
+import manage.smodel.PageBean;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-9-27 上午10:47:56
+ *@Version 1.0
+ *
+ */
+
+public interface IScenicPotService {
+   public void saveScenicPot(SgHotPot scenicPot);
+   public void saveScenicPotImage(SgHpImage image);
+   public PageBean<SgHotPot> getSgHotPotListByPid(int pid,int page,int pageSize);
+   public boolean deleteSgHotPotById(int id);
+   public List<SgHotPot> getScenicPotListById(int id);
+   public List<SgHpImage> getHpImageId(String imgSortId);
+   public void deleteScenicImage(int id);
+   public void updateScenicPotVoice(SgHpVoice voice);
+   public void updateScenicPot(SgHotPot scenicPot);
+}
+

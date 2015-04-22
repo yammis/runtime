@@ -1,0 +1,35 @@
+package webservice.businessService.Impl;
+
+import javax.annotation.Resource;
+
+import manage.model.SgProvince;
+import dao.IBaseDao;
+import webservice.businessService.IScenicAreaService;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-20 下午1:53:21
+ *@Version 1.0
+ *
+ */
+
+public class scenicAreaServiceImpl implements IScenicAreaService {
+	private IBaseDao<SgProvince> provinceDao;
+	public IBaseDao<SgProvince> getProvinceDao() {
+		return provinceDao;
+	}
+	@Resource
+	public void setProvinceDao(IBaseDao<SgProvince> provinceDao) {
+		this.provinceDao = provinceDao;
+	}
+	
+	@Override
+	 public String getScenicAreaInfoByProId()
+	 {
+		 String hql="from ";
+		
+		 return null;
+	 }
+}
+

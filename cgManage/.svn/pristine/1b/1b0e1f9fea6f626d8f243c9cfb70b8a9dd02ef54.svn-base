@@ -1,0 +1,48 @@
+package webservice.vo;
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-21 下午4:10:03
+ *@Version 1.0
+ *
+ */
+
+public class ScenicPot {
+  private int id;
+  public int getId() {
+	return id;
+}
+public void setId(int id) {
+	this.id = id;
+}
+public String getScenicPotName() {
+	return scenicPotName;
+}
+public void setScenicPotName(String scenicPotName) {
+	this.scenicPotName = scenicPotName;
+}
+public String getScenicPotImage() {
+	return scenicPotImage;
+}
+public void setScenicPotImage(String scenicPotImage) {
+	this.scenicPotImage = scenicPotImage;
+}
+public int getViewer() {
+	return viewer;
+}
+public void setViewer(int viewer) {
+	this.viewer = viewer;
+}
+public String getScenicPotIndex() {
+	return scenicPotIndex;
+}
+public void setScenicPotIndex(String scenicPotIndex) {
+	this.scenicPotIndex = scenicPotIndex;
+}
+private String scenicPotName;
+  private String scenicPotImage;
+  private int viewer;
+  private String scenicPotIndex;
+  
+}
+

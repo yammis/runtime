@@ -1,0 +1,29 @@
+package manage.action;
+
+import java.io.IOException;
+
+import manage.util.JsonUtil;
+
+import org.apache.struts2.ServletActionContext;
+
+//import com.alibaba.fastjson.JSON;
+/**
+*
+*@Author yammis
+*@Date 2014-8-26 下午5:25:52
+*@Version 1.0
+*
+*/
+public class BaseAction {
+	public static void writeJson(Object object) {
+		try {
+			String json = JsonUtil.objToString(object);
+			ServletActionContext.getResponse().setContentType("text/html;charset=utf-8");
+			ServletActionContext.getResponse().getWriter().write(json);
+			ServletActionContext.getResponse().getWriter().flush();
+			ServletActionContext.getResponse().getWriter().close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+}
+	}

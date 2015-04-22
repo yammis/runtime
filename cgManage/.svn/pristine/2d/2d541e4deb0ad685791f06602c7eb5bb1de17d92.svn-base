@@ -1,0 +1,85 @@
+package manage.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+/**
+ * SgConmmentImage entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name="sg_Conmment_Image"
+    ,schema="dbo"
+    ,catalog="SceneryGuide"
+)
+
+public class SgConmmentImage  implements java.io.Serializable {
+
+
+    // Fields    
+
+     private Integer id;
+     private String cmtImageName;
+     private String cmtImageSortId;
+
+
+    // Constructors
+
+    /** default constructor */
+    public SgConmmentImage() {
+    }
+
+    
+    /** full constructor */
+    public SgConmmentImage(String cmtImageName, String cmtImageSortId) {
+        this.cmtImageName = cmtImageName;
+        this.cmtImageSortId = cmtImageSortId;
+    }
+
+   
+    // Property accessors
+    @Id @GeneratedValue(strategy=IDENTITY)
+    
+    @Column(name="id", unique=true, nullable=false)
+
+    public Integer getId() {
+        return this.id;
+    }
+    
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
+    @Column(name="cmt_ImageName")
+
+    public String getCmtImageName() {
+        return this.cmtImageName;
+    }
+    
+    public void setCmtImageName(String cmtImageName) {
+        this.cmtImageName = cmtImageName;
+    }
+    
+    @Column(name="cmt_ImageSortId", length=50)
+
+    public String getCmtImageSortId() {
+        return this.cmtImageSortId;
+    }
+    
+    public void setCmtImageSortId(String cmtImageSortId) {
+        this.cmtImageSortId = cmtImageSortId;
+    }
+   
+
+
+
+
+
+
+
+
+}

@@ -1,0 +1,32 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@taglib uri="/struts-tags"  prefix="s"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+    <title>无线新天地-景点资料管理</title>
+    
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+ 
+  
+
+<frameset rows="74,*,30"   frameborder="no" border="0" framespacing="0" >
+		<frame src="<%=basePath%>template/top.jsp" name="topFrame" scrolling="No" noresize="noresize" id="topFrame" title="topFrame"   />
+		<frameset cols="16%,*" frameborder="no">
+		    <frame src="<%=basePath%>moudles/Menu_MoudleList.html" name="mainFrame" id="mainFrame" title="mainFrame" scrolling="yes"  target="_parent" />
+			<frame src="<%=basePath%>admin/logUserInfo.html"  title="main" name="mainpage" scrolling="yes"/>
+	  </frameset>
+	
+		<frame src="<%=basePath%>template/foot.jsp" name="bottomFrame" scrolling="No" noresize="noresize" id="bottomFrame" title="bottomFrame" />
+	</frameset>
+
+</html>

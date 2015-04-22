@@ -1,0 +1,114 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@taglib uri="/struts-tags"  prefix="s"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";%>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>i导游下载</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta content="i导游下载" property="og:title" />
+ 
+<link rel="stylesheet" href="<%=basePath %>localResources/css/soft-install.css" type="text/css"></link></head>
+
+<body>
+<div class="row-fluid breadcrumbs margin-bottom-20">
+  <div class="container">
+    <h1 class="pull-left">i导游</h1>
+    <ul class="pull-right breadcrumb">
+        <li>版本：<s:property value="softInstallInfo.versionId" /></li>
+        <li>大小：<s:property value="softInstallInfo.softFileSize" /></li>
+        <li><s:property value="softInstallInfo.createDate" /></li>
+    </ul>
+  </div>
+</div>
+<div class="container content">
+   <div id="" class="view row">
+     <div class="span12" style="text-align:center;">
+        <a>
+          <img class="appicon" src="<%=basePath %>localResources/image/120.png" />
+        </a>
+     </div>
+   </div>
+   <div id="" class="view row" style="margin-top:30px;">
+     <div class="span12 margin-bottom-20" style="text-align:center;">
+        <a class="btn-u btn-u-lg">
+          <i class="fa fa-download"></i>
+          点击安装
+        </a>
+     </div>
+     <div class="span12" style="text-align:center;">
+        <span class="label label-info">适用于android设备</span>
+     </div>
+   </div>
+   <div class="devider devider-dotted">
+   </div>
+   <div id="" class="view row margin-bottom-30">
+     <div class="span12" style="text-align:center;">
+            或用手机扫描下面二维码安装
+            <br>
+            <br>
+            <img src="<%=basePath%>qrcode">
+            </div>
+   </div>
+   <div class="devider devider-dotted">
+   </div>
+   <div class="row">
+      <div class="col-md-8 col-md-offset-2" style="word-break:break-all;">
+        <div class="tag-box tag-box-v6">
+            <h2>应用版本介绍</h2>
+           <s:property value="softInstallInfo.softDescription" />
+           
+        </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-md-8 col-md-offset-2" style="word-break:break-all;">
+        <div class="tag-box tag-box-v6 margin-bottom-40">
+            <h2>应用截图</h2>
+            <div class="table-responsive" style="border:none; overflow:auto;">
+                  <table class="table" style="margin-bottom:0;">
+                      <tbody>
+                          <tr>
+                                <input id="sortId" type="hidden" value="<s:property value="softInstallInfo.softSnapshotSortId" />"/>
+                                <input id="h_path" type="hidden" value="<%=basePath %>"/>
+                          </tr>
+                      </tbody>
+                  </table>
+            </div>
+        </div>
+      </div>
+   </div>
+
+</div>
+
+<div class="footer">
+        <div class="footer-in">
+        北京无线新天地信息技术有限公司
+        <br>
+        <a href="http://www.wn-zone.com" target="_blank">www.wn-zone.com</a>
+        </div>
+</div>
+<script type="text/javascript" src="<%=basePath %>localResources/js/jquery-1.8.0.js"></script>
+<script type="text/javascript">
+$(function(){
+           $.post("page/snapshotName",{sortId:$("#sortId").val()},function(d){
+             var dataJson=eval(d);
+             if(dataJson!=null && dataJson!="")
+             {
+               for(var i=0;i<dataJson.length;i++)
+               {
+	              var snapHtml='<td class="text-center" width="20%" style="border:none;"><div> <img style="width:230px; height:410px" src="<%=basePath %>UploadFiles/soft/snapshot/'+dataJson[i].image+'"></div></td>';
+	              $("#sortId").after(snapHtml);
+               }
+             }
+           });
+  })
+</script>
+<script type="text/javascript" src="<%=basePath %>localResources/js/local/softinstall.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,19 @@
+package webservice.SOAPServices;
+
+import javax.jws.WebParam;
+import javax.jws.WebService;
+
+import webservice.conf.wsConf;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-21 下午5:11:08
+ *@Version 1.0
+ *
+ */
+@WebService(targetNamespace=wsConf.cg_TargetNamespace, serviceName="ScenicPotInfoService")
+public interface IScenicPotInfoByAreaId {
+	public String getScenicPotInfoByAreaId(@WebParam(name="areaId")String areaId);
+}
+

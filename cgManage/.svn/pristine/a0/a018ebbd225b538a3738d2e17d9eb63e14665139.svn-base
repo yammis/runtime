@@ -1,0 +1,210 @@
+package manage.service.Impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
+import org.hibernate.transform.Transformers;
+import org.springframework.stereotype.Service;
+import dao.IBaseDao;
+import manage.model.SgHotPotDistrict;
+import manage.model.SgHpImage;
+import manage.model.SgHpPlanChart;
+import manage.service.IScenicAreaService;
+import manage.smodel.PageBean;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-9-1 上午11:24:14
+ *@Version 1.0
+ *
+ */
+
+@Service("scenicAreaService")
+public class ScenicAreaService implements IScenicAreaService {
+
+	private IBaseDao<SgHotPotDistrict> scenicAreaDao;
+	private IBaseDao<SgHpImage> scenicImageDao;
+	private IBaseDao<SgHpPlanChart> scenicMapDao;
+	public IBaseDao<SgHpPlanChart> getScenicMapDao() {
+		return scenicMapDao;
+	}
+	@Resource
+	public void setScenicMapDao(IBaseDao<SgHpPlanChart> scenicMapDao) {
+		this.scenicMapDao = scenicMapDao;
+	}
+	public IBaseDao<SgHpImage> getScenicImage() {
+		return scenicImageDao;
+	}
+	@Resource
+	public void setScenicImage(IBaseDao<SgHpImage> scenicImageDao) {
+		this.scenicImageDao = scenicImageDao;
+	}
+	public IBaseDao<SgHotPotDistrict> getScenicAreaDao() {
+		return scenicAreaDao;
+	}
+	@Resource
+	public void setScenicAreaDao(IBaseDao<SgHotPotDistrict> scenicAreaDao) {
+		this.scenicAreaDao = scenicAreaDao;
+	}
+	@Override
+	public void saveScenicArea(SgHotPotDistrict area) {
+		// TODO Auto-generated method stub
+        scenicAreaDao.saveT(area);
+	}
+	
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicAreaService#getScenicAreaList()
+	 */
+	@Override
+	public PageBean<SgHotPotDistrict> getScenicAreaList(int page,int pageSize) {
+		// TODO Auto-generated method stub
+		String hql=" from SgHotPotDistrict senic where senic.isAvailable=true";
+		return	scenicAreaDao.getPagedList(hql, pageSize, page);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicAreaService#getHdImage()
+	 */
+	@Override
+	public List<SgHpImage> getHdImage(String imgSortId) {
+		// TODO Auto-generated method stub
+	String hql="select hpImageName from SgHpImage image where image.hpImageSortId='"+imgSortId+"'";
+	    
+		return	scenicImageDao.get(hql);
+	}
+	@Override
+	public List<SgHpImage> getHdImageId(String imgSortId) {
+		// TODO Auto-generated method stub
+	String hql="select id from SgHpImage image where image.hpImageSortId='"+imgSortId+"'";
+	    
+		return	scenicImageDao.get(hql);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicAreaService#getScenicAreaDetail(int)
+	 */
+	@Override
+	public List<SgHotPotDistrict> getScenicAreaDetail(String areaId) {
+		// TODO Auto-generated method stub
+		String hql="from SgHotPotDistrict area where area.id='"+areaId+"'";
+		return scenicAreaDao.get(hql);
+	}
+	
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicAreaService#deleteScenicAreaById(java.lang.String)
+	 */
+	
+//	private HibernateTemplate hibernateTemplate;
+//	public HibernateTemplate getHibernateTemplate() {
+//		return hibernateTemplate;
+//	}
+//	@Resource
+//	public void setHibernateTemplate(HibernateTemplate hibernateTemplate) {
+//		this.hibernateTemplate = hibernateTemplate;
+//	}
+	@Override
+	public boolean deleteScenicAreaById(String id)  {
+		// TODO Auto-generated method stub
+//		String hql="delete from SgHotPotDistrict area where area.id='"+id+"'";
+//		scenicAreaDao.executeHql(hql);
+		SgHotPotDistrict scenicArea=	scenicAreaDao.get(SgHotPotDistrict.class, Integer.parseInt(id) );
+		if(scenicArea!=null)
+		scenicAreaDao.delete(scenicArea);
+		return true;
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicAreaService#saveScenicImage(manage.model.SgHpImage)
+	 */
+	@Override
+	public void saveScenicImage(SgHpImage image) {
+		// TODO Auto-generated method stub
+		scenicImageDao.saveT(image);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicAreaService#updateScenicAreaById(manage.model.SgHotPotDistrict)
+	 */
+	@Override
+	public void updateScenicAreaById(SgHotPotDistrict area) {
+		// TODO Auto-generated method stub
+	   scenicAreaDao.update(area);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicAreaService#updateScenicAreaMap(manage.model.SgHpPlanChart)
+	 */
+	@Override
+	public void updateScenicAreaMap(SgHpPlanChart map) {
+		// TODO Auto-generated method stub
+		scenicMapDao.update(map);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicAreaService#deleteScenicImage(java.lang.String)
+	 */
+	@Override
+	public void deleteScenicImage(int id)  {
+		// TODO Auto-generated method stub
+		SgHpImage image= scenicImageDao.get(SgHpImage.class, id);
+		if(image!=null)
+		scenicImageDao.delete(image);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicAreaService#getScenicAreaList()
+	 */
+	@Override
+	public List<SgHotPotDistrict> getScenicAreaList() {
+		// TODO Auto-generated method stub
+		String hql="select id,hdTitle from SgHotPotDistrict where isAvailable=true";
+		return scenicAreaDao.get(hql);
+	}
+
+	@Override
+	public List<Map> searchScenicAreaByAreaName(String name,String type) {
+		// TODO Auto-generated method stub
+		String hql="";
+		if(type.equals("1"))//按景区搜索
+		{
+			 hql="select new map(s.id as id,s.hdTitle as title,s.hdImageSortId as imgSortId,s.hdDescription as description,s.hdTitleIndex as index,s.sgHpPlanChart.pcImageName as mapName,s.hdInnerTraffic as inTraffic,s.hdTraffic as traffic,s.hdViewers as viewer) from SgHotPotDistrict s where s.hdTitle like :areaName";
+			 Map<String,Object> params=new HashMap<String,Object>();
+	         params.put("areaName", "%"+name+"%");
+			 Query q=scenicAreaDao.getQueryList(hql, params);
+			 List<Map> map=null;
+			if(q!=null &&q.list().size()>0)
+				{
+					 map=q.list();
+					 return map;
+				}
+		}
+		else if(type.equals("2"))//按景点搜索
+		{
+			// hql="select distinct(s.id), new map(s.sgHotPotDistrict.id as id,s.sgHotPotDistrict.hdTitle as title,s.sgHotPotDistrict.hdImageSortId as imgSortId,s.sgHotPotDistrict.hdDescription as description,s.sgHotPotDistrict.hdTitleIndex as index,s.sgHotPotDistrict.sgHpPlanChart.pcImageName as mapName,s.sgHotPotDistrict.hdInnerTraffic as inTraffic,s.sgHotPotDistrict.hdTraffic as traffic,s.sgHotPotDistrict.hdViewers as viewer) from SgHotPot s where s.HTitle like '%"+name+"%'";
+			String sql="select distinct LTRIM(d.id) as id,d.hd_Title as title,d.hd_ImageSortId as imgSortId,CONVERT(varchar(8000),d.hd_Description) as [description],d.hd_TitleIndex as [index],c.pc_ImageName as mapName,CONVERT(varchar(8000),d.hd_InnerTraffic) as inTraffic,CONVERT(varchar(8000),d.hd_Traffic) as traffic,d.hd_Viewers as viewer from sg_HotPot s inner join  sg_HotPotDistrict d on s.h_ParentId=d.id inner join sg_hpPlanChart c on d.id=c.id where s.h_Title like :potName";
+            Map<String,Object> params=new HashMap<String,Object>();
+            params.put("potName", "%"+name+"%");
+			Query q= scenicAreaDao.getBySql(sql,params);
+            q.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP); 
+            List<Map> map=q.list();
+			return map;
+		}
+		else if(type.equals("3"))//按省份搜索
+		{
+			  String sql="select d.id as id,d.hd_Title as title,d.hd_ImageSortId as imgSortId,d.hd_Description as [description],d.hd_TitleIndex as [index],a.pc_ImageName as mapName,d.hd_InnerTraffic as inTraffic,d.hd_Traffic as traffic,d.hd_Viewers as viewer from sg_HotPotDistrict d  inner join sg_City c on d.hd_CityId=c.id left join sg_hpPlanChart a on d.hd_MapId=a.id where c.pid in (select p.id from sg_Province p where p.Province like :provinceName)";
+			  Map<String,Object> params=new HashMap<String,Object>();
+			  params.put("provinceName", "%"+name+"%");
+			  Query q= scenicAreaDao.getBySql(sql,params);
+	           q.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP); 
+	           List<Map> map=q.list();
+			   return map;
+		}
+	
+	
+		
+		return null;
+	}
+
+	
+
+}
+

@@ -1,0 +1,109 @@
+package manage.model;
+
+import java.sql.Timestamp;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+/**
+ * SysSoftInfo entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sys_SoftInfo", schema = "dbo", catalog = "SceneryGuide")
+public class SysSoftInfo implements java.io.Serializable {
+
+	// Fields
+
+	private Integer softId;
+	private SysSoftVersion sysSoftVersion;
+	private String title;
+	private String softName;
+	private Boolean isAvaiable;
+	private Timestamp createDate;
+
+	// Constructors
+
+	/** default constructor */
+	public SysSoftInfo() {
+	}
+
+	/** minimal constructor */
+	public SysSoftInfo(SysSoftVersion sysSoftVersion) {
+		this.sysSoftVersion = sysSoftVersion;
+	}
+
+	/** full constructor */
+	public SysSoftInfo(SysSoftVersion sysSoftVersion, String title,
+			String softName, Boolean isAvaiable, Timestamp createDate) {
+		this.sysSoftVersion = sysSoftVersion;
+		this.title = title;
+		this.softName = softName;
+		this.isAvaiable = isAvaiable;
+		this.createDate = createDate;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "SoftID", unique = true, nullable = false)
+	public Integer getSoftId() {
+		return this.softId;
+	}
+
+	public void setSoftId(Integer softId) {
+		this.softId = softId;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "vid", nullable = false)
+	public SysSoftVersion getSysSoftVersion() {
+		return this.sysSoftVersion;
+	}
+
+	public void setSysSoftVersion(SysSoftVersion sysSoftVersion) {
+		this.sysSoftVersion = sysSoftVersion;
+	}
+
+	@Column(name = "Title")
+	public String getTitle() {
+		return this.title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	@Column(name = "SoftName")
+	public String getSoftName() {
+		return this.softName;
+	}
+
+	public void setSoftName(String softName) {
+		this.softName = softName;
+	}
+
+	@Column(name = "IsAvaiable")
+	public Boolean getIsAvaiable() {
+		return this.isAvaiable;
+	}
+
+	public void setIsAvaiable(Boolean isAvaiable) {
+		this.isAvaiable = isAvaiable;
+	}
+
+	@Column(name = "CreateDate", length = 23)
+	public Timestamp getCreateDate() {
+		return this.createDate;
+	}
+
+	public void setCreateDate(Timestamp createDate) {
+		this.createDate = createDate;
+	}
+
+}

@@ -1,0 +1,231 @@
+﻿////载入省份
+//function loadProvince() {
+//    $.get("/manage/provinceList", function (data) {
+//        if (data.rResult) {
+//            var dataJson = eval(data.info);
+//            for (var i = 0; i < dataJson.length; i++) {
+//                $("#province").append("<option value=" + dataJson[i].id + ">" + dataJson[i].ProvinceName + "</option>");
+//            }
+//        }
+//    }, "json");
+//}
+//
+////根据省份查出城市
+//$("#province").live("change", function () {
+//    var pid = $("#province option:selected").val();
+//    $.post("/manage/cityList", { id: pid }, function (data) {
+//        if (data.rResult) {
+//            var dataJsonCity = eval(data.info);
+//            $("#city").children().eq(0).nextAll().remove();
+//            for (var i = 0; i < dataJsonCity.length; i++) {
+//
+//                $("#city").append("<option value=" + dataJsonCity[i].id + ">" + dataJsonCity[i].CityName + "</option>");
+//            }
+//        }
+//    }, "json");
+//});
+
+//根据城市查出城市的景区
+$("#city").live("change", function () {
+    var hid = $("#city option:selected").val();
+    $.post("/manage/hpDistrictListFilter", { id: hid }, function (data) {
+        if (data.rResult) {
+            var dataJsonHotPot = eval(data.info);
+            var Htmlstr = "";
+            $("#data-hp-box").empty();
+            if (dataJsonHotPot.length <= 0) {
+                $("#data-hp-box").html("<span style=' color:red; '>此省份暂无数据！</span>");
+                return false;
+            }
+            for (var i = 0; i < dataJsonHotPot.length; i++) {
+                Htmlstr += '<tr id="hp-' + dataJsonHotPot[i].id + '">';
+                Htmlstr += '<td height="97" align="center" bgcolor="#FFFFFF" style="color: #0360AF">';
+                Htmlstr += '    <a href="/SubHotPot/SubHotPotList?potid=' + dataJsonHotPot[i].id + '&pid=1" title="查看景点">' + dataJsonHotPot[i].title + '</a>';
+                Htmlstr += '</td>';
+                Htmlstr += '<td align="center" bgcolor="#FFFFFF">';
+                var images = (dataJsonHotPot[i].imageName).toString();
+
+                images = images.substr(0, images.indexOf("g") + 1);
+                Htmlstr += '    <img src="../../UploadFiles/hotpotimg/Thumb/' + images + '" alt=""  style="width:100px;height:70px" />';
+
+
+                Htmlstr += '</td>';
+                Htmlstr += '<td align="center" bgcolor="#FFFFFF">';
+                Htmlstr += '   <p>' + dataJsonHotPot[i].description.substr(0, 40) + '</p>';
+                Htmlstr += '</td>';
+                //                Htmlstr += '<td>';
+                //                Htmlstr += '<div class="audiojs" classname="audiojs" id="audiojs_wrapper' + i + '">';
+                //                Htmlstr += '   <audio  preload="auto" src="../../UploadFiles/hotpotvoice/' + dataJsonHotPot[i].voice + '">    </audio>';
+                //                Htmlstr += '    <div class="play-pause"> <p class="play"></p><p class="pause"></p><p class="loading"></p><p class="error"></p> </div>           <div class="scrubber">             <div class="progress" style="width: 0px;"></div>             <div class="loaded" style="width: 80px;"></div>           </div>           <div class="time">             <em class="played">00:00</em>/<strong class="duration">01:46</strong>  </div> ';
+                //                Htmlstr += '   <div class="error-message"></div></div>';
+
+                //                Htmlstr += '  </td>';
+                Htmlstr += ' <td align="center" bgcolor="#FFFFFF">';
+                Htmlstr += '    <p>' + dataJsonHotPot[i].titleIndex + '</p>';
+                Htmlstr += '     </td>';
+                Htmlstr += '    <td align="center" bgcolor="#FFFFFF">';
+                Htmlstr += '        <img src="../../UploadFiles/hopotplatchart/' + dataJsonHotPot[i].planChart + '" alt="" width="98" height="58" style="width:70;height:70px">';
+                Htmlstr += '   </td>';
+                Htmlstr += '   <td align="center" bgcolor="#FFFFFF">';
+                Htmlstr += '     <p>' + dataJsonHotPot[i].innerTraffic.substr(0, 40) + '</p>';
+                Htmlstr += '   </td>';
+                Htmlstr += '   <td align="center" bgcolor="#FFFFFF">';
+                Htmlstr += '       <p>' + dataJsonHotPot[i].traffic.substr(0, 40) + '</p>';
+                Htmlstr += '   </td>';
+                Htmlstr += '   <td align="center" bgcolor="#FFFFFF">' + dataJsonHotPot[i].like + '';
+                Htmlstr += '    </td>';
+                Htmlstr += '    <td align="center" bgcolor="#FFFFFF">';
+                Htmlstr += '       <a href="javascript:;" onclick="delHpItem(' + dataJsonHotPot[i].id + ')">删除</a>|<a href="/manage/StuffEdit/' + dataJsonHotPot[i].id + '">修改</a>|<a href="/manage/StuffDetail/' + dataJsonHotPot[i].id + '">详情</a>';
+                Htmlstr += '    </td>';
+                Htmlstr += '    </tr>';
+
+                $("#data-hp-box").html(Htmlstr);
+                voiceApply(); //audiojs对audio标签再次渲染
+            }
+        }
+    }, "json");
+});
+function voiceApply() {
+    audiojs.createAll();
+}
+
+
+
+    //模糊查询景区
+$("#hpDistrictSearch").live("click", function () {
+        var txtHopts = $("#txtHopt").val();
+        $.post("/manage/hotpotListFilter", { txtHopt: txtHopts }, function (data) {
+            if (data.rResult) {
+                var dataJsonHotPot = eval(data.info);
+                var Htmlstr = "";
+                $("#data-hp-box").empty();
+                if (dataJsonHotPot.length <= 0) {
+                    $("#data-hp-box").html("<span style=' color:red; '>此省份暂无数据！</span>");
+                    return false;
+                }
+                for (var i = 0; i < dataJsonHotPot.length; i++) {
+                    Htmlstr += '<tr id="hp-' + dataJsonHotPot[i].id + '">';
+                    Htmlstr += '<td height="97" align="center" bgcolor="#FFFFFF" style="color: #0360AF">';
+                    Htmlstr += '    <a href="/SubHotPot/SubHotPotList?potid=' + dataJsonHotPot[i].id + '&pid=1" title="查看景点">' + dataJsonHotPot[i].title + '</a>';
+                    Htmlstr += '</td>';
+                    Htmlstr += '<td align="center" bgcolor="#FFFFFF">';
+                    var images = (dataJsonHotPot[i].imageName).toString();
+
+                    images = images.substr(0, images.indexOf("g") + 1);
+                    Htmlstr += '    <img src="../../UploadFiles/hotpotimg/Thumb/' + images + '" alt=""  style="width:100px;height:70px" />';
+
+
+                    Htmlstr += '</td>';
+                    Htmlstr += '<td align="center" bgcolor="#FFFFFF">';
+                    Htmlstr += '   <p>' + dataJsonHotPot[i].description.substr(0, 40) + '</p>';
+                    Htmlstr += '</td>';
+                    //                Htmlstr += '<td>';
+                    //                Htmlstr += '<div class="audiojs" classname="audiojs" id="audiojs_wrapper' + i + '">';
+                    //                Htmlstr += '   <audio  preload="auto" src="../../UploadFiles/hotpotvoice/' + dataJsonHotPot[i].voice + '">    </audio>';
+                    //                Htmlstr += '    <div class="play-pause"> <p class="play"></p><p class="pause"></p><p class="loading"></p><p class="error"></p> </div>           <div class="scrubber">             <div class="progress" style="width: 0px;"></div>             <div class="loaded" style="width: 80px;"></div>           </div>           <div class="time">             <em class="played">00:00</em>/<strong class="duration">01:46</strong>  </div> ';
+                    //                Htmlstr += '   <div class="error-message"></div></div>';
+
+                    //                Htmlstr += '  </td>';
+                    Htmlstr += ' <td align="center" bgcolor="#FFFFFF">';
+                    Htmlstr += '    <p>' + dataJsonHotPot[i].titleIndex + '</p>';
+                    Htmlstr += '     </td>';
+                    Htmlstr += '    <td align="center" bgcolor="#FFFFFF">';
+                    Htmlstr += '        <img src="../../UploadFiles/hopotplatchart/' + dataJsonHotPot[i].planChart + '" alt="" width="98" height="58" style="width:70;height:70px">';
+                    Htmlstr += '   </td>';
+                    Htmlstr += '   <td align="center" bgcolor="#FFFFFF">';
+                    Htmlstr += '     <p>' + dataJsonHotPot[i].innerTraffic.substr(0, 40) + '</p>';
+                    Htmlstr += '   </td>';
+                    Htmlstr += '   <td align="center" bgcolor="#FFFFFF">';
+                    Htmlstr += '       <p>' + dataJsonHotPot[i].traffic.substr(0, 40) + '</p>';
+                    Htmlstr += '   </td>';
+                    Htmlstr += '   <td align="center" bgcolor="#FFFFFF">' + dataJsonHotPot[i].like + '';
+                    Htmlstr += '    </td>';
+                    Htmlstr += '    <td align="center" bgcolor="#FFFFFF">';
+                    Htmlstr += '       <a href="javascript:;" onclick="delHpItem(' + dataJsonHotPot[i].id + ')">删除</a>|<a href="/manage/StuffEdit/' + dataJsonHotPot[i].id + '">修改</a>|<a href="/manage/StuffDetail/' + dataJsonHotPot[i].id + '">详情</a>';
+                    Htmlstr += '    </td>';
+                    Htmlstr += '    </tr>';
+
+                    $("#data-hp-box").html(Htmlstr);
+                    voiceApply(); //audiojs对audio标签再次渲染
+                }
+            }
+        }, "json");
+    });
+    function voiceApply() {
+        audiojs.createAll();
+    }
+    //删除景区
+    function delHpDistrictItem(id) {
+        if (confirm("删除景区将会附带删除其所有景点、景区评论和景区结算信息，确定删除?")) {
+
+            $.post("page/deleteHotPotDistrict", { hotpotid: id }, function (data) {
+                if (eval(data)) {
+                    $("#hp-" + id + "").remove();
+                }
+            });
+        }
+    }
+
+
+    //删除软件
+    function del(id) {
+        if (confirm("确定删除?")) {
+
+            $.post("/Software/Delete", { id: id }, function (data) {
+                if (data.rResult) {
+                    $("#hp-" + id + "").remove();
+                }
+            });
+        }
+    }
+
+    //景点查询
+    $("#hotpotSearch").live("click", function () {
+        var txtHopts = $("#hpTxt").val();
+        var txtDistrict = $("#sub_districtId").val();
+        $.post("/SubHotPot/hotpotSearch", { txtHopt: txtHopts,txtDistrictId:txtDistrict}, function (data) {
+            if (data.rResult) {
+                var dataJsonHotPot = eval(data.info);
+                var Htmlstr = "";
+                $("#data-hp-box").empty();
+                if (dataJsonHotPot.length <= 0) {
+                    $("#data-hp-box").html("<span style=' color:red; '>此省份暂无数据！</span>");
+                    return false;
+                }
+                for (var i = 0; i < dataJsonHotPot.length; i++) {
+                    Htmlstr += '<tr>';
+                    Htmlstr += '<td height="97" align="center" bgcolor="#FFFFFF" style=" color:#0360AF">';
+                    Htmlstr += '  ' + dataJsonHotPot[i].hotpotName + '';
+                    Htmlstr += ' </td>';
+
+                    Htmlstr += ' <td align="center" bgcolor="#FFFFFF">';
+                    if (dataJsonHotPot[i].imageName != null) {
+                        var imgArr = [];
+                        imgArr = (dataJsonHotPot[i].imageName).toString().split(",");
+                        Htmlstr += ' <img src="../../UploadFiles/hotpotimg/Thumb/' + imgArr[0] + '" alt=""  style="width:100px;height:70px" />';
+                    }
+
+                    Htmlstr += '  </td>';
+                    Htmlstr += '  <td align="center" bgcolor="#FFFFFF">';
+                    Htmlstr += '      <p>' + dataJsonHotPot[i].description + '</p>';
+                    Htmlstr += ' </td>';
+                    Htmlstr += '  <td>';
+                    if (dataJsonHotPot[i].imageName != null) {
+
+                        Htmlstr += '     <audio  preload="auto" src="../../UploadFiles/hotpotvoice/' + dataJsonHotPot[i].voiceName + '">    </audio>';
+                    }
+                    Htmlstr += ' </td>';
+
+                    Htmlstr += ' <td align="center" bgcolor="#FFFFFF">' + dataJsonHotPot[i].viewer + '';
+                    Htmlstr += '  </td>';
+                    Htmlstr += ' <td align="center" bgcolor="#FFFFFF">';
+                    Htmlstr += '     <a href="/SubHotPot/SubHotPotEdit/' + dataJsonHotPot[i].id + '">修改</a>|<a href="/SubHotPot/SubHotPotDetail/' + dataJsonHotPot[i].id + '">详情</a>';
+                    Htmlstr += '  </td>';
+                    Htmlstr += '</tr>';
+
+                    $("#data-hp-box").html(Htmlstr);
+                    voiceApply(); //audiojs对audio标签再次渲染
+                }
+            }
+        }, "json");
+    });

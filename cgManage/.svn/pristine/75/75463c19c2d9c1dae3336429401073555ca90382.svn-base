@@ -1,0 +1,98 @@
+package manage.action;
+
+import java.sql.Timestamp;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.Servlet;
+
+import org.apache.struts2.ServletActionContext;
+
+import manage.model.SgChargeSwitcher;
+import manage.myextends.Exceptions.MyExceptions;
+import manage.service.IChargeModeService;
+import manage.smodel.JsonMessage;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-28 下午2:12:23
+ *@Version 1.0
+ *
+ */
+
+public class ChargeModeAction extends ActionSupport {
+
+	private IChargeModeService chargeModeService;
+	public IChargeModeService getChargeModeService() {
+		return chargeModeService;
+	}
+	@Resource
+	public void setChargeModeService(IChargeModeService chargeModeService) {
+		this.chargeModeService = chargeModeService;
+	}
+	private List<SgChargeSwitcher> chargeModeList;
+
+	public List<SgChargeSwitcher> getChargeModeList() {
+		return chargeModeList;
+	}
+	public void setChargeModeList(List<SgChargeSwitcher> chargeModeList) {
+		this.chargeModeList = chargeModeList;
+	}
+	//收费模式列表
+	public String chargeModeList()
+	{
+		chargeModeList=chargeModeService.getChargeModeList();
+		return "chargeModeManage";
+	}
+	//添加收费模式
+	public void addNewMode()
+	{
+		String modeName=ServletActionContext.getRequest().getParameter("modeName");
+		String status=ServletActionContext.getRequest().getParameter("status");
+		int returns= chargeModeService.addNewChargeMode(modeName,status);
+		BaseAction.writeJson(returns);
+	}
+	
+	public void deleteModeItem()
+	{
+		String modeId=ServletActionContext.getRequest().getParameter("id");
+		JsonMessage jm =new JsonMessage();
+    try{
+			chargeModeService.deleteChargeMode(Integer.parseInt(modeId));
+			jm.setStatus(true);
+			BaseAction.writeJson(jm);
+         }
+    catch(MyExceptions ex)
+    {
+    	jm.setStatus(false);
+		BaseAction.writeJson(jm);
+    }
+	}
+	public void updateModeItem()
+	{
+		String modeId=ServletActionContext.getRequest().getParameter("modeId");
+		String modeName=ServletActionContext.getRequest().getParameter("modeName");
+		String modeStatus=ServletActionContext.getRequest().getParameter("modeStatus");
+		SgChargeSwitcher chargeMode=new SgChargeSwitcher();
+		JsonMessage jm=new JsonMessage();
+		try{
+		chargeMode.setId(Integer.parseInt(modeId));
+		chargeMode.setChargeModeName(modeName);
+		chargeMode.setIsCharge(Boolean.parseBoolean(modeStatus) );
+		Timestamp time=new Timestamp(System.currentTimeMillis());
+		chargeMode.setUpdateTime(time);
+		chargeModeService.updateChargeMode(chargeMode);
+		jm.setStatus(true);
+		BaseAction.writeJson(jm);
+		}
+		catch(Exception ex){
+			jm.setStatus(false);
+			BaseAction.writeJson(jm);
+		}
+	}
+	
+}
+

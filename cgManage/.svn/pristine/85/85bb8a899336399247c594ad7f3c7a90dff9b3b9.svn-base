@@ -1,0 +1,73 @@
+﻿
+$(function() {
+     HdId = $("#hid_areaId").val();
+     
+     $.get("page/getScenicAreaInfo", function (data) {
+
+         var dataJsonHotPot = eval(data);
+         $("#hotpot").children().eq(0).nextAll().remove();
+
+         for (var i = 0; i < dataJsonHotPot.length; i++) {
+             if (HdId == dataJsonHotPot[i][0])
+                 $("#HotPot").append("<option value=" + dataJsonHotPot[i][0] + " selected='selected'>" + dataJsonHotPot[i][1] + "</option>");
+             else
+                 $("#HotPot").append("<option value=" + dataJsonHotPot[i][0] + ">" + dataJsonHotPot[i][1] + "</option>");
+         }
+
+     }, "json");
+})
+
+
+
+
+function HpContentCheck() {
+    var hTitle = $("#hpTitle");
+
+    var hDistrictName = $("#HotPot option:selected");
+    var hDesc = $("#hpDesc");
+    var hIndex = $("#hpIndex");
+    var numberPat = /^\d+$/;
+    var hImageIsupload = $("#hid-isupload").val();
+    if (hImageIsupload != "1") {
+        alert("景区图片未上传或上传不成功，请上传后重试！");
+        return false;
+    }
+    if (hTitle.val() == "") {
+        errorTip(hTitle, "标题不能为空！");
+        return false;
+    }
+    else {
+        removeTip(hTitle);
+    }
+
+    if (hDistrictName.val() == "景区") {
+        alert("请选择所属景区！");
+        return false;
+    }
+    if (hDesc.val() == "") {
+        errorTip(hDesc, "景点介绍不能为空！");
+        return false;
+    }
+    else {
+        removeTip(hDesc);
+    }
+    if (hIndex.val() == "") {
+        errorTip(hIndex, "景点索引不能为空！");
+        return false;
+    }
+    else {
+        removeTip(hIndex);
+    }
+
+
+}
+
+function errorTip(objSelector, content) {
+    objSelector.focus();
+    objSelector.after("<span style=' color:red'>" + content + "</span>");
+
+}
+
+function removeTip(objSelector) {
+    objSelector.next().remove();
+}

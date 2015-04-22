@@ -1,0 +1,18 @@
+package manage.service;
+
+import java.util.List;
+
+import manage.model.SysUser;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-8-27 下午2:26:57
+ *@Version 1.0
+ *
+ */
+
+public interface ILoginUserInfoService {
+ public List<SysUser> getLoginUserInfo(SysUser user);
+}
+

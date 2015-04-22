@@ -1,0 +1,65 @@
+package manage.service.Impl;
+
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import dao.IBaseDao;
+import manage.model.SysUser;
+import manage.service.ILoginService;
+import manage.util.Encrypt;
+
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
+/**
+*
+*@Author yammis
+*@Date 2014-8-26 下午5:25:52
+*@Version 1.0
+*
+*/
+@Service("loginService")
+public class LoginServiceImpl implements ILoginService {
+	private static final Logger logger = Logger.getLogger(LoginServiceImpl.class);
+	private IBaseDao<SysUser> userDao;
+	
+public IBaseDao<SysUser> getUserDao() {
+		return userDao;
+	}
+
+@Resource
+	public void setUserDao(IBaseDao<SysUser> userDao) {
+		this.userDao = userDao;
+	}
+
+
+@Override
+public SysUser loginCheck(SysUser user) {
+	// TODO Auto-generated method stub
+
+	Map<String,Object> params=new HashMap<String,Object>();
+	params.put("uName", user.getSysName());
+	params.put("uPass",Encrypt.e(user.getSysPass()));
+	
+	SysUser t=userDao.get("from SysUser s where s.sysName= :uName and s.sysPass= :uPass", params);
+	if(t!=null)
+	{
+		return t;
+	}
+	return null;
+}
+
+/* (non-Javadoc)
+ * @see manage.service.ILoginService#coutLogin(manage.model.SysUser)
+ */
+@Override
+public void coutLogin(SysUser user) {
+	// TODO Auto-generated method stub
+	Timestamp time=new Timestamp(System.currentTimeMillis());
+	user.setLoginCouter(user.getLoginCouter()+1);
+	user.setLastLoginDate(time);
+	userDao.update(user);
+}
+}

@@ -1,0 +1,33 @@
+package webservice.vo;
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-14 上午11:37:29
+ *@Version 1.0
+ *
+ */
+
+public class ProvinceNameScenicCount {
+ private Integer id;
+ private String provinceName;
+ private int scenicAreaCount;
+public Integer getId() {
+	return id;
+}
+public void setId(Integer id) {
+	this.id = id;
+}
+public String getProvinceName() {
+	return provinceName;
+}
+public void setProvinceName(String provinceName) {
+	this.provinceName = provinceName;
+}
+public int getScenicAreaCount() {
+	return scenicAreaCount;
+}
+public void setScenicAreaCount(int scenicAreaCount) {
+	this.scenicAreaCount = scenicAreaCount;
+}
+}
+

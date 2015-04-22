@@ -1,0 +1,151 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@taglib uri="/struts-tags"  prefix="s"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <base href="<%=basePath%>">
+    
+    <title>景区离线包列表</title>
+    
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+  <link rel="stylesheet" href="<%=basePath %>localResources/bootstrap/css/bootstrap-responsive.min.css" type="text/css"></link>
+  <link rel="stylesheet" href="<%=basePath %>localResources/bootstrap/css/bootstrap.min.css" type="text/css"></link>
+<script src="<%=basePath %>localResources/js/jquery-1.8.0.js" type="text/javascript"></script>
+<script src="<%=basePath %>localResources/js/local/offline.js" type="text/javascript"></script>
+
+  <link rel="stylesheet" href="<%=basePath %>localResources/css/page.css" type="text/css"></link></head>
+  
+  <body>
+
+<script type="text/javascript">
+    $(function () {
+        var id = $("#hid").val();
+        if (id == "") {
+            $("#lb").text("暂无版本");
+        };
+
+    })
+</script>
+
+<div style=" margin-left:20px">
+   <ol class="breadcrumb">
+            <i class="icon-home"></i>
+		   <li><a href="<%=basePath %>admin/logUserInfo.html" target="mainpage">首页</a></li>
+		<span class="divider">/</span>
+		   <li><a href="javascript:;" style="cursor:not-allowed">景区离线包</a></li>
+  </ol>
+
+<div>
+    
+    <div style="margin-top: 15px">
+        <input type="button" style="cursor: pointer; border: none; background: url(<%=basePath %>localResources/image/add.png);
+            width: 156px; height: 47px; color: #fff; font-size: 14px" value="计费模式添加" id="btn-madd" /></div>
+    <div style="width: 920px; height: 40px; margin-top: 15px; background-color: #E4E7E0;
+        margin-bottom: 15px">
+        <div style="width: 150px; float: left; text-align: center; line-height: 40px;">
+            <img src="<%=basePath %>localResources/image/moudle_icon.png" style="padding-right: 3px" title="模块" />景区名称</div>
+        <div style="width: 300px; float: left; text-align: center; line-height: 40px; margin-left: 15px">
+            <img src="<%=basePath %>localResources/image/link.png" style="padding-right: 3px" title="地址" />客户端时间戳</div>
+        <div style="width: 270px; float: left; text-align: center; line-height: 40px; margin-left: 15px">
+            <img src="<%=basePath %>localResources/image/edit.png" style="padding-right: 3px;" title="编辑" />编辑</div>
+    </div>
+   <s:iterator value="offlineList.list" var="offline">
+ 
+        <div class="moudle-list" style="width: 920px; height: 40px; line-height: 40px">
+            <div style="display: none"><s:property value="#offline.offlineId" /></div>
+            <div class="m-item" style="width: 170px; margin-left: 15px; float: left; text-align: center">
+                <span style="padding-left: 35px"><s:property value="#offline.sgHotPotDistrict.hdTitle" /></span>
+            </div>
+            <div class="m-item" style="width: 300px; float: left; margin-left: 15px; text-align: center">
+                <input type="hidden" id="hid" value=" <s:property value="#offline.offlineId" />"/>
+               <s:property value="#offline.timeStamp" />
+                <label id="lb+<s:property value="#offline.offlineId" />">
+                </label>
+            </div>
+            <div class="m-item" style="width: 270px; float: left; text-align: center">
+                <a class="sa-gen" href="javascript:;">生成离线包</a>
+                <input type="hidden" id="cg-<s:property value="#offline.sgHotPotDistrict.id" />" value="<s:property value="#offline.sgHotPotDistrict.id" />" />
+            </div>
+         
+        </div>    
+         <div style="clear: both">
+            </div>
+        
+   </s:iterator>
+</div>
+<div class="ye">
+  <tr align="left" valign="middle">
+		<td style="padding-left: 10px; padding-right: 10px;">
+		<table width="100%" style="height: 100%;" cellpadding="0" 	cellspacing="0">
+			<tr class="pagination">
+					<!--  分页 --> 
+					<s:if test="offlineList.totalPage>1">
+					<s:if test="%{offlineList.currentPage == 1}">
+			     	 <td align="left" width="60" height="30">
+					【首页】
+						</td>
+					 <td align="left" width="70" height="30">
+						【上一页】
+						</td>
+						</s:if>
+						<s:else>
+						<td align="left" width="60" height="30">
+							<a href="<%=basePath %>page/offlinePackageMore?pIndex=1" title="首页">【首页】</a>
+						</td>
+						<td align="left" width="70" height="30">
+							<a href="<%=basePath %>page/offlinePackageMore?pIndex=<s:property value="%{offlineList.currentPage-1}"/>" title="上一页">【上一页】</a>
+						</td>
+						</s:else>
+						<s:if test="%{offlineList.currentPage != offlineList.totalPage}">
+						<td align="left" width="70" height="30">
+						<a href="<%=basePath %>page/offlinePackageMore?pIndex=<s:property value="%{offlineList.currentPage+1}"/>" title="下一页">【下一页】</a>
+						</td>
+						<td align="left" width="60" height="30">
+						<a href="<%=basePath %>page/offlinePackageMore?pIndex=<s:property value="offlineList.totalPage"/>" title="尾页">【尾页】</a>
+						</td>
+						</s:if>
+						<s:else>
+							<td align="left" width="70" height="30">
+							【下一页】
+							</td>
+							<td align="left" width="60" height="30">
+								【尾页】
+							</td>
+						</s:else>
+						</s:if>									
+						<s:else>
+							<td align="left" width="60" height="30">
+									【首页】
+							</td>
+						<td align="left" width="70" height="30">
+								【上一页】
+														</td>
+														<td align="left" width="70" height="30">
+															【下一页】
+														</td>
+														<td align="left" width="60" height="30">
+															【尾页】
+														</td>
+													</s:else>
+													<td align="right">
+														共有<span><s:property value="offlineList.allRow"/>条</span>信息，
+														每页<span><s:property value="offlineList.pageSize" />条</span>，
+														当前<span><s:property value="offlineList.currentPage"/>/<s:property value="offlineList.totalPage"/>页</span>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>   
+</div>
+
+  </body>
+</html>

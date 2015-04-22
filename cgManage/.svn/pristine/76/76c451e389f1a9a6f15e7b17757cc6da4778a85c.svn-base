@@ -1,0 +1,173 @@
+package manage.model;
+
+import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+/**
+ * SgCommentDistrict entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sg_Comment_District", schema = "dbo", catalog = "SceneryGuide")
+public class SgCommentDistrict implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private SgUser sgUser;
+	private SgHotPotDistrict sgHotPotDistrict;
+	private String commentContent;
+	private String commentImageSortId;
+	private String commentPositionName;
+	private Double commentScore;
+	private String commentPositionXy;
+	private Timestamp createDate;
+	private Boolean isAvaiable;
+	private Set<SgCommentUser> sgCommentUsers = new HashSet<SgCommentUser>(0);
+
+	// Constructors
+
+	/** default constructor */
+	public SgCommentDistrict() {
+	}
+
+	/** minimal constructor */
+	public SgCommentDistrict(SgUser sgUser, SgHotPotDistrict sgHotPotDistrict) {
+		this.sgUser = sgUser;
+		this.sgHotPotDistrict = sgHotPotDistrict;
+	}
+
+	/** full constructor */
+	public SgCommentDistrict(SgUser sgUser, SgHotPotDistrict sgHotPotDistrict,
+			String commentContent, String commentImageSortId,
+			String commentPositionName, Double commentScore,
+			String commentPositionXy, Timestamp createDate, Boolean isAvaiable,
+			Set<SgCommentUser> sgCommentUsers) {
+		this.sgUser = sgUser;
+		this.sgHotPotDistrict = sgHotPotDistrict;
+		this.commentContent = commentContent;
+		this.commentImageSortId = commentImageSortId;
+		this.commentPositionName = commentPositionName;
+		this.commentScore = commentScore;
+		this.commentPositionXy = commentPositionXy;
+		this.createDate = createDate;
+		this.isAvaiable = isAvaiable;
+		this.sgCommentUsers = sgCommentUsers;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cmt_Uid", nullable = false)
+	public SgUser getSgUser() {
+		return this.sgUser;
+	}
+
+	public void setSgUser(SgUser sgUser) {
+		this.sgUser = sgUser;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cmt_HpDistrictId", nullable = false)
+	public SgHotPotDistrict getSgHotPotDistrict() {
+		return this.sgHotPotDistrict;
+	}
+
+	public void setSgHotPotDistrict(SgHotPotDistrict sgHotPotDistrict) {
+		this.sgHotPotDistrict = sgHotPotDistrict;
+	}
+
+	@Column(name = "commentContent")
+	public String getCommentContent() {
+		return this.commentContent;
+	}
+
+	public void setCommentContent(String commentContent) {
+		this.commentContent = commentContent;
+	}
+
+	@Column(name = "comment_ImageSortId", length = 50)
+	public String getCommentImageSortId() {
+		return this.commentImageSortId;
+	}
+
+	public void setCommentImageSortId(String commentImageSortId) {
+		this.commentImageSortId = commentImageSortId;
+	}
+
+	@Column(name = "comment_PositionName")
+	public String getCommentPositionName() {
+		return this.commentPositionName;
+	}
+
+	public void setCommentPositionName(String commentPositionName) {
+		this.commentPositionName = commentPositionName;
+	}
+
+	@Column(name = "comment_Score", precision = 53, scale = 0)
+	public Double getCommentScore() {
+		return this.commentScore;
+	}
+
+	public void setCommentScore(Double commentScore) {
+		this.commentScore = commentScore;
+	}
+
+	@Column(name = "comment_PositionXY", length = 50)
+	public String getCommentPositionXy() {
+		return this.commentPositionXy;
+	}
+
+	public void setCommentPositionXy(String commentPositionXy) {
+		this.commentPositionXy = commentPositionXy;
+	}
+
+	@Column(name = "createDate", length = 23)
+	public Timestamp getCreateDate() {
+		return this.createDate;
+	}
+
+	public void setCreateDate(Timestamp createDate) {
+		this.createDate = createDate;
+	}
+
+	@Column(name = "isAvaiable")
+	public Boolean getIsAvaiable() {
+		return this.isAvaiable;
+	}
+
+	public void setIsAvaiable(Boolean isAvaiable) {
+		this.isAvaiable = isAvaiable;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sgCommentDistrict")
+	public Set<SgCommentUser> getSgCommentUsers() {
+		return this.sgCommentUsers;
+	}
+
+	public void setSgCommentUsers(Set<SgCommentUser> sgCommentUsers) {
+		this.sgCommentUsers = sgCommentUsers;
+	}
+
+}

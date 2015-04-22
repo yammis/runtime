@@ -1,0 +1,33 @@
+package webservice.SOAPServices.Impl;
+
+import javax.annotation.Resource;
+
+import webservice.SOAPServices.IScenicAreaViewerIncrease;
+import webservice.businessService.IViewerService;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-23 下午3:20:31
+ *@Version 1.0
+ *
+ */
+
+public class ScenicAreaViewerIncrease implements IScenicAreaViewerIncrease {
+
+	private IViewerService viewerBean;
+	public IViewerService getViewerBean() {
+		return viewerBean;
+	}
+	@Resource(name="scenicAreaViewerBean")
+	public void setViewerBean(IViewerService viewerBean) {
+		this.viewerBean = viewerBean;
+	}
+	@Override
+	public void increaseScenicAreaViewer(String areaId) {
+		// TODO Auto-generated method stub
+	    viewerBean.increaseAreaViewer(areaId);
+	}
+
+}
+

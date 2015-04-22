@@ -1,0 +1,36 @@
+package manage.smodel;
+
+import manage.model.SgHotPotDistrict;
+import manage.model.SgHpImage;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-9-15 下午2:38:27
+ *@Version 1.0
+ *
+ */
+
+public class ScenicArea {
+	
+	public ScenicArea()
+	{
+		HotPotDistrict=new SgHotPotDistrict();
+		HpImage=new SgHpImage();
+	}
+ private SgHotPotDistrict HotPotDistrict;
+ public SgHotPotDistrict getHotPotDistrict() {
+	return HotPotDistrict;
+}
+public void setHotPotDistrict(SgHotPotDistrict hotPotDistrict) {
+	HotPotDistrict = hotPotDistrict;
+}
+public SgHpImage getHpImage() {
+	return HpImage;
+}
+public void setHpImage(SgHpImage hpImage) {
+	HpImage = hpImage;
+}
+private SgHpImage HpImage;
+}
+

@@ -1,0 +1,31 @@
+
+    
+ body{font-family:"Microsoft YaHei"; }
+ body,ul,li,ol,dl,dt,dd,table,tr,td,form,input,select,p,h1,h2,h3,h4,h5,h6{margin:0;padding:0}
+ul li{list-style:none}
+a{ color:#333}
+img ,input{vertical-align:middle}
+table{ font-size:12px}
+.hotpot-title{ font-size:14px;width:910px;}
+ #hpimgQueue
+    {
+        width: 400px;
+        height: 250px;
+        overflow:  scroll;
+        border: 1px solid #E5E5E5;
+        margin-bottom: 10px;
+        
+    }
+    #voiceQueue,#platQueue
+    {
+        width: 400px;
+        height: 150px;
+        overflow:  scroll;
+        border: 1px solid #E5E5E5;
+        margin-bottom: 10px;
+        
+    }
+.right-panle{ padding-left: 15px}
+    
+
+    

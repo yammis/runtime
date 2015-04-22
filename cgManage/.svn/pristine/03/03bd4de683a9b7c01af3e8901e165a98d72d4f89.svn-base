@@ -1,0 +1,136 @@
+package manage.service.Impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import dao.IBaseDao;
+import manage.model.SgHotPot;
+import manage.model.SgHpImage;
+import manage.model.SgHpVoice;
+import manage.service.IScenicPotService;
+import manage.smodel.PageBean;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-9-27 上午10:49:08
+ *@Version 1.0
+ *
+ */
+@Service("scenicPotService")
+public class ScenicPotService implements IScenicPotService {
+
+	private IBaseDao<SgHotPot> scenicPotDao;
+	private IBaseDao<SgHpImage> scenicImageDao;
+	private IBaseDao<SgHpVoice> scenicVoiceDao;
+	public IBaseDao<SgHpVoice> getScenicVoiceDao() {
+		return scenicVoiceDao;
+	}
+	@Resource
+	public void setScenicVoiceDao(IBaseDao<SgHpVoice> scenicVoiceDao) {
+		this.scenicVoiceDao = scenicVoiceDao;
+	}
+	public IBaseDao<SgHpImage> getscenicImageDao() {
+		return scenicImageDao;
+	}
+	@Resource
+	public void setScenicImage(IBaseDao<SgHpImage> scenicImageDao) {
+		this.scenicImageDao = scenicImageDao;
+	}
+	public IBaseDao<SgHotPot> getScenicPotDao() {
+		return scenicPotDao;
+	}
+	@Resource
+	public void setScenicPotDao(IBaseDao<SgHotPot> scenicPotDao) {
+		this.scenicPotDao = scenicPotDao;
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicPotService#saveScenicPot(manage.model.SgHotPot)
+	 */
+	@Override
+	public void saveScenicPot(SgHotPot scenicPot) {
+		// TODO Auto-generated method stub
+		scenicPotDao.saveT(scenicPot);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicPotService#saveScenicPotImage(manage.model.SgHpImage)
+	 */
+	@Override
+	public void saveScenicPotImage(SgHpImage image) {
+		// TODO Auto-generated method stub
+		scenicImageDao.saveT(image);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicPotService#getSgHotPotListByPid(int)
+	 */
+	@Override
+	public PageBean<SgHotPot> getSgHotPotListByPid(int pid,int page,int pageSize) {
+		// TODO Auto-generated method stub
+		String hql="from SgHotPot where sgHotPotDistrict.id='"+pid+"'";
+		return scenicPotDao.getPagedList(hql, pageSize, page);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicPotService#deleteSgHotPotById(int)
+	 */
+	@Override
+	public boolean deleteSgHotPotById(int id) {
+		// TODO Auto-generated method stub
+		SgHotPot scenicPot=scenicPotDao.get(SgHotPot.class, id);
+		if(scenicPot!=null)
+		{
+			scenicPotDao.delete(scenicPot);
+		
+		}
+		return true;
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicPotService#getScenicPotListById()
+	 */
+	@Override
+	public List<SgHotPot> getScenicPotListById(int id) {
+		// TODO Auto-generated method stub
+		String hql="from SgHotPot pot where pot.id='"+id+"'";
+		return scenicPotDao.get(hql);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicPotService#getHdImageId(java.lang.String)
+	 */
+	@Override
+	public List<SgHpImage> getHpImageId(String imgSortId) {
+		// TODO Auto-generated method stub
+      String hql="select id from SgHpImage image where image.hpImageSortId='"+imgSortId+"'";
+	    
+		return	scenicImageDao.get(hql);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicPotService#deleteScenicImage(int)
+	 */
+	@Override
+	public void deleteScenicImage(int id) {
+		// TODO Auto-generated method stub
+		SgHpImage image= scenicImageDao.get(SgHpImage.class, id);
+		if(image!=null)
+			scenicImageDao.delete(image);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicPotService#updateScenicPot(manage.model.SgHotPot)
+	 */
+	@Override
+	public void updateScenicPot(SgHotPot scenicPot) {
+		// TODO Auto-generated method stub
+		scenicPotDao.update(scenicPot);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IScenicPotService#updateScenicPotVoice(manage.model.SgHpVoice)
+	 */
+	@Override
+	public void updateScenicPotVoice(SgHpVoice voice) {
+		// TODO Auto-generated method stub
+		scenicVoiceDao.update(voice);
+	}
+
+}
+

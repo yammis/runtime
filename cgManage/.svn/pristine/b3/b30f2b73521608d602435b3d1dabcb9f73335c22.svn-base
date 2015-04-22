@@ -1,0 +1,51 @@
+package webservice.businessService.Impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.hibernate.Query;
+import org.springframework.stereotype.Service;
+
+import dao.IBaseDao;
+
+import webservice.businessService.IScenicImageService;
+
+import manage.model.SgHpImage;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-21 下午4:47:55
+ *@Version 1.0
+ *
+ */
+public class ScenicImageServiceImpl implements IScenicImageService {
+
+	private IBaseDao<SgHpImage> imageDao;
+	public IBaseDao<SgHpImage> getImageDao() {
+		return imageDao;
+	}
+	@Resource
+	public void setImageDao(IBaseDao<SgHpImage> imageDao) {
+		this.imageDao = imageDao;
+	}
+	@Override
+	public String getScenicImageBySortId(String sortId) {
+		// TODO Auto-generated method stub
+		if(sortId!=null)
+		{
+			String imgHql="select img.hpImageName from SgHpImage img where img.hpImageSortId='"+sortId+"'";
+			Query q=  imageDao.getQueryList(imgHql);
+			if(q!=null && q.list().size()>0)
+			{
+				List<String> imgName=q.list();
+				return imgName.get(0);
+			}
+			else return null;
+		}
+		else return null;
+	}
+
+}
+

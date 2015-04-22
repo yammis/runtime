@@ -1,0 +1,47 @@
+﻿var timer;
+$("#authority_link").live("mouseover", function () {
+    dockShow();
+    shutTimer();
+});
+$("#authority_link").live("mouseout", function () {
+    setTimer();
+});
+
+$(".drop-down-setting").live("mouseout", function () {
+    setTimer();
+});
+$(".drop-down-setting").live("mouseover", function () {
+    shutTimer();
+});
+
+function dockShow() {
+    $(".drop-down-setting").fadeIn("slow");
+}
+
+function dockHide() {
+    shutTimer();
+    $(".drop-down-setting").fadeOut();
+}
+
+function setTimer() {
+    timer = window.setTimeout(dockHide, 500);
+}
+
+function shutTimer() {
+    if (timer) {
+        window.clearTimeout(timer);
+        timer = null;
+    }
+
+}
+
+var lilist = $(".drop-down-setting");
+$(function () {
+    for (var i = 0; i < lilist.length; i++) {
+        lilist[i].onmouseover = function () {
+            alert(i);
+        };
+    }
+});
+
+//

@@ -1,0 +1,47 @@
+
+
+$(function(){
+	$.get("page/getProviceList",function(data){
+		var proJson=eval(data);
+		var thisPro=$("#hidp").val();
+	
+		for(var i=0;i<proJson.length;i++)
+			{
+			if(proJson[i][0]==thisPro)
+				{
+				  $("#province").append("<option value=" + proJson[i][0] + " selected='selected'>" + proJson[i][1] + "</option>");
+				  loadCity();
+				}
+			else
+				{
+		     	  $("#province").append("<option value=" + proJson[i][0] + ">" + proJson[i][1] + "</option>");
+				}
+			}
+	},"json")
+})
+//根据省份查出城市
+$("#province").live("change", function () {
+	 loadCity();
+});
+
+function loadCity()
+{
+	var pid = $("#province option:selected").val();
+    $.post("page/getCityList", { id: pid }, function (data) {
+        if (data) {
+            var dataJsonCity = eval(data);
+        	var thisCity=$("#hidc").val();
+            $("#city").children().remove();
+            for (var i = 0; i < dataJsonCity.length; i++) {         	
+            	if(thisCity==dataJsonCity[i].id)
+            		{
+            	    $("#city").append("<option value=" + dataJsonCity[i].id + " selected='selected'>" + dataJsonCity[i].city + "</option>");
+            		}
+            	else
+            		{
+                    $("#city").append("<option value=" + dataJsonCity[i].id + ">" + dataJsonCity[i].city + "</option>");
+            		}
+            	}
+        }
+    },"json");	
+}

@@ -1,0 +1,92 @@
+package manage.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+/**
+ * SysMoudle entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sys_moudle", schema = "dbo", catalog = "SceneryGuide")
+public class SysMoudle implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private SysRole sysRole;
+	private String moudleName;
+	private String moudleUri;
+	private Boolean isAvaiable;
+
+	// Constructors
+
+	/** default constructor */
+	public SysMoudle() {
+	}
+
+	/** full constructor */
+	public SysMoudle(SysRole sysRole, String moudleName, String moudleUri,
+			Boolean isAvaiable) {
+		this.sysRole = sysRole;
+		this.moudleName = moudleName;
+		this.moudleUri = moudleUri;
+		this.isAvaiable = isAvaiable;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "roleId")
+	public SysRole getSysRole() {
+		return this.sysRole;
+	}
+
+	public void setSysRole(SysRole sysRole) {
+		this.sysRole = sysRole;
+	}
+
+	@Column(name = "moudleName")
+	public String getMoudleName() {
+		return this.moudleName;
+	}
+
+	public void setMoudleName(String moudleName) {
+		this.moudleName = moudleName;
+	}
+
+	@Column(name = "moudleUri", length = 50)
+	public String getMoudleUri() {
+		return this.moudleUri;
+	}
+
+	public void setMoudleUri(String moudleUri) {
+		this.moudleUri = moudleUri;
+	}
+
+	@Column(name = "isAvaiable")
+	public Boolean getIsAvaiable() {
+		return this.isAvaiable;
+	}
+
+	public void setIsAvaiable(Boolean isAvaiable) {
+		this.isAvaiable = isAvaiable;
+	}
+
+}

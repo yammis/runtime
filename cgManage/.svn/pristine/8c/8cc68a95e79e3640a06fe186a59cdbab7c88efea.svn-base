@@ -1,0 +1,36 @@
+package manage.service;
+
+import java.io.Serializable;
+import java.util.List;
+
+import org.hibernate.Query;
+
+import manage.model.SgHotPotDistrict;
+import manage.model.SgHpImage;
+import manage.model.SgHpPlanChart;
+import manage.smodel.PageBean;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-9-1 上午11:23:16
+ *@Version 1.0
+ *
+ */
+
+public interface IScenicAreaService {
+  public void saveScenicArea(SgHotPotDistrict area);
+  public void saveScenicImage(SgHpImage image);
+  public PageBean<SgHotPotDistrict> getScenicAreaList(int page,int pageSize);
+  public List<SgHpImage> getHdImage(String imgSortId);
+  public List<SgHpImage> getHdImageId(String imgSortId);
+  public List<SgHotPotDistrict> getScenicAreaDetail(String areaId);
+  public boolean deleteScenicAreaById(String id);
+  public void updateScenicAreaById(SgHotPotDistrict area);
+  public void updateScenicAreaMap(SgHpPlanChart map);
+  public void deleteScenicImage(int id);
+  public List<SgHotPotDistrict> getScenicAreaList();
+  //public List<Sg>
+  //public List<SgHotPotDistrict> editScenicAreaDetail
+}
+

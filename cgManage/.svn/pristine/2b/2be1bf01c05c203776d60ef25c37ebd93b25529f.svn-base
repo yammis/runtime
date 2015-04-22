@@ -1,0 +1,128 @@
+package manage.model;
+
+import java.sql.Timestamp;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * SysSoftInfo entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sys_SoftInfo", schema = "dbo", catalog = "SceneryGuide")
+public class SysSoftInfo implements java.io.Serializable {
+
+	// Fields
+
+	private Integer softId;
+	private Double versionId;
+	private String softDescription;
+	private String softFileSize;
+	private String softName;
+	private String softSnapshotSortId;
+	private Boolean isAvaiable;
+	private Timestamp createDate;
+
+	// Constructors
+
+	/** default constructor */
+	public SysSoftInfo() {
+	}
+
+	/** minimal constructor */
+	public SysSoftInfo(Double versionId) {
+		this.versionId = versionId;
+	}
+
+	/** full constructor */
+	public SysSoftInfo(Double versionId, String softDescription,
+			String softFileSize, String softName, String softSnapshotSortId,
+			Boolean isAvaiable, Timestamp createDate) {
+		this.versionId = versionId;
+		this.softDescription = softDescription;
+		this.softFileSize = softFileSize;
+		this.softName = softName;
+		this.softSnapshotSortId = softSnapshotSortId;
+		this.isAvaiable = isAvaiable;
+		this.createDate = createDate;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "softID", unique = true, nullable = false)
+	public Integer getSoftId() {
+		return this.softId;
+	}
+
+	public void setSoftId(Integer softId) {
+		this.softId = softId;
+	}
+
+	@Column(name = "versionId", nullable = false, precision = 53, scale = 0)
+	public Double getVersionId() {
+		return this.versionId;
+	}
+
+	public void setVersionId(Double versionId) {
+		this.versionId = versionId;
+	}
+
+	@Column(name = "softDescription")
+	public String getSoftDescription() {
+		return this.softDescription;
+	}
+
+	public void setSoftDescription(String softDescription) {
+		this.softDescription = softDescription;
+	}
+
+	@Column(name = "softFileSize", length = 50)
+	public String getSoftFileSize() {
+		return this.softFileSize;
+	}
+
+	public void setSoftFileSize(String softFileSize) {
+		this.softFileSize = softFileSize;
+	}
+
+	@Column(name = "softName")
+	public String getSoftName() {
+		return this.softName;
+	}
+
+	public void setSoftName(String softName) {
+		this.softName = softName;
+	}
+
+	@Column(name = "softSnapshotSortId", length = 50)
+	public String getSoftSnapshotSortId() {
+		return this.softSnapshotSortId;
+	}
+
+	public void setSoftSnapshotSortId(String softSnapshotSortId) {
+		this.softSnapshotSortId = softSnapshotSortId;
+	}
+
+	@Column(name = "isAvaiable")
+	public Boolean getIsAvaiable() {
+		return this.isAvaiable;
+	}
+
+	public void setIsAvaiable(Boolean isAvaiable) {
+		this.isAvaiable = isAvaiable;
+	}
+
+	@Column(name = "createDate", length = 23)
+	public Timestamp getCreateDate() {
+		return this.createDate;
+	}
+
+	public void setCreateDate(Timestamp createDate) {
+		this.createDate = createDate;
+	}
+
+}

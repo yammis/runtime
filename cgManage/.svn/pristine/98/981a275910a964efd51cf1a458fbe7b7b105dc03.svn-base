@@ -1,0 +1,17 @@
+/**
+ * 
+ */
+package webservice.SOAPServices;
+
+import javax.jws.WebParam;
+import javax.jws.WebService;
+
+import webservice.conf.wsConf;
+/**
+ * @author likai
+ *
+ */
+@WebService(targetNamespace=wsConf.cg_TargetNamespace, serviceName="ScenicAreaPackger")
+public interface ISenicAreaOnLine {
+	public String getScenicAreaOnLineInfo();
+}

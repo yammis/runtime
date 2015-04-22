@@ -1,0 +1,73 @@
+package manage.model;
+
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+/**
+ * SgCarrier entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sg_Carrier", schema = "dbo", catalog = "SceneryGuide")
+public class SgCarrier implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private String carrierName;
+	private Set<SgSmsCodeProvinceCarrier> sgSmsCodeProvinceCarriers = new HashSet<SgSmsCodeProvinceCarrier>(
+			0);
+
+	// Constructors
+
+	/** default constructor */
+	public SgCarrier() {
+	}
+
+	/** full constructor */
+	public SgCarrier(String carrierName,
+			Set<SgSmsCodeProvinceCarrier> sgSmsCodeProvinceCarriers) {
+		this.carrierName = carrierName;
+		this.sgSmsCodeProvinceCarriers = sgSmsCodeProvinceCarriers;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@Column(name = "CarrierName", length = 15)
+	public String getCarrierName() {
+		return this.carrierName;
+	}
+
+	public void setCarrierName(String carrierName) {
+		this.carrierName = carrierName;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sgCarrier")
+	public Set<SgSmsCodeProvinceCarrier> getSgSmsCodeProvinceCarriers() {
+		return this.sgSmsCodeProvinceCarriers;
+	}
+
+	public void setSgSmsCodeProvinceCarriers(
+			Set<SgSmsCodeProvinceCarrier> sgSmsCodeProvinceCarriers) {
+		this.sgSmsCodeProvinceCarriers = sgSmsCodeProvinceCarriers;
+	}
+
+}

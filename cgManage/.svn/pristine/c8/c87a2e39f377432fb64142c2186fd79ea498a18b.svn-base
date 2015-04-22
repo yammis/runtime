@@ -1,0 +1,19 @@
+package webservice.SOAPServices;
+
+import javax.jws.WebParam;
+import javax.jws.WebService;
+
+import webservice.conf.wsConf;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-23 下午3:20:03
+ *@Version 1.0
+ *
+ */
+@WebService(targetNamespace=wsConf.cg_TargetNamespace, serviceName="ScenicAreaIncreaseViewerService")
+public interface IScenicAreaViewerIncrease {
+ public void increaseScenicAreaViewer(@WebParam(name="areaId")String areaId);
+}
+

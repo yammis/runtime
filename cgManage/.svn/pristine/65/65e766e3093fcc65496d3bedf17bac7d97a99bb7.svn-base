@@ -1,0 +1,318 @@
+package manage.model;
+
+import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+/**
+ * SgHotPotDistrict entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sg_HotPotDistrict", schema = "dbo", catalog = "SceneryGuide")
+public class SgHotPotDistrict implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private SgHpPlanChart sgHpPlanChart;
+	private SgCity sgCity;
+	private String hdTitle;
+	private String hdImageSortId;
+	private String hdTitleIndex;
+	private Double hdCharge;
+	private String hdLevel;
+	private String hdDescription;
+	private String hdInnerTraffic;
+	private String hdTip;
+	private String hdTraffic;
+	private String hdTicketInfo;
+	private String hdCoordinatePosition;
+	private Integer hdViewers;
+	private String hdCommetScore;
+	private Integer hdCommentid;
+	private Timestamp hdCreateTime;
+	private Boolean isAvailable;
+	private Boolean hasVoice;
+	private Set<SgHotPot> sgHotPots = new HashSet<SgHotPot>(0);
+	private Set<SgOrder> sgOrders = new HashSet<SgOrder>(0);
+	private Set<SgHotPotDistrictOffline> sgHotPotDistrictOfflines = new HashSet<SgHotPotDistrictOffline>(
+			0);
+	private Set<SgCommentDistrict> sgCommentDistricts = new HashSet<SgCommentDistrict>(
+			0);
+
+	// Constructors
+
+	/** default constructor */
+	public SgHotPotDistrict() {
+	}
+
+	/** full constructor */
+	public SgHotPotDistrict(SgHpPlanChart sgHpPlanChart, SgCity sgCity,
+			String hdTitle, String hdImageSortId, String hdTitleIndex,
+			Double hdCharge, String hdLevel, String hdDescription,
+			String hdInnerTraffic, String hdTip, String hdTraffic,
+			String hdTicketInfo, String hdCoordinatePosition,
+			Integer hdViewers, String hdCommetScore, Integer hdCommentid,
+			Timestamp hdCreateTime, Boolean isAvailable, Boolean hasVoice,
+			Set<SgHotPot> sgHotPots, Set<SgOrder> sgOrders,
+			Set<SgHotPotDistrictOffline> sgHotPotDistrictOfflines,
+			Set<SgCommentDistrict> sgCommentDistricts) {
+		this.sgHpPlanChart = sgHpPlanChart;
+		this.sgCity = sgCity;
+		this.hdTitle = hdTitle;
+		this.hdImageSortId = hdImageSortId;
+		this.hdTitleIndex = hdTitleIndex;
+		this.hdCharge = hdCharge;
+		this.hdLevel = hdLevel;
+		this.hdDescription = hdDescription;
+		this.hdInnerTraffic = hdInnerTraffic;
+		this.hdTip = hdTip;
+		this.hdTraffic = hdTraffic;
+		this.hdTicketInfo = hdTicketInfo;
+		this.hdCoordinatePosition = hdCoordinatePosition;
+		this.hdViewers = hdViewers;
+		this.hdCommetScore = hdCommetScore;
+		this.hdCommentid = hdCommentid;
+		this.hdCreateTime = hdCreateTime;
+		this.isAvailable = isAvailable;
+		this.hasVoice = hasVoice;
+		this.sgHotPots = sgHotPots;
+		this.sgOrders = sgOrders;
+		this.sgHotPotDistrictOfflines = sgHotPotDistrictOfflines;
+		this.sgCommentDistricts = sgCommentDistricts;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@ManyToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+	@JoinColumn(name = "hd_MapId")
+	public SgHpPlanChart getSgHpPlanChart() {
+		return this.sgHpPlanChart;
+	}
+
+	public void setSgHpPlanChart(SgHpPlanChart sgHpPlanChart) {
+		this.sgHpPlanChart = sgHpPlanChart;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "hd_CityId")
+	public SgCity getSgCity() {
+		return this.sgCity;
+	}
+
+	public void setSgCity(SgCity sgCity) {
+		this.sgCity = sgCity;
+	}
+
+	@Column(name = "hd_Title")
+	public String getHdTitle() {
+		return this.hdTitle;
+	}
+
+	public void setHdTitle(String hdTitle) {
+		this.hdTitle = hdTitle;
+	}
+
+	@Column(name = "hd_ImageSortId", length = 50)
+	public String getHdImageSortId() {
+		return this.hdImageSortId;
+	}
+
+	public void setHdImageSortId(String hdImageSortId) {
+		this.hdImageSortId = hdImageSortId;
+	}
+
+	@Column(name = "hd_TitleIndex", length = 5)
+	public String getHdTitleIndex() {
+		return this.hdTitleIndex;
+	}
+
+	public void setHdTitleIndex(String hdTitleIndex) {
+		this.hdTitleIndex = hdTitleIndex;
+	}
+
+	@Column(name = "hd_Charge", precision = 53, scale = 0)
+	public Double getHdCharge() {
+		return this.hdCharge;
+	}
+
+	public void setHdCharge(Double hdCharge) {
+		this.hdCharge = hdCharge;
+	}
+
+	@Column(name = "hd_Level", length = 10)
+	public String getHdLevel() {
+		return this.hdLevel;
+	}
+
+	public void setHdLevel(String hdLevel) {
+		this.hdLevel = hdLevel;
+	}
+
+	@Column(name = "hd_Description")
+	public String getHdDescription() {
+		return this.hdDescription;
+	}
+
+	public void setHdDescription(String hdDescription) {
+		this.hdDescription = hdDescription;
+	}
+
+	@Column(name = "hd_InnerTraffic")
+	public String getHdInnerTraffic() {
+		return this.hdInnerTraffic;
+	}
+
+	public void setHdInnerTraffic(String hdInnerTraffic) {
+		this.hdInnerTraffic = hdInnerTraffic;
+	}
+
+	@Column(name = "hd_Tip")
+	public String getHdTip() {
+		return this.hdTip;
+	}
+
+	public void setHdTip(String hdTip) {
+		this.hdTip = hdTip;
+	}
+
+	@Column(name = "hd_Traffic")
+	public String getHdTraffic() {
+		return this.hdTraffic;
+	}
+
+	public void setHdTraffic(String hdTraffic) {
+		this.hdTraffic = hdTraffic;
+	}
+
+	@Column(name = "hd_TicketInfo")
+	public String getHdTicketInfo() {
+		return this.hdTicketInfo;
+	}
+
+	public void setHdTicketInfo(String hdTicketInfo) {
+		this.hdTicketInfo = hdTicketInfo;
+	}
+
+	@Column(name = "hd_CoordinatePosition", length = 50)
+	public String getHdCoordinatePosition() {
+		return this.hdCoordinatePosition;
+	}
+
+	public void setHdCoordinatePosition(String hdCoordinatePosition) {
+		this.hdCoordinatePosition = hdCoordinatePosition;
+	}
+
+	@Column(name = "hd_Viewers")
+	public Integer getHdViewers() {
+		return this.hdViewers;
+	}
+
+	public void setHdViewers(Integer hdViewers) {
+		this.hdViewers = hdViewers;
+	}
+
+	@Column(name = "hd_CommetScore", length = 10)
+	public String getHdCommetScore() {
+		return this.hdCommetScore;
+	}
+
+	public void setHdCommetScore(String hdCommetScore) {
+		this.hdCommetScore = hdCommetScore;
+	}
+
+	@Column(name = "hd_Commentid")
+	public Integer getHdCommentid() {
+		return this.hdCommentid;
+	}
+
+	public void setHdCommentid(Integer hdCommentid) {
+		this.hdCommentid = hdCommentid;
+	}
+
+	@Column(name = "hd_CreateTime", length = 23)
+	public Timestamp getHdCreateTime() {
+		return this.hdCreateTime;
+	}
+
+	public void setHdCreateTime(Timestamp hdCreateTime) {
+		this.hdCreateTime = hdCreateTime;
+	}
+
+	@Column(name = "isAvailable")
+	public Boolean getIsAvailable() {
+		return this.isAvailable;
+	}
+
+	public void setIsAvailable(Boolean isAvailable) {
+		this.isAvailable = isAvailable;
+	}
+
+	@Column(name = "hasVoice")
+	public Boolean getHasVoice() {
+		return this.hasVoice;
+	}
+
+	public void setHasVoice(Boolean hasVoice) {
+		this.hasVoice = hasVoice;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sgHotPotDistrict")
+	public Set<SgHotPot> getSgHotPots() {
+		return this.sgHotPots;
+	}
+
+	public void setSgHotPots(Set<SgHotPot> sgHotPots) {
+		this.sgHotPots = sgHotPots;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sgHotPotDistrict")
+	public Set<SgOrder> getSgOrders() {
+		return this.sgOrders;
+	}
+
+	public void setSgOrders(Set<SgOrder> sgOrders) {
+		this.sgOrders = sgOrders;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sgHotPotDistrict")
+	public Set<SgHotPotDistrictOffline> getSgHotPotDistrictOfflines() {
+		return this.sgHotPotDistrictOfflines;
+	}
+
+	public void setSgHotPotDistrictOfflines(
+			Set<SgHotPotDistrictOffline> sgHotPotDistrictOfflines) {
+		this.sgHotPotDistrictOfflines = sgHotPotDistrictOfflines;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sgHotPotDistrict")
+	public Set<SgCommentDistrict> getSgCommentDistricts() {
+		return this.sgCommentDistricts;
+	}
+
+	public void setSgCommentDistricts(Set<SgCommentDistrict> sgCommentDistricts) {
+		this.sgCommentDistricts = sgCommentDistricts;
+	}
+
+}

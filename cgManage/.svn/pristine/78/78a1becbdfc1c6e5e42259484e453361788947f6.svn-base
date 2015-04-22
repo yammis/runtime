@@ -1,0 +1,146 @@
+package manage.model;
+
+import java.sql.Timestamp;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+/**
+ * WOrder entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name="w_Order"
+    ,schema="dbo"
+    ,catalog="SceneryGuide"
+)
+
+public class WOrder  implements java.io.Serializable {
+
+
+    // Fields    
+
+     private Integer id;
+     private String orderId;
+     private String hotPotDistrictId;
+     private String mobile;
+     private Double salePrice;
+     private Timestamp orderTime;
+     private Timestamp payTime;
+     private Timestamp createTime;
+
+
+    // Constructors
+
+    /** default constructor */
+    public WOrder() {
+    }
+
+    
+    /** full constructor */
+    public WOrder(String orderId, String hotPotDistrictId, String mobile, Double salePrice, Timestamp orderTime, Timestamp payTime, Timestamp createTime) {
+        this.orderId = orderId;
+        this.hotPotDistrictId = hotPotDistrictId;
+        this.mobile = mobile;
+        this.salePrice = salePrice;
+        this.orderTime = orderTime;
+        this.payTime = payTime;
+        this.createTime = createTime;
+    }
+
+   
+    // Property accessors
+    @Id @GeneratedValue(strategy=IDENTITY)
+    
+    @Column(name="id", unique=true, nullable=false)
+
+    public Integer getId() {
+        return this.id;
+    }
+    
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
+    @Column(name="OrderId", length=50)
+
+    public String getOrderId() {
+        return this.orderId;
+    }
+    
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+    
+    @Column(name="HotPotDistrictId", length=50)
+
+    public String getHotPotDistrictId() {
+        return this.hotPotDistrictId;
+    }
+    
+    public void setHotPotDistrictId(String hotPotDistrictId) {
+        this.hotPotDistrictId = hotPotDistrictId;
+    }
+    
+    @Column(name="Mobile", length=11)
+
+    public String getMobile() {
+        return this.mobile;
+    }
+    
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+    
+    @Column(name="SalePrice", precision=53, scale=0)
+
+    public Double getSalePrice() {
+        return this.salePrice;
+    }
+    
+    public void setSalePrice(Double salePrice) {
+        this.salePrice = salePrice;
+    }
+    
+    @Column(name="OrderTime", length=23)
+
+    public Timestamp getOrderTime() {
+        return this.orderTime;
+    }
+    
+    public void setOrderTime(Timestamp orderTime) {
+        this.orderTime = orderTime;
+    }
+    
+    @Column(name="PayTime", length=23)
+
+    public Timestamp getPayTime() {
+        return this.payTime;
+    }
+    
+    public void setPayTime(Timestamp payTime) {
+        this.payTime = payTime;
+    }
+    
+    @Column(name="CreateTime", length=23)
+
+    public Timestamp getCreateTime() {
+        return this.createTime;
+    }
+    
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+    }
+   
+
+
+
+
+
+
+
+
+}

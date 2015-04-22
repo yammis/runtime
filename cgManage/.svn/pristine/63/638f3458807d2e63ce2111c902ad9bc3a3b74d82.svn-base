@@ -1,0 +1,322 @@
+package manage.action;
+
+import java.io.File;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.interceptor.SessionAware;
+
+
+import manage.model.SgHotPot;
+import manage.model.SgHotPotDistrict;
+import manage.model.SgHpImage;
+import manage.model.SgHpVoice;
+import manage.service.IScenicPotService;
+import manage.smodel.PageBean;
+import manage.util.BusinessTool;
+import manage.util.FileUtil;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-9-1 上午11:10:19
+ *@Version 1.0
+ *
+ */
+
+public class ScenicPotAction implements SessionAware {
+    private String _VirtualThumbHpImgPath = "/UploadFiles/hotpotimg/Thumb/";
+    private String _VirtualOriginalHpImgPath = "/UploadFiles/hotpotimg/";
+    private String _VirtualOriginalVoicePath = "/UploadFiles/hotpotvoice/";
+
+    private String areaid;
+    
+	public String getAreaid() {
+		return areaid;
+	}
+	public void setAreaid(String areaid) {
+		this.areaid = areaid;
+	}
+	private SgHotPot scenicPotInfo;
+    public SgHotPot getScenicPotInfo() {
+		return scenicPotInfo;
+	}
+	public void setScenicPotInfo(SgHotPot scenicPotInfo) {
+		this.scenicPotInfo = scenicPotInfo;
+	}
+	private PageBean<SgHotPot> pageBean;
+  
+	public PageBean<SgHotPot> getPageBean() {
+		return pageBean;
+	}
+	public void setPageBean(PageBean<SgHotPot> pageBean) {
+		this.pageBean = pageBean;
+	}
+	private int pageIndex;
+	private int pageSize=10;
+
+
+	public int getPageIndex() {
+		return pageIndex;
+	}
+
+	public void setPageIndex(int pageIndex) {
+		this.pageIndex = pageIndex;
+	}
+
+	public int getTotalCounts() {
+		return totalCounts;
+	}
+
+	public void setTotalCounts(int totalCounts) {
+		this.totalCounts = totalCounts;
+	}
+	private Map<String,Object> session;
+	public Map<String, Object> getSession() {
+		return session;
+	}
+	public void setSession(Map<String, Object> session) {
+		this.session = session;
+	}
+	private int totalCounts;
+	
+	
+	private File voiceFile;
+	public File getVoiceFile() {
+		return voiceFile;
+	}
+	public void setVoiceFile(File voiceFile) {
+		this.voiceFile = voiceFile;
+	}
+	private File imgFile;
+	public File getImgFile() {
+		return imgFile;
+	}
+	public void setImgFile(File imgFile) {
+		this.imgFile = imgFile;
+	}
+	private String imgFileFileName; // 文件名称
+	public String getImgFileFileName() {
+		return imgFileFileName;
+	}
+	public void setImgFileFileName(String imgFileFileName) {
+		this.imgFileFileName = imgFileFileName;
+	}
+	private String voiceFileFileName;
+	public String getVoiceFileFileName() {
+		return voiceFileFileName;
+	}
+	public void setVoiceFileFileName(String voiceFileFileName) {
+		this.voiceFileFileName = voiceFileFileName;
+	}
+	private String imgFileContentType;
+	private SgHotPot scenicPot;
+   private IScenicPotService scenicPotService;
+
+  public IScenicPotService getScenicPotService() {
+    	return scenicPotService;
+  }
+   @Resource
+	public void setScenicPotService(IScenicPotService scenicPotService) {
+		this.scenicPotService = scenicPotService;
+	}
+   
+   public void uploadPotImage()
+   {
+	   String savePath=ServletActionContext.getRequest().getRealPath(_VirtualOriginalHpImgPath);
+	   String thumbSavePath=ServletActionContext.getRequest().getRealPath(_VirtualThumbHpImgPath);
+		FileUtil.checkRealPath(ServletActionContext.getRequest().getRealPath("/UploadFiles/"));
+	   FileUtil.checkRealPath(savePath);
+	   FileUtil.checkRealPath(thumbSavePath);
+	   String newName=FileUtil.reName(imgFileFileName);
+	   String fullPath=savePath+"\\"+newName;
+	   String thumbFullPath=thumbSavePath+"\\"+newName;
+	   
+	   FileUtil.saveFile(imgFile, fullPath);
+	   manage.util.ImageUtil.imageCompress(fullPath, thumbFullPath, 0.5f, 200, 128);
+	   String randomId = BusinessTool.GetRandomStr(20) + "|" + newName;
+		BaseAction.writeJson(randomId);
+   }
+   
+   
+   public void uploadPotVoice()
+   {
+	   String savePath=ServletActionContext.getRequest().getRealPath(_VirtualOriginalVoicePath);
+		FileUtil.checkRealPath(ServletActionContext.getRequest().getRealPath("/UploadFiles/"));
+	   FileUtil.checkRealPath(savePath);
+	   String newName=FileUtil.reName(voiceFileFileName);
+	   String fullPath=savePath+"\\"+newName;
+	   
+	   FileUtil.saveFile(voiceFile, fullPath);
+		BaseAction.writeJson(newName); 
+   }
+   
+   public String saveScenicPot()
+   {
+	   String areaId=ServletActionContext.getRequest().getParameter("scenicAreaId");
+	   this.areaid=areaId;
+	   String imgInfo=ServletActionContext.getRequest().getParameter("hpImgInfo");
+	   String voiceInfo=ServletActionContext.getRequest().getParameter("hpVoiceInfo");
+	   String[] imgSort=imgInfo.split("\\|");
+		if (!imgInfo.equals("")) {
+			scenicPot.setHImageSortId(imgSort[0]);
+			for(int i=1; i<imgSort.length;i=i+2)
+			{
+				SgHpImage image=new SgHpImage();
+				image.setHpImageSortId(imgSort[0]);
+				image.setHpImageName(imgSort[i]);
+				image.setIsAvaiable(true);
+				scenicPotService.saveScenicPotImage(image);
+			}	
+		}
+		//voiceInfo非空，初始化voice表信息
+		if(!voiceInfo.equals(""))
+		{
+			SgHpVoice voice=new SgHpVoice();
+			voice.setHpVoiceName(voiceInfo);
+			voice.setIsAvaiable(true);
+			scenicPot.setSgHpVoice(voice);
+		}
+		if(!areaId.equals(""))
+		{
+			SgHotPotDistrict area=new SgHotPotDistrict();
+			area.setId(Integer.parseInt(areaId));
+			scenicPot.setSgHotPotDistrict(area);
+		}
+		 iniPotInfo();
+	   scenicPotService.saveScenicPot(scenicPot);
+	   return "addToList";
+   }
+   
+   public String editScenicPotInfo()
+   {
+	   String hpImgInfo=ServletActionContext.getRequest().getParameter("hpImgInfo");
+	   String hpVoiceInfo=ServletActionContext.getRequest().getParameter("hpVoiceInfo");
+	   String hidOldImgSortId=ServletActionContext.getRequest().getParameter("hidOldImgSortId");
+	   String hidOldhpVoiceName=ServletActionContext.getRequest().getParameter("hidOldhpVoiceName");
+	   String hidOldhpVoiceId=ServletActionContext.getRequest().getParameter("hidOldhpVoiceId");
+	   String hidAreaId=ServletActionContext.getRequest().getParameter("hidAreaId");
+	   this.areaid=hidAreaId;
+	   scenicPot.setHImageSortId(hidOldImgSortId);
+	   String imgSort[]=hpImgInfo.split("\\|");
+	   if(!hpImgInfo.equals(""))
+	   {
+		   scenicPot.setHImageSortId(imgSort[0]);
+		   //删除旧景点图片
+		   List<SgHpImage> hpImageList=scenicPotService.getHpImageId(hidOldImgSortId);
+		   if(hpImageList!=null)
+		   {
+			   for(Object o:hpImageList)
+			   {
+				   scenicPotService.deleteScenicImage(Integer.parseInt(o.toString()));
+			   }
+		   }
+		   //取出新景点图片名字
+		   for(int i=1;i<imgSort.length;i=i+2)
+		   {
+			   SgHpImage image=new SgHpImage();
+			   image.setHpImageSortId(imgSort[0]);
+			   image.setHpImageName(imgSort[i]);
+			   image.setIsAvaiable(true);
+			   scenicPotService.saveScenicPotImage(image);
+		   }
+	   }
+	   //语音有更新
+	   SgHpVoice voice= new SgHpVoice();
+	   SgHotPotDistrict district =new SgHotPotDistrict();
+	   if(!hpVoiceInfo.equals(""))
+	   {
+		  
+		   voice.setHpVoiceName(hpVoiceInfo);
+		   voice.setIsAvaiable(true);
+		   scenicPot.setSgHpVoice(voice);
+		   //之前有语音
+		   if(!hidOldhpVoiceId.equals(""))
+		   {
+			   voice.setId(Integer.parseInt(hidOldhpVoiceId) );
+			   scenicPotService.updateScenicPotVoice(voice);
+		   }
+		   district.setHasVoice(true);
+	   }
+	   //语音未更新
+	   else
+	   {
+		   //之前有语音
+		   if(!hidOldhpVoiceId.equals(""))
+		   {
+			   voice.setHpVoiceName(hidOldhpVoiceName);
+			   voice.setIsAvaiable(true);
+			   voice.setId(Integer.parseInt(hidOldhpVoiceId));
+			   scenicPot.setSgHpVoice(voice);
+		   }
+	   }
+	 
+	  district.setId(Integer.parseInt(hidAreaId) );
+	  scenicPot.setSgHotPotDistrict(district);
+	   iniPotInfo();
+	   scenicPotService.updateScenicPot(scenicPot);
+	   return "editToScenicPotList";
+   }
+	
+	public String getScenicPotListByPid()
+	{
+		String areaId=ServletActionContext.getRequest().getParameter("areaid");
+		if(areaId==null || areaId.equals("")) areaId=this.getAreaid();
+		session.put("areaId", areaId);
+		this.pageBean= scenicPotService.getSgHotPotListByPid(Integer.parseInt(areaId),0,pageSize);
+		return "scenicPotList";
+	}
+	
+	public void searchScenicPot()
+	{
+		String potName=ServletActionContext.getRequest().getParameter("potName");
+	    List<Map> hotPot=scenicPotService.searchScenicPot(potName);
+	    BaseAction.writeJson(hotPot);
+	}
+	
+	public String getScenicPotListMore()
+	{
+		if(session.get("areaId")!=null)
+		{
+			String areaId=session.get("areaId").toString();
+		String pIndex=ServletActionContext.getRequest().getParameter("pIndex");
+		this.pageBean= scenicPotService.getSgHotPotListByPid(Integer.parseInt(areaId),Integer.parseInt(pIndex) ,pageSize);
+		}
+		return "scenicPotMore";
+	}
+	
+	
+	public void deleteScenicPotById()
+	{
+		String potId=ServletActionContext.getRequest().getParameter("potId");
+		boolean result= scenicPotService.deleteSgHotPotById(Integer.parseInt(potId));
+		BaseAction.writeJson(result);	
+	}
+	
+	public String editScenicPot()
+	{
+		String hotId=ServletActionContext.getRequest().getParameter("potId");
+		this.scenicPotInfo=scenicPotService.getScenicPotListById(Integer.parseInt(hotId)).get(0);
+		return "editToScenicPot";
+	}
+   //设置景点默认信息
+   private void iniPotInfo()
+   {
+	   scenicPot.setHCommentScore("8");
+	   Timestamp time = new Timestamp(System.currentTimeMillis());
+	   scenicPot.setHCreateTime(time);
+	   scenicPot.setHViewers(0);
+	   scenicPot.setIsAvailable(true);
+   }
+   public SgHotPot getScenicPot() {
+		return scenicPot;
+	}
+	public void setScenicPot(SgHotPot scenicPot) {
+		this.scenicPot = scenicPot;
+	}
+
+}
+

@@ -1,0 +1,84 @@
+package manage.model;
+
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+/**
+ * SgProvince entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sg_Province", schema = "dbo", catalog = "SceneryGuide")
+public class SgProvince implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private String province;
+	private Set<SgCity> sgCities = new HashSet<SgCity>(0);
+	private Set<SgSmsCodeProvinceCarrier> sgSmsCodeProvinceCarriers = new HashSet<SgSmsCodeProvinceCarrier>(
+			0);
+
+	// Constructors
+
+	/** default constructor */
+	public SgProvince() {
+	}
+
+	/** full constructor */
+	public SgProvince(String province, Set<SgCity> sgCities,
+			Set<SgSmsCodeProvinceCarrier> sgSmsCodeProvinceCarriers) {
+		this.province = province;
+		this.sgCities = sgCities;
+		this.sgSmsCodeProvinceCarriers = sgSmsCodeProvinceCarriers;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@Column(name = "Province", length = 50)
+	public String getProvince() {
+		return this.province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sgProvince")
+	public Set<SgCity> getSgCities() {
+		return this.sgCities;
+	}
+
+	public void setSgCities(Set<SgCity> sgCities) {
+		this.sgCities = sgCities;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sgProvince")
+	public Set<SgSmsCodeProvinceCarrier> getSgSmsCodeProvinceCarriers() {
+		return this.sgSmsCodeProvinceCarriers;
+	}
+
+	public void setSgSmsCodeProvinceCarriers(
+			Set<SgSmsCodeProvinceCarrier> sgSmsCodeProvinceCarriers) {
+		this.sgSmsCodeProvinceCarriers = sgSmsCodeProvinceCarriers;
+	}
+
+}

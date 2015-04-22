@@ -1,0 +1,64 @@
+package webservice.businessService.Impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import manage.model.SgHotPot;
+import manage.model.SgHpImage;
+import manage.model.SgProvince;
+import dao.IBaseDao;
+import webservice.businessService.IScenicAreaService;
+import webservice.businessService.IScenicImageService;
+import webservice.vo.ScenicPot;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-20 下午1:53:21
+ *@Version 1.0
+ *
+ */
+
+public class scenicAreaServiceImpl implements IScenicAreaService {
+	private IBaseDao<SgHotPot> scenicPotDao;
+	private IScenicImageService imgserv;
+	public IScenicImageService getImgserv() {
+		return imgserv;
+	}
+	@Resource(name="imageBean")
+	public void setImgserv(IScenicImageService imgserv) {
+		this.imgserv = imgserv;
+	}
+	public IBaseDao<SgHotPot> getScenicPotDao() {
+		return scenicPotDao;
+	}
+	@Resource
+	public void setScenicPotDao(IBaseDao<SgHotPot> scenicPotDao) {
+		this.scenicPotDao = scenicPotDao;
+	}
+
+
+	@Override
+	public List<ScenicPot> getScenicPotInfoByAreaId(String areaId) {
+		// TODO Auto-generated method stub
+		String hql="from SgHotPot s where s.sgHotPotDistrict.id='"+areaId+"'";
+		List<SgHotPot> potList= scenicPotDao.get(hql);
+		List<ScenicPot> scenicPotList=new ArrayList<ScenicPot>();
+		for(SgHotPot pot:potList)
+		{
+			ScenicPot spot=new ScenicPot();
+			spot.setId(pot.getId());
+			spot.setScenicPotName(pot.getHTitle());
+			spot.setScenicPotIndex(pot.getHTitleIndex());
+			List<SgHpImage> imgList=imgserv.getScenicImageBySortId(pot.getHImageSortId());
+			if(imgList!=null)
+				spot.setScenicPotImage(imgList.get(0).getHpImageName());
+			scenicPotList.add(spot);
+			}
+		return scenicPotList;
+	}
+	
+}
+

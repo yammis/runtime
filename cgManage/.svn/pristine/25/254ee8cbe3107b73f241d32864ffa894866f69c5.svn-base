@@ -1,0 +1,22 @@
+package manage.service;
+
+import java.util.List;
+
+import manage.model.SgChargeSwitcher;
+import manage.myextends.Exceptions.MyExceptions;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-28 下午3:16:06
+ *@Version 1.0
+ *
+ */
+
+public interface IChargeModeService {
+ public List<SgChargeSwitcher> getChargeModeList();
+ public int addNewChargeMode(String modeName,String status);
+ public void deleteChargeMode(int modeId) ;
+ public void updateChargeMode(SgChargeSwitcher charge);
+}
+

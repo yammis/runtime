@@ -1,0 +1,98 @@
+$(function(){
+	
+	$(".dropdown-toggle").click(function(){
+		if($(".dropdown-menu").css("display")=="none")
+		$(".dropdown-menu").show();
+		else $(".dropdown-menu").hide();
+	})
+	
+	$(".dropdown-menu").find("a").each(function(){
+		$(this).click(function(){
+			$(".dropdown-toggle").html($(this).text()+"  <span class=\"caret\"></span>");
+			$(".dropdown-toggle").attr("i",$(this).attr("i"));
+			$(".dropdown-menu").hide();
+		})
+	})
+	
+	$("#hpDistrictSearch").click(function(){
+		var inputVal=$("#prependedDropdownButton");
+		var searchType=$(".dropdown-toggle").attr("i");
+		if(inputVal.val()=="")
+			{
+			inputVal.focus();
+			}
+		else 
+			{
+			 searchByAreaName(inputVal.val(),searchType);
+			}
+	})
+	
+})
+
+//删除景区
+function delHpDistrictItem(id) {
+    if (confirm("删除景区将会附带删除其所有景点、景区评论和景区结算信息，确定删除?")) {
+
+        $.post("page/deleteHotPotDistrict", { hotpotid: id }, function (data) {
+            if (eval(data)) {
+                $("#hp-" + id + "").remove();
+            }
+        });
+    }
+}
+
+function searchByAreaName(areaVal,searchType)
+{
+	 $.post("page/searchByAreaName",{areaName:areaVal,type:searchType},function(data){
+	
+			if(data)
+				{
+				  var dataJsonArea = eval(data);
+	              var Htmlstr = "";
+	              var host= $("base").attr("href");
+	              $("#data-hp-box").empty();
+	              if (dataJsonArea.length <= 0) {
+	                  $("#data-hp-box").html("<span style=' color:red; '>暂无数据！</span>");
+	                  return false;
+                 }
+              for (var i = 0; i < dataJsonArea.length; i++) {
+                  Htmlstr += '<tr id="hp-' + dataJsonArea[i].id + '">';
+                  Htmlstr += '<td height="97" align="center" bgcolor="#FFFFFF" style="color: #0360AF">';
+                  Htmlstr += '    <a href="page/getScenicPotList?areaid=' + dataJsonArea[i].id+'" title="查看景点">' + dataJsonArea[i].title + '</a>';
+                  Htmlstr += '</td>';
+                  Htmlstr += '<td align="center" bgcolor="#FFFFFF">';
+                  Htmlstr += '    <img class="hpimage"  src="'+host+'cgManage/UploadFiles/hotpotimg/Thumb/|' + dataJsonArea[i].imgSortId + '" alt=""  style="width:100px;height:70px" />';
+                  Htmlstr += '</td>';
+                  Htmlstr += '<td align="center" bgcolor="#FFFFFF">';
+                  Htmlstr += '   <p>' + dataJsonArea[i].description.substr(0, 40) + '</p>';
+                  Htmlstr += '</td>';
+                  Htmlstr += ' <td align="center" bgcolor="#FFFFFF">';
+                  Htmlstr += '    <p>' + dataJsonArea[i].index + '</p>';
+                  Htmlstr += '     </td>';
+                  Htmlstr += '    <td align="center" bgcolor="#FFFFFF">';
+                  Htmlstr += '        <img src="'+host+'UploadFiles/hopotplatchart/' + dataJsonArea[i].mapName + '" alt="" width="98" height="58" style="width:70;height:70px">';
+                  Htmlstr += '   </td>';
+                  Htmlstr += '   <td align="center" bgcolor="#FFFFFF">';
+                  Htmlstr += '     <p>' + dataJsonArea[i].inTraffic.replace(/<[^>]+>/g,"").substr(0, 40) + '</p>';
+                  Htmlstr += '   </td>';
+                  Htmlstr += '   <td align="center" bgcolor="#FFFFFF">';
+                  Htmlstr += '       <p>' + dataJsonArea[i].traffic.replace(/<[^>]+>/g,"").substr(0, 40) + '</p>';
+                  Htmlstr += '   </td>';
+                  Htmlstr += '   <td align="center" bgcolor="#FFFFFF">' + dataJsonArea[i].viewer + '';
+                  Htmlstr += '    </td>';
+                  Htmlstr += '    <td align="center" bgcolor="#FFFFFF">';
+                  Htmlstr += '       <a href="javascript:;" onclick="delHpItem(' + dataJsonArea[i].id + ')">删除</a>|<a href="page/editHotPotDistrict?areaid=' + dataJsonArea[i].id + '">修改</a>|<a href="page/getAreaDetail?areaid=' + dataJsonArea[i].id + '">详情</a>';
+                  Htmlstr += '    </td>';
+                  Htmlstr += '    </tr>';
+     			 
+                  $("#data-hp-box").html(Htmlstr);
+                  loadImg();
+                  $(".ye").empty();
+				}
+				}
+			else
+				{
+				 $("#data-hp-box").html("<span style=' color:red; '>暂无数据！</span>");
+				}
+			 },"json")
+}

@@ -1,0 +1,86 @@
+package manage.model;
+
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+/**
+ * SgCity entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sg_City", schema = "dbo", catalog = "SceneryGuide")
+public class SgCity implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private SgProvince sgProvince;
+	private String city;
+	private Set<SgHotPotDistrict> sgHotPotDistricts = new HashSet<SgHotPotDistrict>(
+			0);
+
+	// Constructors
+
+	/** default constructor */
+	public SgCity() {
+	}
+
+	/** full constructor */
+	public SgCity(SgProvince sgProvince, String city,
+			Set<SgHotPotDistrict> sgHotPotDistricts) {
+		this.sgProvince = sgProvince;
+		this.city = city;
+		this.sgHotPotDistricts = sgHotPotDistricts;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "pid")
+	public SgProvince getSgProvince() {
+		return this.sgProvince;
+	}
+
+	public void setSgProvince(SgProvince sgProvince) {
+		this.sgProvince = sgProvince;
+	}
+
+	@Column(name = "city", length = 50)
+	public String getCity() {
+		return this.city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sgCity")
+	public Set<SgHotPotDistrict> getSgHotPotDistricts() {
+		return this.sgHotPotDistricts;
+	}
+
+	public void setSgHotPotDistricts(Set<SgHotPotDistrict> sgHotPotDistricts) {
+		this.sgHotPotDistricts = sgHotPotDistricts;
+	}
+
+}

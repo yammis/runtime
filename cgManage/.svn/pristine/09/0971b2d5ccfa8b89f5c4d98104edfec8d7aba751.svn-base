@@ -1,0 +1,19 @@
+package manage.service;
+
+
+
+import manage.model.SysUser;
+
+/**
+*
+*@Author yammis
+*@Date 2014-8-26 下午5:25:52
+*@Version 1.0
+*
+*/
+
+public interface ILoginService {
+	 public SysUser loginCheck(SysUser user);
+	 
+	 public void coutLogin(SysUser user);
+}

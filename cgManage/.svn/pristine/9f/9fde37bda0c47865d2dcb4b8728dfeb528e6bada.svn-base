@@ -1,0 +1,43 @@
+package dao;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+import manage.smodel.PageBean;
+
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
+
+
+public interface IBaseDao<T> {
+	   public T get(String hql,Map<String,Object> params);
+	   
+	   public List<T> get(String hql);
+	   
+	   public List<T>getBySql(String sql,Class<T> c);
+	   
+	   public Query getBySql(String sql);
+	   
+	   public Query getQueryList(String hql);
+	   
+//	   public List<Object[]> getToPoJo(String hql);
+	   
+		public T get(Class<T> c, Serializable id);
+	   
+	   public List<T> getList(String hql,Map<String,Object> params);
+
+	//   public T findById(int id);
+	   public PageBean<T> getPagedList(String hql,int pageSize,int page);
+	   
+	   public Serializable save(T o);
+	   
+	   public void saveT(T t);
+
+		public void delete(T t);
+
+		public void update(T o);
+
+		public void saveOrUpdate(T o);
+		
+		public int executeHql(String hql);
+}

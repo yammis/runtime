@@ -1,0 +1,91 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@taglib uri="/struts-tags"  prefix="s"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <base href="<%=basePath%>">
+    
+    <title>main</title>
+    
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="localResources/bootstrap/css/bootstrap-responsive.min.css" type="text/css"></link>
+  <link rel="stylesheet" href="localResources/bootstrap/css/bootstrap.min.css" type="text/css"></link>
+  <script type="text/javascript" src="localResources/js/jquery-1.8.0.js"></script>
+  <script type="text/javascript" src="localResources/bootstrap/js/bootstrap.min.js"></script>
+  
+  <script type="text/javascript" src="localResources/js/local/time.js"></script></head>
+  <style type="text/css">
+  body{font-size:12px;font-family:"Microsoft YaHei";}
+body,ul,li,ol,dl,dt,dd,table,tr,td,form,input,select,p,h1,h2,h3,h4,h5,h6{margin:0;padding:0}
+ul li{list-style:none}
+
+img ,input{vertical-align:middle}
+  .main-title{ height: 27px; line-height:25px; 
+  width:95%;
+  background-color:rgb(198,223,198); 
+  box-shadow:1px 1px 2px;
+                   text-indent:2em; 
+                   
+ }
+   .main-title-time {
+    color: #0e2d5f;
+    font-size: 12px;
+    font-weight: bold;
+    height: 16px;
+    line-height: 16px;
+    }
+    .main-log{ margin:20px 0 0 15px;  font-size:14px}
+.main-log ul li{ line-height:30px}
+  </style>
+  <body>
+     <ol class="breadcrumb">
+            <i class="icon-home"></i>
+		   <li><a href="javascript:;" target="mainpage">首页</a></li>
+  </ol>
+       <div class="main-log tabbable tabbable-custom tabbable-full-width">
+     <ul class="nav nav-tabs">
+
+			<li class="active"><a data-toggle="tab" href="#tab_1_1">登录信息</a></li>
+
+			<li class=""><a data-toggle="tab" href="#tab_1_2">用户信息</a></li>
+
+			<li class=""><a data-toggle="tab" href="#tab_1_3">Account</a></li>
+
+			<li class=""><a data-toggle="tab" href="#tab_1_4">Projects</a></li>
+
+			<li class=""><a data-toggle="tab" href="#tab_1_6">Help</a></li>
+
+	</ul>
+   <div class="tab-content">
+     <s:iterator value="users" var="user">
+      <div id="tab_1_1" class="tab-pane row-fluid active">
+          当前登录情况
+	      <ul>
+	        <li>创建时间：<s:date name="#user.CreateDate" format="yyyy-MM-dd EE HH:mm:SSS" /></li>
+	        <li>上次登录时间：<s:date name="#user.lastLoginDate" format="yyyy-MM-dd EE HH:mm:SSS" /></li>
+	        <li>登录次数：<s:property value="#user.loginCouter"/> 次</li>
+	      </ul>
+     </div>
+     <div id="tab_1_2"  class="tab-pane row-fluid">
+     用户信息
+        <ul>
+            <li>角色：<s:property value="#user.sysRole.roleName"/></li>
+        </ul>
+     </div>
+         </s:iterator>
+         </div>
+    </div>
+    	   
+</body>
+</html>
+

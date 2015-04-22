@@ -1,0 +1,47 @@
+package webservice.vo;
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-23 上午10:50:30
+ *@Version 1.0
+ *
+ */
+
+public class ScenicAreaGuides {
+  private String areaDescription;
+  public String getAreaDescription() {
+	return areaDescription;
+}
+public void setAreaDescription(String areaDescription) {
+	this.areaDescription = areaDescription;
+}
+public String getInnerTraffic() {
+	return innerTraffic;
+}
+public void setInnerTraffic(String innerTraffic) {
+	this.innerTraffic = innerTraffic;
+}
+public String getTips() {
+	return tips;
+}
+public void setTips(String tips) {
+	this.tips = tips;
+}
+public String getTraffic() {
+	return traffic;
+}
+public void setTraffic(String traffic) {
+	this.traffic = traffic;
+}
+public String getTicketInfo() {
+	return ticketInfo;
+}
+public void setTicketInfo(String ticketInfo) {
+	this.ticketInfo = ticketInfo;
+}
+private String innerTraffic;
+  private String tips;
+  private String traffic;
+  private String ticketInfo;
+}
+

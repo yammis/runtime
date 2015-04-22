@@ -1,0 +1,94 @@
+package manage.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+/**
+ * SgSmsCodeProvinceCarrier entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sg_SmsCode_Province_Carrier", schema = "dbo", catalog = "SceneryGuide")
+public class SgSmsCodeProvinceCarrier implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private SgProvince sgProvince;
+	private SgSmsCode sgSmsCode;
+	private SgCarrier sgCarrier;
+	private Boolean isClosed;
+
+	// Constructors
+
+	/** default constructor */
+	public SgSmsCodeProvinceCarrier() {
+	}
+
+	/** full constructor */
+	public SgSmsCodeProvinceCarrier(SgProvince sgProvince, SgSmsCode sgSmsCode,
+			SgCarrier sgCarrier, Boolean isClosed) {
+		this.sgProvince = sgProvince;
+		this.sgSmsCode = sgSmsCode;
+		this.sgCarrier = sgCarrier;
+		this.isClosed = isClosed;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "spc_ProvinceId")
+	public SgProvince getSgProvince() {
+		return this.sgProvince;
+	}
+
+	public void setSgProvince(SgProvince sgProvince) {
+		this.sgProvince = sgProvince;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "spc_CodeId")
+	public SgSmsCode getSgSmsCode() {
+		return this.sgSmsCode;
+	}
+
+	public void setSgSmsCode(SgSmsCode sgSmsCode) {
+		this.sgSmsCode = sgSmsCode;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "spc_CarrierId")
+	public SgCarrier getSgCarrier() {
+		return this.sgCarrier;
+	}
+
+	public void setSgCarrier(SgCarrier sgCarrier) {
+		this.sgCarrier = sgCarrier;
+	}
+
+	@Column(name = "isClosed")
+	public Boolean getIsClosed() {
+		return this.isClosed;
+	}
+
+	public void setIsClosed(Boolean isClosed) {
+		this.isClosed = isClosed;
+	}
+
+}

@@ -1,0 +1,21 @@
+package manage.webservice;
+
+import javax.jws.WebService;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-9 下午4:25:55
+ *@Version 1.0
+ *
+ */
+@WebService()  
+public class testi implements test {
+
+
+	 public String sayHi(String text) {  
+	        System.out.println("sayHi called");  
+	        return "Hello " + text;  
+	    }  
+}
+

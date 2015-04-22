@@ -1,0 +1,19 @@
+package webservice.businessService;
+
+import java.util.List;
+
+import manage.model.SgHotPotDistrict;
+import webservice.vo.ScenicPot;
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-20 下午1:52:42
+ *@Version 1.0
+ *
+ */
+
+public interface IScenicAreaService {
+ public List<ScenicPot> getScenicPotInfoByAreaId(String areaId);
+ public List<SgHotPotDistrict> getScenicAreaGuides(String areaId);
+}
+

@@ -1,0 +1,54 @@
+package webservice.SOAPServices.Impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import manage.util.DESUtil;
+import manage.util.JsonUtil;
+import webservice.SOAPServices.IProvinceNameScenicAreaCount;
+import webservice.businessService.IProvinceService;
+import webservice.vo.ProvinceNameScenicCount;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-14 上午11:26:37
+ *@Version 1.0
+ *
+ */
+
+public class ProvinceNameScenicAreaCount implements IProvinceNameScenicAreaCount {
+
+    private IProvinceService  provinceAreaDao;
+	
+	public IProvinceService getProvinceAreaDao() {
+		return provinceAreaDao;
+	}
+  @Resource(name="ProAreaBean")
+	public void setProvinceAreaDao(IProvinceService provinceAreaDao) {
+		this.provinceAreaDao = provinceAreaDao;
+	}
+
+	@Override
+	public String getProvinceInfoScenicAreaCount() {
+		// TODO Auto-generated method stub
+		String result=null;
+	  List<ProvinceNameScenicCount> pnscList=	provinceAreaDao.getProvinceAreaInfoList();
+	  String jsonstr= JsonUtil.objToString(pnscList);
+		  try {
+			result= DESUtil.EncryptDesBase64(jsonstr, DESUtil.DES_KEY).toString();
+		//	results=DESUtil.DecryptDesBase64(result, DESUtil.DES_KEY).toString();
+			  //result=DESUtil.des3EncodeCBC(key, keyiv, data)
+		//System.out.println(results);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	  return result;
+
+	}
+
+}
+

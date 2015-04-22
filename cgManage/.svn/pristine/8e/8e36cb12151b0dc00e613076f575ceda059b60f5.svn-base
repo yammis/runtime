@@ -1,0 +1,123 @@
+package manage.model;
+
+import java.sql.Timestamp;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * ThirdPartSmsRecord entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "third_PartSmsRecord", schema = "dbo", catalog = "SceneryGuide")
+public class ThirdPartSmsRecord implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private String mobileNo;
+	private String smsContent;
+	private String batchId;
+	private Timestamp sendTime;
+	private String syncTime;
+	private String statusDescription;
+	private Boolean status;
+
+	// Constructors
+
+	/** default constructor */
+	public ThirdPartSmsRecord() {
+	}
+
+	/** full constructor */
+	public ThirdPartSmsRecord(String mobileNo, String smsContent,
+			String batchId, Timestamp sendTime, String syncTime,
+			String statusDescription, Boolean status) {
+		this.mobileNo = mobileNo;
+		this.smsContent = smsContent;
+		this.batchId = batchId;
+		this.sendTime = sendTime;
+		this.syncTime = syncTime;
+		this.statusDescription = statusDescription;
+		this.status = status;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@Column(name = "mobileNo", length = 11)
+	public String getMobileNo() {
+		return this.mobileNo;
+	}
+
+	public void setMobileNo(String mobileNo) {
+		this.mobileNo = mobileNo;
+	}
+
+	@Column(name = "smsContent", length = 90)
+	public String getSmsContent() {
+		return this.smsContent;
+	}
+
+	public void setSmsContent(String smsContent) {
+		this.smsContent = smsContent;
+	}
+
+	@Column(name = "batchId", length = 50)
+	public String getBatchId() {
+		return this.batchId;
+	}
+
+	public void setBatchId(String batchId) {
+		this.batchId = batchId;
+	}
+
+	@Column(name = "sendTime", length = 23)
+	public Timestamp getSendTime() {
+		return this.sendTime;
+	}
+
+	public void setSendTime(Timestamp sendTime) {
+		this.sendTime = sendTime;
+	}
+
+	@Column(name = "syncTime", length = 50)
+	public String getSyncTime() {
+		return this.syncTime;
+	}
+
+	public void setSyncTime(String syncTime) {
+		this.syncTime = syncTime;
+	}
+
+	@Column(name = "statusDescription")
+	public String getStatusDescription() {
+		return this.statusDescription;
+	}
+
+	public void setStatusDescription(String statusDescription) {
+		this.statusDescription = statusDescription;
+	}
+
+	@Column(name = "status")
+	public Boolean getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
+
+}

@@ -1,0 +1,187 @@
+package manage.model;
+
+import java.sql.Timestamp;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+/**
+ * SgHotPot entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sg_HotPot", schema = "dbo", catalog = "SceneryGuide")
+public class SgHotPot implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private SgHpVoice sgHpVoice;
+	private SgHotPotDistrict sgHotPotDistrict;
+	private String HTitle;
+	private String HImageSortId;
+	private String HTitleIndex;
+	private String HDescription;
+	private Integer HViewers;
+	private String HCoordinatePosition;
+	private String HCommentScore;
+	private Integer HCommentid;
+	private Timestamp HCreateTime;
+	private Boolean isAvailable;
+
+	// Constructors
+
+	/** default constructor */
+	public SgHotPot() {
+	}
+
+	/** full constructor */
+	public SgHotPot(SgHpVoice sgHpVoice, SgHotPotDistrict sgHotPotDistrict,
+			String HTitle, String HImageSortId, String HTitleIndex,
+			String HDescription, Integer HViewers, String HCoordinatePosition,
+			String HCommentScore, Integer HCommentid, Timestamp HCreateTime,
+			Boolean isAvailable) {
+		this.sgHpVoice = sgHpVoice;
+		this.sgHotPotDistrict = sgHotPotDistrict;
+		this.HTitle = HTitle;
+		this.HImageSortId = HImageSortId;
+		this.HTitleIndex = HTitleIndex;
+		this.HDescription = HDescription;
+		this.HViewers = HViewers;
+		this.HCoordinatePosition = HCoordinatePosition;
+		this.HCommentScore = HCommentScore;
+		this.HCommentid = HCommentid;
+		this.HCreateTime = HCreateTime;
+		this.isAvailable = isAvailable;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
+	@JoinColumn(name = "h_VoiceId")
+	public SgHpVoice getSgHpVoice() {
+		return this.sgHpVoice;
+	}
+
+	public void setSgHpVoice(SgHpVoice sgHpVoice) {
+		this.sgHpVoice = sgHpVoice;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "h_ParentId")
+	public SgHotPotDistrict getSgHotPotDistrict() {
+		return this.sgHotPotDistrict;
+	}
+
+	public void setSgHotPotDistrict(SgHotPotDistrict sgHotPotDistrict) {
+		this.sgHotPotDistrict = sgHotPotDistrict;
+	}
+
+	@Column(name = "h_Title")
+	public String getHTitle() {
+		return this.HTitle;
+	}
+
+	public void setHTitle(String HTitle) {
+		this.HTitle = HTitle;
+	}
+
+	@Column(name = "h_ImageSortId", length = 50)
+	public String getHImageSortId() {
+		return this.HImageSortId;
+	}
+
+	public void setHImageSortId(String HImageSortId) {
+		this.HImageSortId = HImageSortId;
+	}
+
+	@Column(name = "h_TitleIndex", length = 5)
+	public String getHTitleIndex() {
+		return this.HTitleIndex;
+	}
+
+	public void setHTitleIndex(String HTitleIndex) {
+		this.HTitleIndex = HTitleIndex;
+	}
+
+	@Column(name = "h_Description")
+	public String getHDescription() {
+		return this.HDescription;
+	}
+
+	public void setHDescription(String HDescription) {
+		this.HDescription = HDescription;
+	}
+
+	@Column(name = "h_Viewers")
+	public Integer getHViewers() {
+		return this.HViewers;
+	}
+
+	public void setHViewers(Integer HViewers) {
+		this.HViewers = HViewers;
+	}
+
+	@Column(name = "h_coordinatePosition", length = 50)
+	public String getHCoordinatePosition() {
+		return this.HCoordinatePosition;
+	}
+
+	public void setHCoordinatePosition(String HCoordinatePosition) {
+		this.HCoordinatePosition = HCoordinatePosition;
+	}
+
+	@Column(name = "h_CommentScore", length = 10)
+	public String getHCommentScore() {
+		return this.HCommentScore;
+	}
+
+	public void setHCommentScore(String HCommentScore) {
+		this.HCommentScore = HCommentScore;
+	}
+
+	@Column(name = "h_Commentid")
+	public Integer getHCommentid() {
+		return this.HCommentid;
+	}
+
+	public void setHCommentid(Integer HCommentid) {
+		this.HCommentid = HCommentid;
+	}
+
+	@Column(name = "h_CreateTime", length = 23)
+	public Timestamp getHCreateTime() {
+		return this.HCreateTime;
+	}
+
+	public void setHCreateTime(Timestamp HCreateTime) {
+		this.HCreateTime = HCreateTime;
+	}
+
+	@Column(name = "isAvailable")
+	public Boolean getIsAvailable() {
+		return this.isAvailable;
+	}
+
+	public void setIsAvailable(Boolean isAvailable) {
+		this.isAvailable = isAvailable;
+	}
+
+}

@@ -1,0 +1,63 @@
+package manage.service.Impl;
+
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import dao.IBaseDao;
+import manage.model.SgHotPotDistrict;
+import manage.model.SgHotPotDistrictOffline;
+import manage.service.IScenicAreaOfflineService;
+import manage.smodel.PageBean;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-11-4 上午11:35:52
+ *@Version 1.0
+ *
+ */
+@Service("offlineService")
+public class ScenicAreaOfflinceService implements IScenicAreaOfflineService {
+	private IBaseDao<SgHotPotDistrictOffline> offlineDao;
+	private IBaseDao<SgHotPotDistrict> areaDao;
+	public IBaseDao<SgHotPotDistrict> getAreaDao() {
+		return areaDao;
+	}
+@Resource
+	public void setAreaDao(IBaseDao<SgHotPotDistrict> areaDao) {
+		this.areaDao = areaDao;
+	}
+
+	public IBaseDao<SgHotPotDistrictOffline> getOfflineDao() {
+		return offlineDao;
+	}
+
+   @Resource
+	public void setOfflineDao(IBaseDao<SgHotPotDistrictOffline> offlineDao) {
+		this.offlineDao = offlineDao;
+	}
+
+	@Override
+	public PageBean<SgHotPotDistrictOffline> getOfflinelineList(int page,int pageSize) {
+		// TODO Auto-generated method stub
+		String hql="from SgHotPotDistrictOffline o";
+		PageBean<SgHotPotDistrictOffline> offlineList=offlineDao.getPagedList(hql, pageSize, page);
+		return offlineList;
+	}
+
+
+	@Override
+	public SgHotPotDistrict getScenicAreaBeanByAreaId(int id) {
+       return areaDao.get(SgHotPotDistrict.class, id);
+	}
+
+	@Override
+	public void saveDistrictInfo(SgHotPotDistrictOffline packageInfo) {
+		offlineDao.saveT(packageInfo);
+		
+	}
+	
+}
+

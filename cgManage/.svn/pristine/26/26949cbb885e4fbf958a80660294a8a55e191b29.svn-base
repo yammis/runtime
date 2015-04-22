@@ -1,0 +1,75 @@
+package manage.service.Impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import dao.IBaseDao;
+
+import manage.model.SgChargeSwitcher;
+import manage.myextends.Exceptions.MyExceptions;
+import manage.service.IChargeModeService;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-28 下午3:16:33
+ *@Version 1.0
+ *
+ */
+@Service("chargeModeService")
+public class ChargeModeServiceImpl implements IChargeModeService {
+
+	private IBaseDao<SgChargeSwitcher> chargeModeDao;
+	public IBaseDao<SgChargeSwitcher> getChargeModeDao() {
+		return chargeModeDao;
+	}
+	@Resource
+	public void setChargeModeDao(IBaseDao<SgChargeSwitcher> chargeModeDao) {
+		this.chargeModeDao = chargeModeDao;
+	}
+
+
+
+	@Override
+	public List<SgChargeSwitcher> getChargeModeList() {
+		// TODO Auto-generated method stub
+		String hql="from SgChargeSwitcher";
+		return chargeModeDao.get(hql);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IChargeModeService#addNewChargeMode()
+	 */
+	@Override
+	public int addNewChargeMode(String modeName,String status) {
+		// TODO Auto-generated method stub
+		String sql="insert into sg_ChargeSwitcher (ChargeModeName,isCharge,UpdateTime) values(:name,:status,GETDATE())";
+		Map<String,Object> params=new HashMap<String,Object>();
+		params.put("name", modeName);
+		params.put("status", status);
+		return chargeModeDao.executeSql(sql, params);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IChargeModeService#deleteChargeMode(java.lang.String)
+	 */
+	@Override
+	public void deleteChargeMode(int modeId)   {
+		// TODO Auto-generated method stub
+		SgChargeSwitcher mode= chargeModeDao.get(SgChargeSwitcher.class, modeId);
+		chargeModeDao.delete(mode);
+	}
+	/* (non-Javadoc)
+	 * @see manage.service.IChargeModeService#updateChargeMode(int)
+	 */
+	@Override
+	public void updateChargeMode(SgChargeSwitcher charge) {
+		// TODO Auto-generated method stub
+		chargeModeDao.update(charge);
+	}
+
+}
+

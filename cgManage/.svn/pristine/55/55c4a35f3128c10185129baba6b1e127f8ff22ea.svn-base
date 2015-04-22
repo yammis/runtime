@@ -1,0 +1,102 @@
+﻿function ContentCheck() {
+    var hTitle = $("#hpTitle");
+    var hStarLevel = $("#hpstar");
+    var hProvince = $("#province option:selected");
+    var hCity=$("city option:selected");
+    var hDesc = $("#hpDesc");
+    var hIndex = $("#hpIndex");
+    var numberPat = /^\d+(\.\d+)?$/;
+    var hFee = $("#hpFee");
+    var hInline = $("#hpInline");
+    var hTip = $("#hpTip");
+    var hTraffic = $("#HpTraffic");
+    var hTicketInfo = $("#hpTicketInfo");
+    var hImageIsupload = $("#hid-isupload").val();
+    if (hImageIsupload != "1") {
+        alert("景区图片未上传或上传不成功，请上传后重试！");
+        return false;
+    }
+    if (hTitle.val() == "") {
+        errorTip(hTitle, "标题不能为空！");
+        return false;
+    }
+   else {
+       removeTip(hTitle);
+   }
+   if (!hStarLevel.val().match(numberPat)) {
+       errorTip(hStarLevel, "星级不能为空且应填写数字！");
+       return false;
+   }
+   else {
+       removeTip(hStarLevel);
+   }
+   if (hProvince.val() == "省份") {
+     
+       return false;
+   }
+   if(hCity.val()=="城市")
+	   {
+	   return false;
+	   }
+   if (hDesc.val()=="") {
+       errorTip(hDesc, "景点介绍不能为空！");
+       return false;
+   }
+   else {
+       removeTip(hDesc);
+   }
+   if (hIndex.val() == "") {
+       errorTip(hIndex, "景点索引不能为空！");
+       return false;
+   }
+   else {
+       removeTip(hIndex);
+   }
+    if (!hFee.val().match(numberPat)) {
+        errorTip(hFee, "费用不能为空且必须为数字！");
+        return false;
+    }
+    else {
+        removeTip(hFee);
+    }
+
+    if (hInline.val() == "") {
+        errorTip(hInline, "景点内交通不能为空！！");
+        return false;
+    }
+    else {
+        removeTip(hInline);
+    }
+    if (hTip.val() == "") {
+        errorTip(hTip, "景点贴士不能为空！！");
+        return false;
+    }
+    else {
+        removeTip(hTip);
+    }
+    if (hTraffic.val() == "") {
+        errorTip(hTraffic, "行车路线不能为空！！");
+        return false;
+    }
+    else {
+        removeTip(hTraffic);
+    }
+    if (hTicketInfo.val() == "") {
+        errorTip(hTicketInfo, "景点票务信息不能为空！！");
+        return false;
+    }
+    else {
+        removeTip(hTicketInfo);
+    }
+   
+}
+
+function errorTip(objSelector, content) {
+    objSelector.focus();
+    objSelector.after("<span style=' color:red'>" + content + "</span>");
+    
+}
+
+function removeTip(objSelector) {
+    objSelector.next().remove();
+}

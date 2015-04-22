@@ -1,0 +1,268 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@taglib uri="/struts-tags"  prefix="s"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <base href="<%=basePath%>">
+    
+    <title>景点编辑</title>
+    
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+	<script type="text/javascript" src="<%=basePath %>/localResources/js/jquery-1.8.0.js"></script>
+  <link rel="stylesheet" href="<%=basePath %>localResources/bootstrap/css/bootstrap-responsive.min.css" type="text/css"></link>
+  <link rel="stylesheet" href="<%=basePath %>localResources/bootstrap/css/bootstrap.min.css" type="text/css"></link>
+  <link href="<%=basePath %>localResources/css/addHotPotDistrict.css" rel="stylesheet" type="text/css" />
+  <link href="<%=basePath %>localResources/js/uploadify/uploadify.css" rel="stylesheet"  type="text/css"></link>
+  <script type="text/javascript" src="<%=basePath %>localResources/js/local/hotpot.js"></script>
+  <script type="text/javascript" src="<%=basePath %>localResources/js/local/loadImage.js"></script></head>
+  
+  <body>
+<style type="text/css">
+    #hpimgQueue
+    {
+        width: 400px;
+        height: 250px;
+        overflow: scroll;
+        border: 1px solid #E5E5E5;
+        margin-bottom: 10px;
+    }
+    #voiceQueue, #platQueue
+    {
+        width: 400px;
+        height: 150px;
+        overflow: scroll;
+        border: 1px solid #E5E5E5;
+        margin-bottom: 10px;
+    }
+    input
+    {
+        border: 1px solid #c9c9c9;
+        margin-left: 15px;
+    }
+    input:focus
+    {
+        border: 2px solid #73BF00;
+    }
+    textarea:focus
+    {
+        border: 2px solid #73BF00;
+    }
+</style>
+<link href="<%=basePath%>localResources/js/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+
+<script src="<%=basePath%>localResources/js/local/cityStuff.js" type="text/javascript"></script>
+
+
+<div style=" margin-left:20px">
+   <ol class="breadcrumb">
+            <i class="icon-home"></i>
+		   <li><a href="<%=basePath %>admin/logUserInfo.html" target="mainpage">首页</a></li>
+		<span class="divider">/</span>
+		   <li><a href="#">景点编辑</a></li>
+  </ol>
+<form action="page/updateScenicPot" method="post" enctype="multipart/form-data"
+class="frm" style="width: 900px; height: 700px;">    
+    <table width="900px" cellspacing="1" cellpadding="0" bgcolor="#d2d2d2" style="margin-left: 10px;
+        margin-top: 5px">
+        <tr>
+            <td width="137px" height="56" align="center" bgcolor="#e6e6e6">
+                <span style="color: red">*</span> 标 题：
+            </td>
+            <td width="763px" height="53" align="left" bgcolor="#FFFFFF">
+                <label>
+                    <input type="text" name="scenicPot.HTitle" id="textfield" style="height: 30px; width: 190px;
+                    line-height: 30px" value="<s:property value="scenicPotInfo.HTitle"/>"  />
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td height="56" align="center" bgcolor="#e6e6e6">
+                所属景区：
+            </td>
+            <td height="53" align="left" bgcolor="#FFFFFF" style="padding-left: 15px">
+                <label for="select">
+                </label>
+                <select name="HotPotId" id="HotPot">
+                </select>
+                
+            </td>
+        </tr>
+        <tr>
+            <td height="56" align="center" bgcolor="#e6e6e6">
+                <span style="color: red">*</span>图片预览
+            </td>
+            <td height="56" bgcolor="#FFFFFF">
+                <div id="hpimgQueue">
+                        <img class="hpimage" src="<%=basePath %>UploadFiles/hotpotimg/Thumb/|<s:property value="scenicPotInfo.HImageSortId" />" alt=""  style="width:50px;height:50px" />                 
+                </div>
+                <p>
+                    <a href="javascript:$('#hpimg_upload').uploadify('upload','*')">上 传</a> | <a href="javascript:$('#hpimg_upload').uploadify('cancel','*')">
+                        取消上传</a>
+                         <input type="hidden" value="0" name="hpImgOld" id="hid-hpimgid"/>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td height="56" align="center" bgcolor="#e6e6e6">
+                <span style="color: red">*</span> 景点图片：
+            </td>
+            <td height="53" align="left" bgcolor="#FFFFFF">
+                <input type="file" name="fileField" id="hpimg_upload" />
+                <input type="hidden" name="hpImgSortId" value="@item.hpPot.h_ImageSortId" />
+                 <input type="hidden" name="hpImgInfo" id="hpImg_Info" />
+            </td>
+        </tr>
+        <tr>
+            <td height="53" align="center" bgcolor="#e6e6e6">
+                <span style="color: red">*</span> 景点标题索引
+            </td>
+            <td height="56" align="left" bgcolor="#FFFFFF">
+                <input type="text" name="scenicPot.HTitleIndex"  id="hpIndex" style="height: 30px; width: 190px;
+                    line-height: 30px" value="<s:property value="scenicPotInfo.HTitleIndex"/>" /><span style="color: red"> 注意填写景点的大写首字母。</span>
+            </td>
+        </tr>
+         <tr>
+            <td height="53" align="center" bgcolor="#e6e6e6">
+                <span style="color: red">*</span> 景点坐标
+            </td>
+            <td height="56" align="left" bgcolor="#FFFFFF">
+                <input type="text" name="scenicPot.HCoordinatePosition" id="h_coordinatePosition" style="height: 30px; width: 190px;
+                    line-height: 30px" value="<s:property value="scenicPotInfo.HCoordinatePosition"/>" />
+            </td>
+        </tr>
+        <tr>
+            <td height="25" align="center" bgcolor="#e6e6e6">
+                <br />
+                <span style="color: red">*</span> 景点介绍
+            </td>
+            <td align="left" bgcolor="#FFFFFF" style="padding-left: 15px">
+                <label>
+                    <textarea name="scenicPot.HDescription"id="textarea" cols="45" rows="5"><s:property value="scenicPotInfo.hDescription"/></textarea>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td height="56" align="center" bgcolor="#e6e6e6">
+                <span style="color: red">*</span>景点语音
+            </td>
+            <td height="56" bgcolor="#FFFFFF">
+                <div id="voiceQueue">
+
+                    <audio preload="auto" src="<%=basePath %>UploadFiles/hotpotvoice/<s:property value="scenicPotInfo.SgHpVoice.hpVoiceName"/>">    </audio>
+                </div>
+                <p>
+                    <a href="javascript:$('#hpvoice').uploadify('upload','*')">上 传</a> | <a href="javascript:$('#hpvoice').uploadify('cancel','*')">
+                        取消上传</a>
+                            <input type="hidden" value="0" name="hpVoice" id="hid-hpVoice"/>
+                            <input type="hidden" name="hpVoiceId" value="@item.hpPot.h_VoiceId" />
+                            <input type="hidden" name="hpVoiceInfo" id="hpVoice_Info" />
+                            <input type="hidden" name="hpVoiceName" value="<s:property value="scenicPotInfo.SgHpVoice.hpVoiceName"/>" />                           
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td height="53" align="center" bgcolor="#e6e6e6">
+                <p>
+                    <span style="color: red">*</span> 景点语音<br />
+                    <br />
+                </p>
+            </td>
+            <td height="56" align="left" bgcolor="#FFFFFF">
+                <input type="file" name="fileField2" id="hpvoice" />
+       
+            </td>
+        </tr>
+        <tr>
+            <td height="56" align="center" bgcolor="#e6e6e6">
+                &nbsp;
+            </td>
+            <td height="56" align="center" bgcolor="#FFFFFF">
+                <input type="submit" name="button" id="button" value="提交" class="btn" />
+            </td>
+        </tr>
+    </table>
+    <input type="hidden" name="scenicPot.id" value="<s:property value="scenicPotInfo.id"/>" />
+   <input type="hidden" name="hidOldImgSortId" value="<s:property value="scenicPotInfo.HImageSortId"/>"/>
+   <input type="hidden" name="hidOldhpVoiceId" value="<s:property value="scenicPotInfo.sgHpVoice.id"/>" />
+    <input type="hidden" name="hidOldhpVoiceName" value="<s:property value="scenicPotInfo.sgHpVoice.hpVoiceName"/>" />
+     <input type="hidden" id="hid_areaId" name="hidAreaId" value="<s:property value="scenicPotInfo.SgHotPotDistrict.id"/>"/>
+</form>
+</div>
+<script type="text/javascript" src="<%=basePath%>localResources/js/local/subHotPot.js"></script>
+<script src="<%=basePath%>localResources/js/audiojs/audio.min.js" type="text/javascript"></script>
+<script src="<%=basePath%>localResources/js/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    audiojs.events.ready(function () {
+        audiojs.createAll();
+    });
+</script>
+<script type="text/javascript">
+   $(function () {
+
+        $('#hpimg_upload').uploadify({
+            'auto': false,
+            'buttonText': '图片选择',
+            'queueSizeLimit': 10,
+            'fileSizeLimit': '4MB',
+            'queueID': 'hpimgQueue',
+            'fileObjName':'imgFile',
+            'fileTypeDesc': 'Image Files',
+            'fileTypeExts': '*.jpg; *.png;',
+            'multi': true,
+            'swf': '/cgManage/localResources/js/uploadify/uploadify.swf',
+            'uploader': 'uploadPotImage',
+              'onSelect':function(){
+              $("#hpimgQueue").find("img").remove();
+            },
+            'onQueueComplete': function () {
+                $("#hid-isupload").val("1");
+            },
+            'onUploadSuccess': function (file, data, response) {
+                var imgValue = $("#hpImg_Info").val();
+                if (imgValue == "")
+                    $("#hpImg_Info").val(eval(data));
+                else
+                    $("#hpImg_Info").val(eval(data) + "|" + imgValue);
+            }
+        });
+
+    });
+
+    $(function () {
+        $('#hpvoice').uploadify({
+            'auto': false,
+            'buttonText': '语音选择',
+            'fileSizeLimit': '4MB',
+            'queueID': 'voiceQueue',
+            'fileObjName':'voiceFile',
+            'fileTypeDesc': 'Audio Files',
+            'fileTypeExts': '*.amr; *.mp3; *.wav',
+            'multi': false,
+            'swf': '/cgManage/localResources/js/uploadify/uploadify.swf',
+            'uploader': 'uploadVoice',
+              'onSelect':function(){
+              $("#voiceQueue").find("div").eq(0).remove();
+            },
+            'onQueueComplete': function () {
+                $("#hid-voice").val("1");
+            },
+            'onUploadSuccess': function (file, data, response) {
+                $("#hpVoice_Info").val(eval(data));
+            }
+        });
+    });
+
+
+</script>
+
+  </body>
+</html>

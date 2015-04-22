@@ -1,0 +1,273 @@
+package manage.action;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import manage.model.SysSoftInfo;
+import manage.model.SysSoftWareSnapshot;
+import manage.service.ISoftWareService;
+import manage.smodel.PageBean;
+import manage.util.BarCodeUtil;
+import manage.util.BusinessTool;
+import manage.util.Encrypt;
+import manage.util.FileUtil;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.google.zxing.WriterException;
+import com.opensymphony.xwork2.ActionSupport;
+
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-11-15 上午10:09:15
+ *@Version 1.0
+ *
+ */
+
+public class SoftWareAction extends ActionSupport {
+ 
+	private ISoftWareService softService;
+	public ISoftWareService getSoftService() {
+		return softService;
+	}
+ @Resource
+	public void setSoftService(ISoftWareService softService) {
+		this.softService = softService;
+	}
+
+    private PageBean<SysSoftInfo> softPaged;
+	public PageBean<SysSoftInfo> getSoftPaged() {
+		return softPaged;
+	}
+	public void setSoftPaged(PageBean<SysSoftInfo> softPaged) {
+		this.softPaged = softPaged;
+	}
+	private int pageIndex;
+	private int pageSize=10;
+
+
+	public int getPageIndex() {
+		return pageIndex;
+	}
+
+	public void setPageIndex(int pageIndex) {
+		this.pageIndex = pageIndex;
+	}
+
+	public int getTotalCounts() {
+		return totalCounts;
+	}
+
+	public void setTotalCounts(int totalCounts) {
+		this.totalCounts = totalCounts;
+	}
+
+	private int totalCounts;
+	private SysSoftInfo softWare;
+	public SysSoftInfo getSoftWare() {
+		return softWare;
+	}
+
+	public void setSoftWare(SysSoftInfo softWare) {
+		this.softWare = softWare;
+	}
+
+	private String softWarePath="/UploadFiles/soft";
+	private String softWareImagePath="/UploadFiles/soft/snapshot";
+	private File imgFile;
+	private File softFile;
+	public File getSoftFile() {
+		return softFile;
+	}
+
+	public void setSoftFile(File softFile) {
+		this.softFile = softFile;
+	}
+
+	private String softFileFileName;
+	public String getSoftFileFileName() {
+		return softFileFileName;
+	}
+
+	public void setSoftFileFileName(String softFileFileName) {
+		this.softFileFileName = softFileFileName;
+	}
+
+	private String imgFileFileName; // 文件名称
+	public String getImgFileFileName() {
+		return imgFileFileName;
+	}
+
+	public void setImgFileFileName(String imgFileFileName) {
+		this.imgFileFileName = imgFileFileName;
+	}
+
+	public File getImgFile() {
+		return imgFile;
+	}
+
+	public void setImgFile(File imgFile) {
+		this.imgFile = imgFile;
+	}
+
+	public String addSoftWareInfo()
+	{
+		String[] softSnapshotInfo=softWare.getSoftSnapshotSortId().split("\\|");
+		String softName=ServletActionContext.getRequest().getParameter("softInfo");
+	    String[] softInfo=softName.split("\\|");
+		for(int i=0; i<softSnapshotInfo.length/2;i++)
+		{	
+			SysSoftWareSnapshot snapshot=new SysSoftWareSnapshot();
+		    snapshot.setImageSortId(softSnapshotInfo[0]);
+			snapshot.setImageName(softSnapshotInfo[2*i+1]);
+			softService.addSoftSnapshot(snapshot);
+		}
+	
+		softWare.setSoftSnapshotSortId(softSnapshotInfo[0]);
+		softWare.setSoftName(softInfo[0]);
+		softWare.setSoftFileSize(softInfo[1]);
+		softWare.setIsAvaiable(true);
+		Timestamp time=new Timestamp(System.currentTimeMillis());
+		softWare.setCreateDate(time);
+		softService.addSoftWareInfo(softWare);
+		
+		return null;
+	}
+	
+	public String  softWareList()
+	{
+	 this.softPaged=softService.getSoftWareList(0, 10);
+	return "softList";
+	}
+	
+	public String  softWareMore()
+	{
+      String pIndex=ServletActionContext.getRequest().getParameter("pIndex");
+	 this.softPaged=softService.getSoftWareList(Integer.parseInt(pIndex), 10);
+	  return "softMore";
+	}
+	
+	public void deleteSoftWare()
+	{
+		String softId=ServletActionContext.getRequest().getParameter("sortId");
+		softService.deleteSoftWareItem(Integer.parseInt(softId));
+		BaseAction.writeJson(true);
+	}
+	public void getSnapshotName()
+	{
+		String snapShotSortid=ServletActionContext.getRequest().getParameter("sortId");
+		List<SysSoftWareSnapshot> snapName= softService.getSoftSnapshotList(snapShotSortid);
+		BaseAction.writeJson(snapName);
+	}
+	
+	public void uploadSoftSnapshot()
+	{
+		String savePath=ServletActionContext.getRequest().getRealPath(softWareImagePath);
+		FileUtil.checkRealPath(savePath);
+		String reFileName= FileUtil.reName(imgFileFileName);
+		String saveFullPath=savePath+"\\"+reFileName;
+		FileUtil.saveFile(imgFile, saveFullPath);
+		String randomId = BusinessTool.GetRandomStr(20) + "|" + reFileName;
+		BaseAction.writeJson(randomId);
+	}
+	
+	public void uploadSoft()
+	{
+		String savePath=ServletActionContext.getRequest().getRealPath(softWarePath);
+		FileUtil.checkRealPath(savePath);
+		String reFileName= FileUtil.reName(softFileFileName);
+		String saveFullPath=savePath+"\\"+reFileName;
+		String fileSize= FileUtil.FormetFileSize(softFile.length());
+		FileUtil.saveFile(softFile, saveFullPath);
+		BaseAction.writeJson(reFileName+"|"+fileSize);
+	}
+	
+	
+	
+	private SysSoftInfo softInstallInfo;
+	public SysSoftInfo getSoftInstallInfo() {
+		return softInstallInfo;
+	}
+	public void setSoftInstallInfo(SysSoftInfo softInstallInfo) {
+		this.softInstallInfo = softInstallInfo;
+	}
+	public String getSoftInfoForInstall()
+	{
+	
+		this.softInstallInfo=softService.getSoftInfoForInstall();
+		return "softInfo";
+	}
+	
+	public String genImg()
+	{
+		String path = ServletActionContext.getRequest().getContextPath();
+		String basePath = ServletActionContext.getRequest().getScheme()+"://"+ServletActionContext.getRequest().getServerName()+":"+ServletActionContext.getRequest().getServerPort()+path+"/";
+		String info=basePath+"download?r=4695f6252ac26e74d1659287c02d5d56";
+		String rImg=ServletActionContext.getRequest().getRealPath("localResources/image/120.png");
+		String dImg=ServletActionContext.getRequest().getRealPath(softWarePath)+"\\"+"iTour.jpg";
+		try {
+		BufferedImage image=	BarCodeUtil.genBarcode(info,200, 200,rImg);
+			 ServletOutputStream sos = ServletActionContext.getResponse().getOutputStream();
+			   ImageIO.write(image, "jpeg", sos);
+		} catch (WriterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "barCode";
+	}
+	 
+	   private String fileName;
+	   private InputStream downloadFile;
+	   
+		public String getFileName() {
+	        return fileName;
+	    }
+	    public void setFileName(String fileName) throws UnsupportedEncodingException {
+	        this.fileName = new String(fileName.getBytes("iso8859-1"),"utf-8");
+	    }
+	    private String downLoadKeyUrl;
+	    private String downloadKey="3G8Ldsw";
+	    public InputStream getDownloadFile() throws UnsupportedEncodingException, FileNotFoundException{
+	        //attachment为进行文件保存，这个时候还可以附件另一个参数filename表示保存时的缺省名称
+	        //inline为在线打开，不进行保存
+	    	if(Encrypt.md5(downloadKey).equals(downLoadKeyUrl))
+	    	{
+	        InputStream in=new FileInputStream(ServletActionContext.getRequest().getRealPath(softWarePath)+"\\"+fileName);
+	        return in;
+	    	}
+	    	return null;
+	    }
+	    public String downloadSoft(){
+				try {
+					this.downLoadKeyUrl=ServletActionContext.getRequest().getParameter("r");
+					this.softInstallInfo=softService.getSoftInfoForInstall();
+					setFileName(softInstallInfo.getSoftName());
+					fileName= new String(fileName.getBytes("iso8859-1"),"utf-8");
+				} catch (UnsupportedEncodingException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+	        return "downloaded";
+	    }
+
+}
+

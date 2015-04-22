@@ -1,0 +1,116 @@
+package webservice.businessService.Impl;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.jws.WebService;
+
+import manage.model.SgCity;
+import manage.model.SgHotPotDistrict;
+import manage.model.SgHotPotDistrictOffline;
+import manage.model.SgHpImage;
+import manage.model.SgProvince;
+import dao.IBaseDao;
+
+import webservice.businessService.IProvinceService;
+import webservice.vo.ProvinceNameScenicCount;
+import webservice.vo.ScenicArea;
+
+
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-13 上午10:55:35
+ *@Version 1.0
+ *
+ */
+public class provinceServiceImpl implements IProvinceService {
+
+	private IBaseDao<SgProvince> provinceDao;
+	private IBaseDao<SgHpImage> imageDao;
+	public IBaseDao<SgHpImage> getImageDao() {
+		return imageDao;
+	}
+	@Resource
+	public void setImageDao(IBaseDao<SgHpImage> imageDao) {
+		this.imageDao = imageDao;
+	}
+	public IBaseDao<SgProvince> getProvinceDao() {
+		return provinceDao;
+	}
+	@Resource
+	public void setProvinceDao(IBaseDao<SgProvince> provinceDao) {
+		this.provinceDao = provinceDao;
+	}
+	@Override
+	public List<ProvinceNameScenicCount> getProvinceAreaInfoList() {
+		//String hql="select new map(p.id as id,p.province as province) from SgProvince p";
+		String hql="from SgProvince s";
+		List<SgProvince> provinceList=provinceDao.get(hql);
+		List<ProvinceNameScenicCount> pncList=new ArrayList<ProvinceNameScenicCount>();
+		
+		for(SgProvince p:provinceList)
+		{
+			ProvinceNameScenicCount pnsc=new ProvinceNameScenicCount();
+			pnsc.setId(p.getId());
+			pnsc.setProvinceName(p.getProvince());
+			Iterator<SgCity> iterCity= p.getSgCities().iterator();
+			while(iterCity.hasNext())
+			{
+				pnsc.setScenicAreaCount(iterCity.next().getSgHotPotDistricts().size());
+			}
+			pncList.add(pnsc);
+		}
+		return pncList;
+	}
+
+	@Override
+	public List<ScenicArea> getScenicAreaInfoByProId(String provinceId) {
+
+		String hql="from SgProvince s where s.id='"+provinceId+"'";
+		String imgSortId="";
+		String imgHql="select new list(img.hpImageName as name)  from SgHpImage img where img.hpImageSortId='"+imgSortId+"'";
+		List<SgProvince> provinceList=provinceDao.get(hql);
+		List<ScenicArea> areaList=new ArrayList<ScenicArea>();
+	 
+		for(SgProvince pro:provinceList)
+		{
+			Iterator<SgCity> cityList=pro.getSgCities().iterator();
+			while(cityList.hasNext())
+			{
+				Iterator<SgHotPotDistrict> scenicAreaList=cityList.next().getSgHotPotDistricts().iterator();
+				while(scenicAreaList.hasNext())
+				{		
+					SgHotPotDistrict areaNext=scenicAreaList.next();
+					 ScenicArea area=new ScenicArea();
+				     area.setId(areaNext.getId());
+				     area.setAreaName(areaNext.getHdTitle());
+				     if(areaNext.getHdImageSortId()!=null && areaNext.getHdImageSortId()!="")
+				     imgSortId=areaNext.getHdImageSortId();
+				     List imageList=  imageDao.getQueryList(imgHql).list();
+				     //	List<SgHpImage> imageList=imageDao.getScenicImageBySortId(imgSortId);
+				     if(imageList!=null && imageList.size()>0)
+				     {
+				    	 String name=imageList.get(0).toString();
+				    	 area.setAreaImageName(name.substring(1, name.length()-1)) ;
+				     }
+				     Iterator<SgHotPotDistrictOffline> areaPackage=areaNext.getSgHotPotDistrictOfflines().iterator();
+					 while(areaPackage.hasNext())
+					 {     
+						 SgHotPotDistrictOffline offlinePackage=areaPackage.next();
+						 area.setAreaOfflinePackageSize(offlinePackage.getSize());
+						 area.setAreaOfflinePackageTimeStamp(offlinePackage.getTimeStamp());  
+					 }
+					 areaList.add(area);
+				}
+			}
+		}
+		return areaList;
+	}
+  
+}
+

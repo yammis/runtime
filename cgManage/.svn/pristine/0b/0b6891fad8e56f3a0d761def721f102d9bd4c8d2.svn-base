@@ -1,0 +1,101 @@
+package manage.util;
+
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-9-10 上午11:16:59
+ *@Version 1.0
+ *
+ */
+
+public class BusinessTool {
+    public static String GetRandomStr(int len)
+    {
+        String result = "";
+        Random rd = new Random();
+        while (result.length() < len)
+        {
+            result += rd.nextInt(len);
+        }
+        return result;
+    }
+    
+        public static String delHTMLTag(String htmlStr){ 
+            String regEx_script="<script[^>]*?>[\\s\\S]*?<\\/script>"; //定义script的正则表达式 
+            String regEx_style="<style[^>]*?>[\\s\\S]*?<\\/style>"; //定义style的正则表达式 
+            String regEx_html="<[^>]+>"; //定义HTML标签的正则表达式 
+             
+            Pattern p_script=Pattern.compile(regEx_script,Pattern.CASE_INSENSITIVE); 
+            Matcher m_script=p_script.matcher(htmlStr); 
+            htmlStr=m_script.replaceAll(""); //过滤script标签 
+             
+            Pattern p_style=Pattern.compile(regEx_style,Pattern.CASE_INSENSITIVE); 
+            Matcher m_style=p_style.matcher(htmlStr); 
+            htmlStr=m_style.replaceAll(""); //过滤style标签 
+             
+            Pattern p_html=Pattern.compile(regEx_html,Pattern.CASE_INSENSITIVE); 
+            Matcher m_html=p_html.matcher(htmlStr); 
+            htmlStr=m_html.replaceAll(""); //过滤html标签 
+
+            return htmlStr.trim(); //返回文本字符串 
+        } 
+    public static String subString(String sourceString , int maxLength)
+    {
+     String resultString = "";
+     if(sourceString==null||sourceString.equals("")||maxLength<1)
+     {
+      return resultString;
+     }
+     else if(sourceString.length()<=maxLength)
+     {
+      return sourceString;
+     }
+     else if(sourceString.length()>2*maxLength)
+     {
+      sourceString = sourceString.substring(0,2*maxLength);
+     }
+    
+    if (sourceString.length()>maxLength)
+    {
+     sourceString=delHTMLTag(sourceString);
+     char[] chr = sourceString.toCharArray();   
+     int strNum=0;
+     int strGBKNum=0;
+     boolean isHaveDot =false;
+     
+     for(int i=0;i<sourceString.length();i++)
+     {
+      if(chr[i]>=0xa1) //0xa1汉字最小位开始
+      {
+       strNum=strNum+2;
+       strGBKNum++;
+      }
+      else
+      { 
+       strNum++;
+      }
+      
+      if(strNum==2*maxLength||strNum==2*maxLength+1)
+      {
+       if(i+1<sourceString.length())
+       {
+        isHaveDot=true;
+       }    
+       break;
+      }
+     }
+     resultString = sourceString.substring(0, strNum-strGBKNum);
+     if(!isHaveDot)
+     {
+      resultString=resultString+"...";
+     }
+    }
+    
+    return resultString;
+   }
+}
+

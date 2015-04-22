@@ -1,0 +1,49 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    
+    <title>top</title>
+    
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+ <link rel="stylesheet" href="../localResources/css/admin.css" type="text/css"></link>
+
+ </head>
+  
+  <body>
+   <table width="1235px" background=" ../localResources/image/header_bg.jpg" cellspacing="0" cellpadding="0" border="0" id="head-uinfo">
+        <tbody><tr height="56">
+            <td width="260">
+                <img width="260" height="56" src="../localResources/image/header_left.jpg">
+            </td>
+                <td align="right" style="font-weight: bold; color: #fff; padding-top: 20px">
+                    当前用户：${session.uName} &nbsp;&nbsp; | &nbsp;&nbsp;  <a id="authority_link" href="javascript:'" style=" color:White" title="权限"><img src="../localResources/image/locker.png">&nbsp;&nbsp;权限</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a href="<%=basePath %>admin/logOut" target="_parent" onclick="if (confirm('确定要退出吗？')) return true; else return false;" style="color: #fff"><img src="../localResources/image/exit.png">&nbsp;&nbsp;退出系统</a>
+                    <div class="drop-down-setting">
+                        <li type="info"><a href="/Moudle/MoudleInfo">模块管理</a></li>
+                         <li type="dress"><a href="/SysUser/SysUserList">用户管理</a></li>
+                        <li type="set"><a href="/SysRole/RoleInfoList">权限管理</a></li> 
+                    </div>
+                </td>
+            <td width="268" align="right">
+                <img width="268" height="56" src="../localResources/image/header_right.jpg">
+            </td>
+        </tr>
+    </tbody></table>
+    <table width="1235px" cellspacing="0" cellpadding="0" border="0">
+        <tbody><tr height="5" bgcolor="#3f6c05">
+            <td>
+            </td>
+        </tr>
+    </tbody></table>
+  </body>
+</html>

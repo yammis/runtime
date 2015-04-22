@@ -1,0 +1,32 @@
+package manage.myextends.Exceptions;
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-29 上午11:01:59
+ *@Version 1.0
+ *
+ */
+
+public class MyExceptions extends RuntimeException {
+  
+	private static final long serialVersionUID = 1L;
+	public MyExceptions (){
+		  super();
+		  }
+	  private String message;
+	public String getMessage() {
+		return message;
+	}
+	public MyExceptions(String message) {
+		this.message = message;
+	}
+	
+	public MyExceptions(String msg, Throwable cause) {
+        super(msg, cause);
+    }
+    
+    public MyExceptions(Throwable cause) {
+        super(cause);
+    }
+}
+

@@ -1,0 +1,46 @@
+package manage.webservice;
+
+import javax.xml.namespace.QName;
+
+import manage.util.DESUtil;
+
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.jaxws.JaxWsServerFactoryBean;
+import org.apache.cxf.jaxws.endpoint.dynamic.JaxWsDynamicClientFactory;
+
+import webservice.businessService.Impl.provinceServiceImpl;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-10 下午5:59:04
+ *@Version 1.0
+ *
+ */
+
+public class ssss {
+	public static void main(String[] args) {
+//        testi impl=new testi();
+//        JaxWsServerFactoryBean factoryBean=new JaxWsServerFactoryBean();
+//        factoryBean.setAddress("http://localhost:8080/sgManage/ws/cxfDemo");
+//        factoryBean.setServiceClass(test.class);
+//        factoryBean.setServiceBean(impl);
+//      
+//        factoryBean.create();
+		
+//		provinceServiceImpl ii=new provinceServiceImpl();
+//		ii.getProvinceAreaInfoList();
+		JaxWsDynamicClientFactory  factory= JaxWsDynamicClientFactory.newInstance();
+		Client client=factory.createClient("http://localhost:8080/cgManage/ws/getScenicPotInfo?wsdl");
+		//QName name=new QName("http://www.cgManage.com","getProvinceInfoScenicAreaCount"); 
+	
+		try {
+		    Object[] objects=client.invoke("getScenicPotInfoByAreaId","10");
+			System.out.println(DESUtil.DecryptDesBase64(objects[0].toString(),DESUtil.DES_KEY));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+    }
+}
+

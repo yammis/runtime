@@ -1,0 +1,110 @@
+package manage.model;
+
+import java.sql.Timestamp;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+/**
+ * SgInstallInfo entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name="sg_InstallInfo"
+    ,schema="dbo"
+    ,catalog="SceneryGuide"
+)
+
+public class SgInstallInfo  implements java.io.Serializable {
+
+
+    // Fields    
+
+     private Integer id;
+     private String mobileDeviceId;
+     private String deviceIp;
+     private Boolean deviceType;
+     private Timestamp createDate;
+
+
+    // Constructors
+
+    /** default constructor */
+    public SgInstallInfo() {
+    }
+
+    
+    /** full constructor */
+    public SgInstallInfo(String mobileDeviceId, String deviceIp, Boolean deviceType, Timestamp createDate) {
+        this.mobileDeviceId = mobileDeviceId;
+        this.deviceIp = deviceIp;
+        this.deviceType = deviceType;
+        this.createDate = createDate;
+    }
+
+   
+    // Property accessors
+    @Id @GeneratedValue(strategy=IDENTITY)
+    
+    @Column(name="id", unique=true, nullable=false)
+
+    public Integer getId() {
+        return this.id;
+    }
+    
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
+    @Column(name="mobileDeviceId", length=20)
+
+    public String getMobileDeviceId() {
+        return this.mobileDeviceId;
+    }
+    
+    public void setMobileDeviceId(String mobileDeviceId) {
+        this.mobileDeviceId = mobileDeviceId;
+    }
+    
+    @Column(name="deviceIp", length=15)
+
+    public String getDeviceIp() {
+        return this.deviceIp;
+    }
+    
+    public void setDeviceIp(String deviceIp) {
+        this.deviceIp = deviceIp;
+    }
+    
+    @Column(name="deviceType")
+
+    public Boolean getDeviceType() {
+        return this.deviceType;
+    }
+    
+    public void setDeviceType(Boolean deviceType) {
+        this.deviceType = deviceType;
+    }
+    
+    @Column(name="createDate", length=23)
+
+    public Timestamp getCreateDate() {
+        return this.createDate;
+    }
+    
+    public void setCreateDate(Timestamp createDate) {
+        this.createDate = createDate;
+    }
+   
+
+
+
+
+
+
+
+
+}

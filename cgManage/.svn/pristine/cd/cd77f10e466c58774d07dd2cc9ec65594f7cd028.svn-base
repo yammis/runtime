@@ -1,0 +1,14 @@
+package webservice.conf;
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-16 上午11:18:32
+ *@Version 1.0
+ *
+ */
+
+public class wsConf {
+ public static final String cg_TargetNamespace="http://www.cgManage.com";
+ 
+}
+

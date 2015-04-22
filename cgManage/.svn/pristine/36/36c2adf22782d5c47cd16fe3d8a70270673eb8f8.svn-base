@@ -1,0 +1,452 @@
+package manage.action;
+
+import java.io.File;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import org.apache.struts2.ServletActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import manage.model.SgCity;
+import manage.model.SgHotPotDistrict;
+import manage.model.SgHpImage;
+import manage.model.SgHpPlanChart;
+import manage.service.IScenicAreaService;
+import manage.smodel.PageBean;
+import manage.util.BusinessTool;
+import manage.util.FileUtil;
+
+/**
+ * 
+ * @Author yammis
+ * @Date 2014-9-1 上午11:09:54
+ * @Version 1.0
+ * 
+ */
+
+public class ScenicAreaAction extends ActionSupport {
+
+	private static final long serialVersionUID = 1L;
+	private IScenicAreaService scenicAreaService;
+	private SgHotPotDistrict scenicArea;
+	private SgHotPotDistrict scenicAreaDetail;
+	public SgHotPotDistrict getScenicAreaDetail() {
+		return scenicAreaDetail;
+	}
+
+	public void setScenicAreaDetail(SgHotPotDistrict scenicAreaDetail) {
+		this.scenicAreaDetail = scenicAreaDetail;
+	}
+
+	private List<SgHotPotDistrict> scenicAreaLists;
+
+	public List<SgHotPotDistrict> getScenicAreaLists() {
+		return scenicAreaLists;
+	}
+
+	public void setScenicAreaLists(List<SgHotPotDistrict> scenicAreaLists) {
+		this.scenicAreaLists = scenicAreaLists;
+	}
+	private String areaid;
+	
+
+	public String getAreaid() {
+		return areaid;
+	}
+
+	public void setAreaid(String areaid) {
+		this.areaid = areaid;
+	}
+
+	private File imgFile;
+	private String imgFileFileName; // 文件名称
+	private String imgFileContentType;
+
+	private String _VirtualThumbHpImgPath = "/UploadFiles/hotpotimg/Thumb/";
+	private String _VirtualOriginalHpImgPath = "UploadFiles/hotpotimg/";
+	private String _VirtualOriginalMapPath = "/UploadFiles/hopotplatchart/";
+private PageBean<SgHotPotDistrict> pageBean;
+
+
+	public PageBean<SgHotPotDistrict> getPageBean() {
+	return pageBean;
+}
+
+public void setPageBean(PageBean<SgHotPotDistrict> pageBean) {
+	this.pageBean = pageBean;
+}
+
+	private int pageIndex;
+	private int pageSize=10;
+
+
+	public int getPageIndex() {
+		return pageIndex;
+	}
+
+	public void setPageIndex(int pageIndex) {
+		this.pageIndex = pageIndex;
+	}
+
+	public int getTotalCounts() {
+		return totalCounts;
+	}
+
+	public void setTotalCounts(int totalCounts) {
+		this.totalCounts = totalCounts;
+	}
+
+	private int totalCounts;
+	
+	public IScenicAreaService getScenicAreaService() {
+		return scenicAreaService;
+	}
+
+	@Resource
+	public void setScenicAreaService(IScenicAreaService scenicAreaService) {
+		this.scenicAreaService = scenicAreaService;
+	}
+
+	private void iniScenicDefault()
+	{
+		scenicArea.setHasVoice(false);
+		scenicArea.setHdViewers(0);
+		scenicArea.setHdCommetScore("8");
+		Timestamp time = new Timestamp(System.currentTimeMillis());
+		scenicArea.setHdCreateTime(time);
+		scenicArea.setIsAvailable(true);
+	}
+	public String addScenicArea() {
+		
+		iniScenicDefault();
+		String scenicImageInfo = ServletActionContext.getRequest()
+				.getParameter("hdImageInfo");
+		String scenicMapInfo = ServletActionContext.getRequest().getParameter(
+				"hpMapInfo");
+		String scenicCityId = ServletActionContext.getRequest().getParameter(
+				"sCity");
+		String[] imgSort = scenicImageInfo.split("\\|");
+	
+		if (!scenicImageInfo.equals("")) {
+			scenicArea.setHdImageSortId(imgSort[0]);
+			
+			for(int i=1; i<imgSort.length;i=i+2)
+			{
+				SgHpImage image=new SgHpImage();
+				image.setHpImageSortId(imgSort[0]);
+				image.setHpImageName(imgSort[i]);
+				image.setIsAvaiable(true);
+				scenicAreaService.saveScenicImage(image);
+			}	
+		}
+		if (!scenicMapInfo.equals("")) {
+			SgHpPlanChart hpc = new SgHpPlanChart();
+			hpc.setIsAvaiable(true);
+			hpc.setPcImageName(scenicMapInfo);
+			scenicArea.setSgHpPlanChart(hpc);
+		}
+		SgCity city = new SgCity();
+		city.setId(Integer.parseInt(scenicCityId));
+		scenicArea.setSgCity(city);
+	
+		scenicAreaService.saveScenicArea(scenicArea);
+		return "areaList";
+	}
+
+	// 上传景区图片
+	public void uploadAreaImage() {
+		@SuppressWarnings("deprecation")
+		String savePath = ServletActionContext.getRequest().getRealPath(
+				_VirtualOriginalHpImgPath);
+		@SuppressWarnings("deprecation")
+		String thumbSavePath = ServletActionContext.getRequest().getRealPath(
+				_VirtualThumbHpImgPath);
+		FileUtil.checkRealPath(ServletActionContext.getRequest().getRealPath("/UploadFiles/"));
+		// 檢查原路文件夾
+		FileUtil.checkRealPath(savePath);
+		// 检查缩略图文件夹
+		FileUtil.checkRealPath(thumbSavePath);
+		String newName = FileUtil.reName(imgFileFileName);
+		String saveFullPath = savePath + "\\" + newName;
+		String thumbSaveFullPath = thumbSavePath + "\\" + newName;
+		FileUtil.saveFile(imgFile, saveFullPath);
+		// 压缩
+		manage.util.ImageUtil.imageCompress(saveFullPath, thumbSaveFullPath,
+				0.5f, 200, 128);
+		String randomId = BusinessTool.GetRandomStr(20) + "|" + newName;
+		BaseAction.writeJson(randomId);
+	}
+
+	// 上传景区地图
+	public void uploadMapImage() {
+		@SuppressWarnings("deprecation")
+		String savePath = ServletActionContext.getRequest().getRealPath(
+				_VirtualOriginalMapPath);
+
+		FileUtil.checkRealPath(savePath);
+		String newName = FileUtil.reName(mapFileFileName);
+		FileUtil.saveFile(mapFile, savePath + "/" + newName);
+		BaseAction.writeJson(newName);
+	}
+	//景区列表
+	public String ScenicAreaList() {
+        this.pageBean=scenicAreaService.getScenicAreaList(0,pageSize);
+	    return "areaList";
+    }
+	//分页后景区列表
+	public String ScenicAreaListMore() {
+       String pIndex=ServletActionContext.getRequest().getParameter("pIndex");
+        this.pageBean=scenicAreaService.getScenicAreaList(Integer.parseInt(pIndex),pageSize);
+	    return "areaMore";
+    }
+	//获取景区图片名字
+	public void AreaImageList()
+	{
+		String ImgSortId = ServletActionContext.getRequest()
+				.getParameter("imgSortId");
+		List<SgHpImage> hpImage=scenicAreaService.getHdImage(ImgSortId);
+				BaseAction.writeJson(hpImage.get(0));
+	}
+	public void AllAreaImageList()
+	{
+		String ImgSortId = ServletActionContext.getRequest()
+				.getParameter("imgSortId");
+		List<SgHpImage> hpImage=scenicAreaService.getHdImage(ImgSortId);
+				BaseAction.writeJson(hpImage);
+	}
+	//获取单个景区详细信息
+	public String ScenicAreaDetail()
+	{
+		String areaId=ServletActionContext.getRequest().getParameter("areaid");
+		if(areaId==null || areaId.equals(""))
+			areaId=this.getAreaid();
+		this.scenicAreaDetail=scenicAreaService.getScenicAreaDetail(areaId).get(0);
+		return "areaDetail";
+	}
+	
+	
+	public void deleteScenicArea()
+	{
+		boolean result=false;
+		String areaId=ServletActionContext.getRequest().getParameter("hotpotid");
+		result=scenicAreaService.deleteScenicAreaById(areaId);
+		BaseAction.writeJson(result);
+	}
+	
+	public String updateScenicArea()
+	{
+		String scenicImageInfo = ServletActionContext.getRequest()
+				.getParameter("hdImageInfo");
+		String scenicMapInfo = ServletActionContext.getRequest().getParameter(
+				"hpMapInfo");
+		String scenicCityId = ServletActionContext.getRequest().getParameter(
+				"sCity");
+		String oldImageSortId=ServletActionContext.getRequest().getParameter(
+				"hidOldImgSortId");
+		String oldMapId=ServletActionContext.getRequest().getParameter(
+				"hidOldMapId");
+		String oldMapName=ServletActionContext.getRequest().getParameter(
+				"hidOldMapName");
+		String[] imgSort = scenicImageInfo.split("\\|");
+		scenicArea.setHdImageSortId(oldImageSortId);
+		if (!scenicImageInfo.equals("")) {
+			scenicArea.setHdImageSortId(imgSort[0]);
+			List<SgHpImage> imgList= scenicAreaService.getHdImageId(oldImageSortId);
+			if(imgList!=null)
+			{
+				for(Object img:imgList)
+				{
+					scenicAreaService.deleteScenicImage(Integer.parseInt(img.toString()));
+				}
+			}
+			for(int i=1; i<imgSort.length;i=i+2)
+			{
+				SgHpImage image=new SgHpImage();
+				image.setHpImageSortId(imgSort[0]);
+				image.setHpImageName(imgSort[i]);
+				image.setIsAvaiable(true);
+				scenicAreaService.saveScenicImage(image);
+			}	
+		}
+		SgHpPlanChart hpc = new SgHpPlanChart();
+		//地图有变动，更新地图表
+		if (!scenicMapInfo.equals("")) {	
+			hpc.setIsAvaiable(true);
+			hpc.setPcImageName(scenicMapInfo);
+			scenicArea.setSgHpPlanChart(hpc);
+			if(!oldMapId.equals(""))
+			{
+				hpc.setId(Integer.parseInt(oldMapId));
+				scenicAreaService.updateScenicAreaMap(hpc);
+			}
+		}
+		else
+		{
+			hpc.setIsAvaiable(true);
+			hpc.setPcImageName(oldMapName);
+			hpc.setId(Integer.parseInt(oldMapId));
+			scenicArea.setSgHpPlanChart(hpc);
+		}
+		SgCity city = new SgCity();
+		city.setId(Integer.parseInt(scenicCityId));
+		scenicArea.setSgCity(city);
+
+		iniScenicDefault();
+		scenicAreaService.updateScenicAreaById(scenicArea);
+	   this.setAreaid(scenicArea.getId().toString());
+		return "editToDetail";
+	}
+	
+	public void searchScenicArea()
+	{
+		String areaName=ServletActionContext.getRequest().getParameter("areaName");
+		String type=ServletActionContext.getRequest().getParameter("type");
+		List<Map> areaList=scenicAreaService.searchScenicAreaByAreaName(areaName,type);
+		BaseAction.writeJson(areaList);
+	}
+	
+	public void getScenicAreaNameList()
+	{
+	    List<SgHotPotDistrict> scenicAreaList=	scenicAreaService.getScenicAreaList();
+		BaseAction.writeJson(scenicAreaList);
+	}
+	
+//	public String ScenicAreaList() {
+//		List<Object[]> list = scenicAreaService.getScenicAreaList().list();
+//		//int loop = list.size();
+//		List<ScenicArea> areaList = new ArrayList<ScenicArea>();
+//      Set<Object[]> set=new HashSet();
+//      String flag="";
+//	for (int i = 0; i < list.size(); i++) {
+////			for(int j=1;j<list.size();j++)
+////			{
+////				
+////				ScenicArea area = new ScenicArea();
+////				Object[] obj = list.get(i);
+////				Object[] objNext = list.get(j);
+////				if(obj!=objNext)
+////				{
+////				SgHotPotDistrict district = (SgHotPotDistrict) obj[0];
+////				SgHotPotDistrict districtNext = (SgHotPotDistrict) objNext[0];
+////				SgHpImage hdImage = (SgHpImage) obj[1];
+////				SgHpImage hdImageNext = (SgHpImage) objNext[1];
+////				if(district.getId() == districtNext.getId())
+////				{
+////					String colName = hdImage.getHpImageName() + "|"
+////							+ hdImageNext.getHpImageName();
+////					hdImage.setHpImageName(colName);
+////					area.setHotPotDistrict(district);
+////					area.setHpImage(hdImage);
+////					//repIndex[i]=i+1;
+////				    list.remove(j);
+////					areaList.add(area);
+////				}
+////				}
+////				else
+////				{
+////					area.setHotPotDistrict(district);
+////					area.setHpImage(hdImage);
+////					areaList.add(area);
+////				}
+//			ScenicArea area = new ScenicArea();
+//			
+//			Object[] obj = list.get(i);
+//		 if(i<list.size()-1)
+//		 {
+//				Object[] objNext = list.get(i + 1);
+//				SgHotPotDistrict districtNext = (SgHotPotDistrict) objNext[0];
+//				SgHpImage hdImageNext = (SgHpImage) objNext[1];
+//		 }
+//				SgHotPotDistrict district = (SgHotPotDistrict) obj[0];
+//				SgHpImage hdImage = (SgHpImage) obj[1];
+//		
+//		  
+//				
+////				if (district.getId() == districtNext.getId())
+////				{
+////					String colName = hdImage.getHpImageName() + "|"
+////							+ hdImageNext.getHpImageName();
+////					hdImage.setHpImageName(colName);
+////					area.setHotPotDistrict(district);
+////					area.setHpImage(hdImage);
+////					//repIndex[i]=i+1;
+////				    list.remove(i+1);
+////					areaList.add(area);
+////				} else {
+////					area.setHotPotDistrict(district);
+////					area.setHpImage(hdImage);
+////					areaList.add(area);
+////				}
+//				area.setHotPotDistrict(district);
+//				area.setHpImage(hdImage);
+//				areaList.add(area);
+//
+//		}
+////		for(Object[] objj:list)
+////		{
+////			ScenicArea area = new ScenicArea();
+////			SgHotPotDistrict district = (SgHotPotDistrict) objj[0];
+////			SgHpImage hdImage = (SgHpImage) objj[1];
+////			area.setHotPotDistrict(district);
+////			area.setHpImage(hdImage);
+////			areaList.add(area);
+////		}
+//		scenicAreaLists = areaList;
+//		return "areaList";
+//	}
+
+	
+
+	public SgHotPotDistrict getScenicArea() {
+		return scenicArea;
+	}
+
+	public void setScenicArea(SgHotPotDistrict scenicArea) {
+		this.scenicArea = scenicArea;
+	}
+
+	private File mapFile;
+
+	public File getMapFile() {
+		return mapFile;
+	}
+
+	public void setMapFile(File mapFile) {
+		this.mapFile = mapFile;
+	}
+
+	private String mapFileFileName;
+
+	public String getMapFileFileName() {
+		return mapFileFileName;
+	}
+
+	public void setMapFileFileName(String mapFileFileName) {
+		this.mapFileFileName = mapFileFileName;
+	}
+
+	public File getImgFile() {
+		return imgFile;
+	}
+
+	public void setImgFile(File imgFile) {
+		this.imgFile = imgFile;
+	}
+
+	public String getImgFileContentType() {
+		return imgFileContentType;
+	}
+
+	public void setImgFileContentType(String imgFileContentType) {
+		this.imgFileContentType = imgFileContentType;
+	}
+
+	public String getImgFileFileName() {
+		return imgFileFileName;
+	}
+
+	public void setImgFileFileName(String imgFileFileName) {
+		this.imgFileFileName = imgFileFileName;
+	}
+}

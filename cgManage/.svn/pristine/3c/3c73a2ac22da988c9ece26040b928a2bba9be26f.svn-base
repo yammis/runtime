@@ -1,0 +1,30 @@
+package manage.util;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+
+import org.apache.commons.beanutils.BeanUtils;
+
+/**
+ *
+ *@Author yammis
+ *@Date 2014-10-14 上午10:42:21
+ *@Version 1.0
+ *
+ */
+
+public class Assemble {
+	public static Object assemble(Map<String, Object> objs, Class<?> targetClass) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+		if (null == objs) {
+			return null;
+		}
+		Object target = targetClass.newInstance();
+		if (target != null) {
+			for(Map.Entry<String, Object> e : objs.entrySet()) {
+				BeanUtils.copyProperty(target, e.getKey(), e.getValue());
+			}
+		}
+		return target;
+	}
+}
+

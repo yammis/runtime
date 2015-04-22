@@ -1,0 +1,40 @@
+﻿
+
+//根据省份查出城市
+$("#province").live("change", function () {
+    var pid = $("#province option:selected").val();
+    $.post("getCityList", { id: pid }, function (data) {
+        if (data) {
+            var dataJsonCity = eval(data);
+            $("#city").children().remove();
+            for (var i = 0; i < dataJsonCity.length; i++) {         	
+                $("#city").append("<option value=" + dataJsonCity[i].id + ">" + dataJsonCity[i].city + "</option>");
+            }
+        }
+    },"json");
+});
+
+
+$(function () {
+    $("#data-hp-box tr").each(function (i) {
+        $(this).mouseover(function () {
+            if (!$(this).hasClass("clicked"))
+                $(this).css("background-color", "#DFEBEB");
+        });
+        $(this).mouseout(function () {
+            if (!$(this).hasClass("clicked"))
+                $(this).css("background-color", "");
+        });
+        $(this).click(function () {
+            if (!$(this).hasClass("clicked")) {
+                $(this).css("background-color", "#FCE6A2");
+                $(this).addClass("clicked");
+            }
+            else {
+                $(this).removeClass("clicked");
+                $(this).css("background-color", "");
+            }
+
+        });
+    });
+})

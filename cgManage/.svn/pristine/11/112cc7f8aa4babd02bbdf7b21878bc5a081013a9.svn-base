@@ -1,0 +1,99 @@
+package manage.model;
+
+import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+/**
+ * SgChargeSwitcher entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "sg_ChargeSwitcher", schema = "dbo", catalog = "SceneryGuide")
+public class SgChargeSwitcher implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private String chargeModeName;
+	private Timestamp updateTime;
+	private Boolean isCharge;
+	private Set<SgOrder> sgOrders = new HashSet<SgOrder>(0);
+
+	// Constructors
+
+	/** default constructor */
+	public SgChargeSwitcher() {
+	}
+
+	/** minimal constructor */
+	public SgChargeSwitcher(Boolean isCharge) {
+		this.isCharge = isCharge;
+	}
+
+	/** full constructor */
+	public SgChargeSwitcher(String chargeModeName, Timestamp updateTime,
+			Boolean isCharge, Set<SgOrder> sgOrders) {
+		this.chargeModeName = chargeModeName;
+		this.updateTime = updateTime;
+		this.isCharge = isCharge;
+		this.sgOrders = sgOrders;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@Column(name = "ChargeModeName", length = 15)
+	public String getChargeModeName() {
+		return this.chargeModeName;
+	}
+
+	public void setChargeModeName(String chargeModeName) {
+		this.chargeModeName = chargeModeName;
+	}
+
+	@Column(name = "UpdateTime", length = 23)
+	public Timestamp getUpdateTime() {
+		return this.updateTime;
+	}
+
+	public void setUpdateTime(Timestamp updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	@Column(name = "isCharge", nullable = false)
+	public Boolean getIsCharge() {
+		return this.isCharge;
+	}
+
+	public void setIsCharge(Boolean isCharge) {
+		this.isCharge = isCharge;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sgChargeSwitcher")
+	public Set<SgOrder> getSgOrders() {
+		return this.sgOrders;
+	}
+
+	public void setSgOrders(Set<SgOrder> sgOrders) {
+		this.sgOrders = sgOrders;
+	}
+
+}
